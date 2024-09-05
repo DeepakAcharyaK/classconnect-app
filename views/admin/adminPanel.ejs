@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <title>Admin Panel</title>
+</head>
+<body class="bg-gray-100">
+
+  <!-- Navigation Bar -->
+  <nav class="bg-blue-600 p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="/" class="text-white font-bold text-xl">Admin Panel</a>
+      <div>
+        <a href="/logout" class="text-white px-3 py-2 rounded hover:bg-blue-500">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800">Manage Users</h1>
+
+    <!-- Pending Teacher List Table -->
+    <h2 class="text-xl font-semibold mb-4">Pending Teachers</h2>
+    <% if (pendingTeachers && pendingTeachers.length > 0) { %>
+      <div class="overflow-x-auto shadow-md rounded-lg mb-6">
+        <table class="min-w-full bg-white divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase">Username</th>
+              <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase">Email</th>
+              <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase">Action</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% pendingTeachers.forEach(teacher => { %>
+              <tr>
+                <td class="py-4 px-6 text-sm font-medium text-gray-900"><%= teacher.name %></td>
+                <td class="py-4 px-6 text-sm text-gray-500"><%= teacher.email %></td>
+                <td class="py-4 px-6 text-sm">
+                  <form action="/admin/approve/teacher/<%= teacher._id %>" method="POST" class="inline">
+                    <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Approve</button>
+                  </form>
+                  <form action="/admin/reject/teacher/<%= teacher._id %>" method="POST" class="inline ml-2">
+                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Reject</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p class="text-gray-500">No pending teacher registrations.</p>
+    <% } %>
+
+    <!-- Approved Teacher List Table -->
+    <h2 class="text-xl font-semibold mb-4">Approved Teachers</h2>
+    <% if (approvedTeachers && approvedTeachers.length > 0) { %>
+      <div class="overflow-x-auto shadow-md rounded-lg mb-6">
+        <table class="min-w-full bg-white divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase">Username</th>
+              <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase">Email</th>
+              <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase">Action</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% approvedTeachers.forEach(teacher => { %>
+              <tr>
+                <td class="py-4 px-6 text-sm font-medium text-gray-900"><%= teacher.name %></td>
+                <td class="py-4 px-6 text-sm text-gray-500"><%= teacher.email %></td>
+                <td class="py-4 px-6 text-sm">
+                  <form action="/admin/delete/teacher/<%= teacher._id %>" method="POST" class="inline">
+                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p class="text-gray-500">No approved teachers available.</p>
+    <% } %>
+
+    <!-- Student List Table -->
+    <h2 class="text-xl font-semibold mb-4">Students</h2>
+    <% if (students && students.length > 0) { %>
+      <div class="overflow-x-auto shadow-md rounded-lg">
+        <table class="min-w-full bg-white divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase">USN</th>
+              <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase">Username</th>
+              <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase">Email</th>
+              <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 uppercase">Action</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% students.forEach(student => { %>
+              <tr>
+                <td class="py-4 px-6 text-sm font-medium text-gray-900"><%= student.usn %></td>
+                <td class="py-4 px-6 text-sm font-medium text-gray-900"><%= student.name %></td>
+                <td class="py-4 px-6 text-sm text-gray-500"><%= student.email %></td>
+                <td class="py-4 px-6 text-sm">
+                  <form action="/admin/delete/student/<%= student._id %>" method="POST" class="inline">
+                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p class="text-gray-500">No students found.</p>
+    <% } %>
+  </div>
+
+  <!-- Toastify JS for notifications -->
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <!-- <script>
+    <% if (message) { %>
+      Toastify({
+        text: "<%= message %>",
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+        close: true
+      }).showToast();
+    <% } %>
+  </script> -->
+</body>
+</html>

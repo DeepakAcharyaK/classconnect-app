@@ -1,0 +1,19 @@
+/* student homepage */
+.menu-name:hover{
+    font-weight: 600;
+  }
+  .hide{
+    transform: translateX(-100%); 
+    transition: transform 0.5s ease-in-out;
+  }
+  .show{
+    transform: translateX(0); 
+    transition: transform 0.5s ease-in-out;
+  }
+  .menu {
+    background: rgba( 255, 255, 255, 0.35 );
+    box-shadow: 0 8px 32px 0 rgba(140, 140, 142, 0.37);
+    backdrop-filter: blur( 7px );
+    -webkit-backdrop-filter: blur( 20px );
+    border: 1px solid rgba(255, 255, 255, 0.18); 
+  }

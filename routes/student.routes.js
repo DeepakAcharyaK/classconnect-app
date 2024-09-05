@@ -1,0 +1,85 @@
+const express= require('express')
+const router=express.Router()
+const student=require('../models/student.model.js')
+const bcrypt = require('bcrypt');
+const isAuthenticated = require('../middlewares/auth.js');
+
+//register-page
+router.get('/register',(req,res)=>{
+    res.render('./student/studentRegister')
+})
+// register route
+router.post('/register',(req,res)=>{
+  let { usn,name,email,phone,password } = req.body
+  bcrypt.genSalt(10, function(err, salt) {
+    bcrypt.hash(password, salt, async function(err, hash) {
+        craetedstd=await student.create({
+          usn,name,email,phone,password:hash
+        })
+        console.log(craetedstd)
+    });
+  });
+  res.redirect(`/student/home/${usn}`)
+})
+// -------------------------------------------------------------
+
+//login-page
+router.get('/login',(req,res)=>{
+  res.render('./student/studentLogin')
+})
+// Login route
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    req.flash('error', 'Email and Password are required');
+    return res.redirect('/student/login');
+  }
+
+  try {
+    const foundStudent = await student.findOne({ email });
+    if (!foundStudent) {
+      req.flash('error', 'Invalid Email or Password');
+      return res.redirect('/student/login');
+    }
+
+    const isMatch = await bcrypt.compare(password, foundStudent.password);
+    if (!isMatch) {
+      req.flash('error', 'Invalid Email or Password');
+      return res.redirect('/student/login');
+    }
+
+    req.session.user = foundStudent;
+
+    req.flash('success', 'Login successful');
+    res.redirect(`/student/home/${foundStudent._id}`);
+  } catch (error) {
+    console.error('Error during login:', error);
+    req.flash('error', 'Internal server error');
+    res.redirect('/student/login');
+  }
+});
+
+// ---------------------------------------------------------------
+//home-page
+router.get('/home/:_id', isAuthenticated, (req, res) => {
+  let user=req.session.user
+  res.render('./student/studentHome', {user});
+});
+
+// ---------------------------------------------------------------
+// Logout route
+router.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error during logout:', err);
+    }
+    res.redirect('/student/login');
+  });
+});
+
+
+module.exports = router;
+
+
+

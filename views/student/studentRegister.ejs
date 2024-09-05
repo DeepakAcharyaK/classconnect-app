@@ -1,0 +1,44 @@
+<%- include('../components/header') %>
+
+<body class="bg-gray-100">
+    <div class="flex justify-center items-center min-h-screen w-auto">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Create an Account</h2>
+            <form action="/student/register" method="post">
+                <div class="mb-4">
+                    <label for="usn" class="block text-sm font-medium text-gray-700">USN</label>
+                    <input type="text" id="usn" name="usn" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Unique Student Number">
+                </div>
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" id="name" name="name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Your FullName">
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                    <input type="email" id="email" name="email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="yoursgmail@gmail.com">
+                </div>
+                <div class="mb-4">
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Mobile Number</label>
+                    <input type="tel" id="phone" name="phone" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="+91 000 000 0000">
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" name="password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="******" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="terms" name="terms" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="terms" class="ml-2 block text-sm text-gray-900">I agree to the <a href="#" class="text-indigo-600 hover:underline">Terms and Conditions</a></label>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <!-- <input type="submit" value=""> -->
+                    <button type="submit" class="w-full bg-indigo-600 text-white p-2 rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Register</button>
+                </div>
+            </form>
+            <p class="mt-4 text-center text-sm text-gray-600">Already have an account? <a href="/student/login" class="text-indigo-600 hover:underline">Sign In</a></p>
+        </div>
+    </div>
+</body>
+
+<%- include('../components/footer') %>

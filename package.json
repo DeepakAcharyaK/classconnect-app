@@ -1,0 +1,23 @@
+{
+  "name": "classconnect-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon -r dotenv/config index.js"
+  },
+  "author": "Deepak Acharya K",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "connect-flash": "^0.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "mongoose": "^8.5.3",
+    "passport": "^0.7.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.10"
+  }
+}
