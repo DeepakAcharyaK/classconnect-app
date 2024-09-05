@@ -37,6 +37,8 @@ app.use('/admin',adminRoutes)
 app.use('/student',studentRoutes)
 app.use('/teacher',teacherRoutes)
 
+console.log('hello')
+
 app.listen(process.env.PORT || 5500,()=>{
     console.log('Server is running on port',process.env.PORT )
 })
