@@ -1,17 +1,8 @@
 const express= require('express')
 const router=express.Router()
 const Teacher = require('../models/teacher.model');
+const isTeacher=require('../middlewares/isTeacher')
 const Admin = require('../models/admin.model');
-
-//isteacher
-const isTeacher = (req, res, next) => {
-  if (req.session.isAdmin) {
-    console.log(req.session)
-    next();
-  } else {
-    res.redirect('/admin/login'); // Redirect to HOD login if not authenticated
-  }
-};
 
 //register
 router.get('/register',(req,res)=>{
@@ -37,9 +28,8 @@ router.get('/login', (req, res) => {
   res.render('teacher/teacherLogin', { message: null }); // Initialize message as null
 });
 
-
 // Teacher login route
-router.post('/login', async (req, res) => {
+router.post('/login',async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -56,15 +46,23 @@ router.post('/login', async (req, res) => {
     if (teacher.password !== password) {
       return res.render('teacher/teacherLogin', { message: 'Incorrect password' });
     }
-
+    req.session.isTeacher = true; // Mark the user as logged in
+    req.session.teacher = teacher; // Store teacher ID in the session
+    console.log(req.session)
     res.redirect(`/teacher/teacherHome/${teacher._id}`); // Redirect to teacher home if approved
   } catch (err) {
     res.status(500).send('Error logging in');
   }
 });
 
-router.get('/teacherHome/:id',(req,res)=>{
+//Teacher home page
+router.get('/teacherHome/:id',isTeacher,(req,res)=>{
   res.render('teacher/teacherHome')
+})
+
+//logout
+router.get('/logout',(req,res)=>{
+  req.session.teacher
 })
 
 

@@ -54,6 +54,13 @@
             <span>Announcements</span>
           </a>
         </li>
+        <!-- Settings Menu Option -->
+        <li>
+          <a href="#" id="settingsButton" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
+            <i class="fa-solid fa-cog mr-2"></i>
+            <span>Settings</span>
+          </a>
+        </li>
       </ul>
       <div class="flex-grow"></div>
       <button id="logout" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
@@ -65,10 +72,19 @@
   <!-- Main Content -->
   <main class="p-4 md:ml-64">
     <div class="container mx-auto">
+
+      <!-- Display List of Created Classes -->
+      <section id="created-classes" class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Created Classes</h2>
+        <ul id="classList" class="space-y-2">
+          <!-- Dynamic Class List -->
+        </ul>
+      </section>
+
       <!-- Create Classroom Section -->
       <section id="create-class" class="bg-white p-6 rounded-lg shadow-md mb-6">
         <h2 class="text-2xl font-semibold mb-4">Create Classroom</h2>
-        <form>
+        <form id="createClassForm">
           <div class="mb-4">
             <label for="className" class="block text-gray-700">Class Name</label>
             <input type="text" id="className" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter class name">
@@ -123,13 +139,68 @@
     </div>
   </main>
 
-  <!-- Script for Sidebar Toggle -->
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+      <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
+      <form id="editProfileForm">
+        <div class="mb-4">
+          <label for="teacherName" class="block text-gray-700">Name</label>
+          <input type="text" id="teacherName" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+        <div class="mb-4">
+          <label for="teacherEmail" class="block text-gray-700">Email</label>
+          <input type="email" id="teacherEmail" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+        <div class="mb-4">
+          <label for="teacherPassword" class="block text-gray-700">Password</label>
+          <input type="password" id="teacherPassword" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+        <div class="mb-4">
+          <label for="teacherPhone" class="block text-gray-700">Phone</label>
+          <input type="text" id="teacherPhone" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+        <div class="mb-4">
+          <label for="teacherProfileImage" class="block text-gray-700">Profile Image</label>
+          <input type="file" id="teacherProfileImage" class="mt-1 w-full border border-gray-300 rounded-lg">
+        </div>
+        <div class="flex justify-end">
+          <button type="button" id="closeSettings" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 mr-2">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Script for Sidebar Toggle and Modal Handling -->
   <script>
     document.getElementById('menuToggle').addEventListener('click', function () {
       const sidebar = document.getElementById('sidebar');
       sidebar.classList.toggle('hidden');
     });
-  </script>
 
+    document.getElementById('settingsButton').addEventListener('click', function () {
+      const settingsModal = document.getElementById('settingsModal');
+      settingsModal.classList.remove('hidden');
+    });
+
+    document.getElementById('closeSettings').addEventListener('click', function () {
+      const settingsModal = document.getElementById('settingsModal');
+      settingsModal.classList.add('hidden');
+    });
+
+    // Event listener to handle form submission and adding classes dynamically
+    document.getElementById('createClassForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const className = document.getElementById('className').value;
+      if (className) {
+        const classList = document.getElementById('classList');
+        const newClassItem = document.createElement('li');
+        newClassItem.classList.add('flex', 'items-center', 'p-2', 'text-gray-700', 'hover:bg-gray-200', 'rounded-md');
+        newClassItem.innerHTML = `<i class="fa-solid fa-chalkboard mr-2"></i><span>${className}</span>`;
+        classList.appendChild(newClassItem);
+      }
+    });
+  </script>
 </body>
 </html>
