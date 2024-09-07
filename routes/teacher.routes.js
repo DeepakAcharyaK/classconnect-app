@@ -1,73 +1,84 @@
-const express= require('express')
-const router=express.Router()
+const express = require('express');
+const router = express.Router();
 const Teacher = require('../models/teacher.model');
-const isTeacher=require('../middlewares/isTeacher')
+const isTeacher = require('../middlewares/isTeacher');
 const Admin = require('../models/admin.model');
 
-//register
-router.get('/register',(req,res)=>{
-    res.render('teacher/teacherRegister')
-})
-
 // Teacher registration route
+router.get('/register', (req, res) => {
+  res.render('teacher/teacherRegister', {
+    successMessage: req.flash('successMessage'),
+    errorMessage: req.flash('errorMessage'),
+  });
+});
+
 router.post('/register', async (req, res) => {
-  const { uid,name,phone,password, email } = req.body;
+  const { uid, name, phone, password, email } = req.body;
   try {
-    const newTeacher = await Teacher.create({ uid,name,phone,password,email }); // Create new teacher
-    req.flash('successMessage','Registration Successfull...')
-    res.redirect('/teacher/login')
+    await Teacher.create({ uid, name, phone, password, email });
+    req.flash('successMessage', 'Registration Successful...');
+    res.redirect('/teacher/login');
   } catch (err) {
-    req.flash('errorMessage','Error in Registering!!!')
-    res.status(500).redirect('/teacher/register')
+    req.flash('errorMessage', 'Error in Registering!!!');
+    res.status(500).redirect('/teacher/register');
   }
 });
 
-// Teacher login
+// Teacher login route
 router.get('/login', (req, res) => {
-  res.render('teacher/teacherLogin',{
-     successMessage:req.flash('successMessage'),
-     errorMessage:req.flash('errorMessage')
-    }
-   ); 
+  res.render('teacher/teacherLogin', {
+    successMessage: req.flash('successMessage'),
+    errorMessage: req.flash('errorMessage'),
+  });
 });
 
-// Teacher login route
-router.post('/login',async (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const teacher = await Teacher.findOne({ email });
 
     if (!teacher) {
-      return res.render('teacher/teacherLogin', { message: 'Teacher not found' });
+      req.flash('errorMessage', 'Teacher not found');
+      return res.redirect('/teacher/login');
     }
 
     if (!teacher.isApproved) {
-      return res.render('teacher/teacherLogin', { message: 'Your registration is pending approval' });
+      req.flash('errorMessage', 'Your registration is pending approval');
+      return res.redirect('/teacher/login');
     }
 
     if (teacher.password !== password) {
-      return res.render('teacher/teacherLogin', { message: 'Incorrect password' });
+      req.flash('errorMessage', 'Incorrect email or password');
+      return res.redirect('/teacher/login');
     }
+
+    // Login successful
     req.session.isTeacher = true; // Mark the user as logged in
-    req.session.teacher = teacher; // Store teacher ID in the session
-    console.log(req.session)
+    req.session.teacher = teacher; // Store teacher data in the session
     res.redirect(`/teacher/teacherHome/${teacher._id}`); // Redirect to teacher home if approved
   } catch (err) {
-    res.status(500).send('Error logging in');
+    req.flash('errorMessage', 'An error occurred during login.');
+    res.status(500).redirect('/teacher/login');
   }
 });
 
-//Teacher home page
-router.get('/teacherHome/:id',isTeacher,(req,res)=>{
-  res.render('teacher/teacherHome')
-})
+// Teacher home page
+router.get('/teacherHome/:id', isTeacher, (req, res) => {
+  res.render('teacher/teacherHome');
+});
 
-//logout
-router.get('/logout',(req,res)=>{
-  req.session.teacher
-})
-
+// Logout route
+router.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error logging out:', err);
+      req.flash('errorMessage', 'Error logging out. Please try again.');
+      return res.redirect('/teacher/teacherHome'); // Redirect back to home on error
+    }
+    res.redirect('/teacher/login'); // Redirect to login page after logout
+  });
+});
 
 module.exports = router;
 

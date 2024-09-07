@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Classroom App</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
+<%- include('../components/header') %>
+
 <body class="bg-gray-100">
+
+    <%- include('../components/snackbar',{successMessage:successMessage,errorMessage:errorMessage}) %>
 
     <div class="flex justify-center items-center min-h-screen">
          <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
@@ -45,7 +41,8 @@
             <p class="mt-4 text-center text-sm text-gray-600">Already have an account? <a href="/teacher/login" class="text-indigo-600 hover:underline">Sign In</a></p>
         </div>
     </div>
-
 </body>
-</html>
+
+<%- include('../components/footer') %>
+
 
