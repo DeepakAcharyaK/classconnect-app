@@ -1,0 +1,38 @@
+<div id="snackbar" class="hidden fixed bottom-5 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg flex items-center justify-between space-x-4 max-w-sm">
+    <span id="snackbar-message"><%= successMessage || errorMessage %></span>
+    <button id="close-snackbar" onclick="closeSnackbar()" class="text-black">&times;</button>
+
+    <script>
+        window.onload = function() {
+    const successMessage = "<%= successMessage %>";
+    const errorMessage = "<%= errorMessage %>";
+
+    if (successMessage) {
+      console.log('Success Message:', successMessage); // Log success message
+      showSnackbar(successMessage,"bg-green-300 text-green-900");
+    } else if (errorMessage) {
+      console.log('Error Message:', errorMessage); // Log error message
+      showSnackbar(errorMessage,"bg-red-300 text-red-900");
+    }
+  };
+
+  function showSnackbar(message,color) {
+    const snackbar = document.getElementById('snackbar');
+    const snackbarMessage = document.getElementById('snackbar-message');
+
+    snackbarMessage.textContent = message;
+    color.split(' ').forEach(cls => snackbar.classList.add(cls));
+    snackbar.classList.remove('hidden');
+
+    // Close the snackbar after 3 seconds
+    setTimeout(() => {
+      closeSnackbar();
+    }, 3000);
+  }
+
+  function closeSnackbar() {
+    const snackbar = document.getElementById('snackbar');
+    snackbar.classList.add('hidden');
+  }
+    </script>
+</div>

@@ -12,20 +12,23 @@ router.get('/register',(req,res)=>{
 // Teacher registration route
 router.post('/register', async (req, res) => {
   const { uid,name,phone,password, email } = req.body;
-
   try {
-    // Create new teacher
-    const newTeacher = await Teacher.create({ uid,name,phone,password,email });
+    const newTeacher = await Teacher.create({ uid,name,phone,password,email }); // Create new teacher
+    req.flash('successMessage','Registration Successfull...')
     res.redirect('/teacher/login')
-    //res.render('register-success'); // Render registration success page
   } catch (err) {
-    res.status(500).send('Error registering teacher');
+    req.flash('errorMessage','Error in Registering!!!')
+    res.status(500).redirect('/teacher/register')
   }
 });
 
 // Teacher login
 router.get('/login', (req, res) => {
-  res.render('teacher/teacherLogin', { message: null }); // Initialize message as null
+  res.render('teacher/teacherLogin',{
+     successMessage:req.flash('successMessage'),
+     errorMessage:req.flash('errorMessage')
+    }
+   ); 
 });
 
 // Teacher login route

@@ -13,7 +13,7 @@ app.use(session({
     secret: 'yourSecretKey', // Use a secure key in production
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false } // Set to true if using HTTPS
+    cookie: { maxAge:60000 } // Set to true if using HTTPS
 }));
   
  // Flash middleware
