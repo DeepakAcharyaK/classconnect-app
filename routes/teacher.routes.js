@@ -121,17 +121,16 @@ router.post(
           res.redirect(`/teacher/teacherHome/${teacherid}`); // Redirect to the updated profile page
         } else {
           req.flash('error', 'Failed to update profile. Please try again.');
-          res.redirect(`/teacher/${teacherid}/profile/update`); // Redirect back to the update form
+          res.redirect(`/teacher/teacherHome/${teacherid}`); // Redirect back to the update form
         }
       } catch (error) {
         console.error('Error updating profile:', error);
         req.flash('error', 'An error occurred while updating the profile.');
-        res.redirect(`/teacher/${teacherid}/profile/update`); // Redirect back to the update form
+        res.redirect(`/teacher/teacherHome/${teacherid}`); 
       }
     }
-  );
+);
   
-
 // -----------------------------Teacher-Logout---------------------------
 
 router.get('/logout', (req, res) => {
