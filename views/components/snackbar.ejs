@@ -1,11 +1,8 @@
+<!-- <div class="notification-track w-10 h-full bg-black">
+
+</div> -->
+
 <div id="snackbar" class="hidden fixed bottom-5 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg flex items-center justify-between space-x-4 max-w-sm">
-  <span>
-  <% if (successMessage!="") { %>
-      <i class="fa-solid fa-circle-check" style="color: #378b57;"></i>
-  <% } else if (errorMessage!="") { %>
-      <i class="fa-solid fa-triangle-exclamation" style="color: #c72929;"></i>
-  <% } %>
-</span>
   <span id="snackbar-message">
     <%= successMessage || errorMessage %>
   </span>
@@ -19,10 +16,10 @@
       const errorMessage = "<%= errorMessage %>";
 
       if (successMessage) {
-        console.log("Success Message:", successMessage); // Log success message
+        // console.log("Success Message:", successMessage); // Log success message
         showSnackbar(successMessage, "bg-green-300 text-green-900");
       } else if (errorMessage) {
-        console.log("Error Message:", errorMessage); // Log error message
+        // console.log("Error Message:", errorMessage); // Log error message
         showSnackbar(errorMessage, "bg-red-300 text-red-900");
       }
     };

@@ -44,3 +44,12 @@ window.addEventListener('click', (event) => {
     }
 });
 // ----------------------------------------------
+
+//profile-button
+      // JavaScript to toggle dialog visibility
+      const profileButton = document.getElementById('profile-button');
+      const profileDialog = document.getElementById('profile-dialog');
+    
+      profileButton.addEventListener('click', () => {
+        profileDialog.classList.toggle('hidden');
+      });

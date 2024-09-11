@@ -42,8 +42,9 @@ const teacherSchema=new mongoose.Schema({
           ref:'Quiz'
       }
     ] ,
-    profile:{
-      type:String
+    profileimg:{
+      type: String,
+      default:'https://res.cloudinary.com/dtfz2ftmr/image/upload/v1725025681/vifb0hlupt5ybcmimmi3.png',
     }
 },{
   timestamps:true

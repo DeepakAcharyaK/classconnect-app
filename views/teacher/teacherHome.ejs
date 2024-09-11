@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teacher's Home Page - classConnect</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+<%- include('../components/header') %>
 
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
   <!-- Navbar -->
   <nav class="bg-white shadow-md">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -15,12 +8,45 @@
         <span class="text-lg font-semibold text-gray-700">classConnect</span>
       </div>
       <div class="flex items-center space-x-4">
-        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        <!-- <img src="<%= teacher.profileimg %>"
              alt="User Avatar"
              class="w-10 h-10 rounded-full overflow-hidden object-cover object-center" />
         <button id="menuToggle" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
           Menu
-        </button>
+        </button> -->
+
+        <div class="relative">
+          <button id="profile-button" class="ml-4 w-12 h-12 flex items-center  justify-center rounded-full overflow-hidden object-cover object-center hover:bg-gray-100">
+            <img src="<%= teacher.profileimg %>" alt="User Avatar" class="w-10 h-10 rounded-full " />
+          </button>
+          <!-- Profile Dialog Box -->
+          <div id="profile-dialog" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl p-4">
+          <!-- User Info -->
+          <div class="flex flex-col items-center text-center">
+          <img src="<%= teacher.profileimg %>" alt="User Avatar" class="w-16 h-16 rounded-full object-cover border-2 border-gray-300" />
+          <p class="text-gray-900 text-xl font-bold">Hi, <%= teacher.name %></p>
+          <p class="text-gray-700 font-semibold mt-2"><%= teacher.email %></p>
+          <button class="mt-2 px-4 py-2 text-blue-600 border rounded-lg font-semibold hover:bg-blue-50">Manage your Account</button>
+          </div>
+          <!-- Actions -->
+          <div class="mt-4 space-y-2">
+            <a href="/teacher/logout">
+            <button  class="w-full flex items-center justify-center p-2 text-gray-700 border border-gray-200   rounded-lg hover:bg-gray-50">
+              <span>Sign out</span>
+            </button>
+            </a>
+          </div>
+          <!-- Footer Links -->
+          <div class="mt-4 flex justify-center space-x-2 text-xs text-gray-500">
+            <a href="#" class="hover:underline">Privacy policy</a>
+            <span>·</span>
+            <a href="#" class="hover:underline">Terms of service</a>
+          </div>
+          </div>
+        </div>
+
+
+
       </div>
     </div>
   </nav>
@@ -63,9 +89,11 @@
         </li>
       </ul>
       <div class="flex-grow"></div>
-      <button id="logout" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+      <a href="/teacher/logout" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+      <button id="logout" class="w-full h-full">
         Logout
       </button>
+    </a>
     </div>
   </div>
 
@@ -138,69 +166,100 @@
       </section>
     </div>
   </main>
+  
 
   <!-- Settings Modal -->
   <div id="settingsModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
       <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
-      <form id="editProfileForm">
+      <form id="editProfileForm" action="/teacher/<%=teacher._id%>/profile/update" method="post">
         <div class="mb-4">
-          <label for="teacherName" class="block text-gray-700">Name</label>
-          <input type="text" id="teacherName" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <label for="uid" class="block text-gray-700">UID</label>
+          <input type="text" id="uid" name="uid" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= teacher.uid %>" readonly>
         </div>
         <div class="mb-4">
-          <label for="teacherEmail" class="block text-gray-700">Email</label>
-          <input type="email" id="teacherEmail" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <label for="name" class="block text-gray-700">Name</label>
+          <input type="text" id="teacherName" name="name" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= teacher.name %>">
         </div>
         <div class="mb-4">
-          <label for="teacherPassword" class="block text-gray-700">Password</label>
-          <input type="password" id="teacherPassword" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <label for="email" class="block text-gray-700">Email</label>
+          <input type="email" name="email" id="teacherEmail" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= teacher.email %>">
         </div>
         <div class="mb-4">
-          <label for="teacherPhone" class="block text-gray-700">Phone</label>
-          <input type="text" id="teacherPhone" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <label for="phone" class="block text-gray-700">Phone</label>
+          <input type="text" name="phone" id="teacherPhone" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= teacher.phone %>">
         </div>
         <div class="mb-4">
-          <label for="teacherProfileImage" class="block text-gray-700">Profile Image</label>
-          <input type="file" id="teacherProfileImage" class="mt-1 w-full border border-gray-300 rounded-lg">
+          <label for="profileimg" class="block text-gray-700">Profile Image</label>
+          <input type="file" name="profileimg" id="teacherProfileImage" class="mt-1 w-full border border-gray-300 rounded-lg">
         </div>
         <div class="flex justify-end">
           <button type="button" id="closeSettings" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 mr-2">Cancel</button>
           <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Update</button>
         </div>
       </form>
+      
     </div>
   </div>
 
   <!-- Script for Sidebar Toggle and Modal Handling -->
-  <script>
-    document.getElementById('menuToggle').addEventListener('click', function () {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('hidden');
-    });
+  <!-- Script for Sidebar Toggle and Modal Handling -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const settingsButton = document.getElementById('settingsButton');
+    const settingsModal = document.getElementById('settingsModal');
+    const closeSettings = document.getElementById('closeSettings');
+    const profileButton = document.getElementById('profile-button');
+    const profileDialog = document.getElementById('profile-dialog');
 
-    document.getElementById('settingsButton').addEventListener('click', function () {
-      const settingsModal = document.getElementById('settingsModal');
-      settingsModal.classList.remove('hidden');
-    });
+    // Sidebar Toggle
+    if (menuToggle) {
+      menuToggle.addEventListener('click', function () {
+        sidebar.classList.toggle('hidden');
+      });
+    }
 
-    document.getElementById('closeSettings').addEventListener('click', function () {
-      const settingsModal = document.getElementById('settingsModal');
-      settingsModal.classList.add('hidden');
-    });
+    // Settings Modal Handling
+    if (settingsButton) {
+      settingsButton.addEventListener('click', function () {
+        settingsModal.classList.remove('hidden');
+      });
+    }
 
-    // Event listener to handle form submission and adding classes dynamically
-    document.getElementById('createClassForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const className = document.getElementById('className').value;
-      if (className) {
-        const classList = document.getElementById('classList');
-        const newClassItem = document.createElement('li');
-        newClassItem.classList.add('flex', 'items-center', 'p-2', 'text-gray-700', 'hover:bg-gray-200', 'rounded-md');
-        newClassItem.innerHTML = `<i class="fa-solid fa-chalkboard mr-2"></i><span>${className}</span>`;
-        classList.appendChild(newClassItem);
-      }
-    });
-  </script>
+    if (closeSettings) {
+      closeSettings.addEventListener('click', function () {
+        settingsModal.classList.add('hidden');
+      });
+    }
+
+    // Profile Dialog Toggle
+    if (profileButton) {
+      profileButton.addEventListener('click', () => {
+        profileDialog.classList.toggle('hidden');
+      });
+    }
+
+    // Create Classroom Form Handling
+    const createClassForm = document.getElementById('createClassForm');
+    if (createClassForm) {
+      createClassForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const className = document.getElementById('className').value;
+        if (className) {
+          const classList = document.getElementById('classList');
+          const newClassItem = document.createElement('li');
+          newClassItem.classList.add('flex', 'items-center', 'p-2', 'text-gray-700', 'hover:bg-gray-200', 'rounded-md');
+          newClassItem.innerHTML = `<i class="fa-solid fa-chalkboard mr-2"></i><span>${className}</span>`;
+          classList.appendChild(newClassItem);
+        }
+      });
+    }
+  });
+</script>
+
+
 </body>
-</html>
+
+<%- include('../components/footer') %>
