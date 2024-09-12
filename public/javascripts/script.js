@@ -52,4 +52,8 @@ window.addEventListener('click', (event) => {
     
       profileButton.addEventListener('click', () => {
         profileDialog.classList.toggle('hidden');
-      });
+  });
+
+//-------------------------------------------------
+//code
+

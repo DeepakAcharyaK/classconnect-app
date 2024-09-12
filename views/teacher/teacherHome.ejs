@@ -9,45 +9,34 @@
         <span class="text-lg font-semibold text-gray-700">classConnect</span>
       </div>
       <div class="flex items-center space-x-4">
-        <!-- <img src="<%= teacher.profileimg %>"
-             alt="User Avatar"
-             class="w-10 h-10 rounded-full overflow-hidden object-cover object-center" />
-        <button id="menuToggle" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-          Menu
-        </button> -->
-
         <div class="relative">
           <button id="profile-button" class="ml-4 w-12 h-12 flex items-center  justify-center rounded-full overflow-hidden object-cover object-center hover:bg-gray-100">
-            <img src="<%= teacher.profileimg %>" alt="User Avatar" class="w-10 h-10 rounded-full " />
+            <img src="<%= teacher.profileimg %>" alt="User Avatar" class="w-10 h-10 rounded-full object-center object-cover " />
           </button>
           <!-- Profile Dialog Box -->
           <div id="profile-dialog" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl p-4">
-          <!-- User Info -->
-          <div class="flex flex-col items-center text-center">
-          <img src="<%= teacher.profileimg %>" alt="User Avatar" class="w-16 h-16 rounded-full object-cover border-2 border-gray-300" />
-          <p class="text-gray-900 text-xl font-bold">Hi, <%= teacher.name %></p>
-          <p class="text-gray-700 font-semibold mt-2"><%= teacher.email %></p>
-          <button class="mt-2 px-4 py-2 text-blue-600 border rounded-lg font-semibold hover:bg-blue-50">Manage your Account</button>
-          </div>
-          <!-- Actions -->
-          <div class="mt-4 space-y-2">
-            <a href="/teacher/logout">
-            <button  class="w-full flex items-center justify-center p-2 text-gray-700 border border-gray-200   rounded-lg hover:bg-gray-50">
-              <span>Sign out</span>
-            </button>
-            </a>
-          </div>
-          <!-- Footer Links -->
-          <div class="mt-4 flex justify-center space-x-2 text-xs text-gray-500">
-            <a href="#" class="hover:underline">Privacy policy</a>
-            <span>·</span>
-            <a href="#" class="hover:underline">Terms of service</a>
-          </div>
+            <div class="flex flex-col items-center text-center">
+              <img src="<%= teacher.profileimg %>" alt="User Avatar" class="w-16 h-16 rounded-full object-cover object-center  border-2 border-gray-300" />
+              <p class="text-gray-900 text-xl font-bold">Hi, <%= teacher.name %></p>
+              <p class="text-gray-700 font-semibold mt-2"><%= teacher.email %></p>
+              <button id="settingsButton" class="mt-2 px-4 py-2 text-blue-600 border rounded-lg font-semibold hover:bg-blue-50">Manage your Account</button>
+            </div>
+            <!-- Actions -->
+            <div class="mt-4 space-y-2">
+              <a href="/teacher/logout">
+                <button  class="w-full flex items-center justify-center p-2 text-gray-700 border border-gray-200   rounded-lg hover:bg-gray-50">
+                  <span>Sign out</span>
+                </button>
+              </a>
+            </div>
+            <!-- Footer Links -->
+            <div class="mt-4 flex justify-center space-x-2 text-xs text-gray-500">
+              <a href="#" class="hover:underline">Privacy policy</a>
+              <span>·</span>
+              <a href="#" class="hover:underline">Terms of service</a>
+            </div>
           </div>
         </div>
-
-
-
       </div>
     </div>
   </nav>
@@ -91,38 +80,45 @@
       </ul>
       <div class="flex-grow"></div>
       <a href="/teacher/logout" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
-      <button id="logout" class="w-full h-full">
-        Logout
-      </button>
-    </a>
+        <button id="logout" class="w-full h-full">Logout</button>
+      </a>
     </div>
   </div>
 
   <!-- Main Content -->
   <main class="p-4 md:ml-64">
-
-    <!-- <%- include('../components/snackbar', { 
+    <%- include('../components/snackbar', { 
       successMessage: successMessage, 
       errorMessage: errorMessage 
-  }) %> -->
-  
+    }) %>
     <div class="container mx-auto">
 
       <!-- Display List of Created Classes -->
       <section id="created-classes" class="bg-white p-6 rounded-lg shadow-md mb-6">
         <h2 class="text-2xl font-semibold mb-4">Created Classes</h2>
-        <ul id="classList" class="space-y-2">
-          <!-- Dynamic Class List -->
-        </ul>
+        <ol id="classList" class="space-y-2">
+          <% teacher.classroomcreated.forEach((val)=>{ %>
+            <li class="w-full flex bg-gray-100 gap-5">
+              <span>Class Name :<%= val.name %></span>
+              <span>Class Code :<%= val.code %></span>
+              <span>Class Code :<%= val.createdAt %></span>
+            </li>
+          <% }) %>
+        </ol>
       </section>
 
       <!-- Create Classroom Section -->
       <section id="create-class" class="bg-white p-6 rounded-lg shadow-md mb-6">
         <h2 class="text-2xl font-semibold mb-4">Create Classroom</h2>
-        <form id="createClassForm">
+        <form id="createClassForm" action="/teacher/teacherHome/<%= teacher._id %>/classroom/create" method="post">
           <div class="mb-4">
             <label for="className" class="block text-gray-700">Class Name</label>
-            <input type="text" id="className" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter class name">
+            <input type="text" id="className" name="className" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter class name">
+          </div>
+          <div class="mb-4">
+            <label for="code" class="block text-gray-700">Code</label>
+            <input type="text" id="code" name="classCode" class="mt-1 px-4 py-2 w-1/5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" readonly>
+            <button id="generateClassroomCode" class="generateClassroomCode relative right-16 px-2 py-2 bg-slate-800 text-white rounded-full">generate</button>
           </div>
           <div class="flex justify-end">
             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
@@ -171,6 +167,7 @@
           </div>
         </form>
       </section>
+
     </div>
   </main>
   
@@ -205,11 +202,12 @@
           <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Update</button>
         </div>
       </form>
-      
     </div>
   </div>
 
-  <!-- Script for Sidebar Toggle and Modal Handling -->
+  <script src="/javascripts/script.js"></script>
+
+ 
   <!-- Script for Sidebar Toggle and Modal Handling -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -249,21 +247,41 @@
     }
 
     // Create Classroom Form Handling
-    const createClassForm = document.getElementById('createClassForm');
-    if (createClassForm) {
-      createClassForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const className = document.getElementById('className').value;
-        if (className) {
-          const classList = document.getElementById('classList');
-          const newClassItem = document.createElement('li');
-          newClassItem.classList.add('flex', 'items-center', 'p-2', 'text-gray-700', 'hover:bg-gray-200', 'rounded-md');
-          newClassItem.innerHTML = `<i class="fa-solid fa-chalkboard mr-2"></i><span>${className}</span>`;
-          classList.appendChild(newClassItem);
-        }
-      });
-    }
+    // const createClassForm = document.getElementById('createClassForm');
+    // if (createClassForm) {
+    //   createClassForm.addEventListener('submit', function (e) {
+    //     // e.preventDefault();
+    //     const className = document.getElementById('className').value;
+    //     if (className) {
+    //       const classList = document.getElementById('classList');
+    //       const newClassItem = document.createElement('li');
+    //       newClassItem.classList.add('flex', 'items-center', 'p-2', 'text-gray-700', 'hover:bg-gray-200', 'rounded-md');
+    //       newClassItem.innerHTML = `<i class="fa-solid fa-chalkboard mr-2"></i><span>${className}</span>`;
+    //       classList.appendChild(newClassItem);
+    //     }
+    //   });
+    // }
   });
+
+  //generate
+const generateClassroomCode = document.querySelector('#generateClassroomCode');
+const inputCode = document.querySelector('#code');
+
+generateClassroomCode.addEventListener('click', (event) => {
+  event.preventDefault(); // Prevent the form from being submitted
+
+  const length = 8; // Define the length inside the function
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let code = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    code += characters[randomIndex];
+  }
+
+  inputCode.value = code; // Use `value` to set the input field's value
+});
+
 </script>
 
 

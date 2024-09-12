@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Teacher = require('../models/teacher.model.js');
+const Classrooms = require('../models/classroom.model.js');
 const isTeacher = require('../middlewares/isTeacher.js');
 const Admin = require('../models/admin.model.js');
 const { validationRules, handleValidationErrors } = require('../utils/validationUtils.js');
@@ -48,7 +49,6 @@ router.get('/login', (req, res) => {
     errorMessage: req.flash('errorMessage')
   });
 });
-
 router.post('/login',validationRules.loginTeacher, handleValidationErrors, async (req, res) => {
   const { email, password } = req.body;
 
@@ -79,20 +79,26 @@ router.post('/login',validationRules.loginTeacher, handleValidationErrors, async
 
 // -----------------------------Teacher-Home---------------------------
 
-router.get('/teacherHome/:teacherid', isTeacher, async(req, res) => {
-  try{
-    const teacher=await Teacher.findOne({_id:req.params.teacherid})
-    res.render('teacher/teacherHome',{
+router.get('/teacherHome/:teacherid', isTeacher, async (req, res) => {
+  try {
+    // Find the teacher by ID and populate the 'classroomcreated' field
+    const teacher = await Teacher.findOne({ _id: req.params.teacherid }).populate('classroomcreated');
+    console.log(teacher)
+    res.render('teacher/teacherHome', {
       successMessage: req.flash('successMessage'),
       errorMessage: req.flash('errorMessage'),
-      teacher
+      teacher,
     });
-  }catch{
-    console.log('something went wrong')
+  } catch (error) {
+    console.log('Something went wrong:', error); // Log the error for debugging
+    req.flash('errorMessage', 'An error occurred while loading the page.');
+    res.status(500).redirect('/error'); // Optionally redirect to an error page
   }
 });
 
-// -----------------------------Teacher-update---------------------------
+
+// -----------------------------Teacher-update-profile---------------------------
+
 router.post(
   '/:teacherid/profile/update',
   isTeacher,
@@ -122,17 +128,50 @@ router.post(
         updatedTeacher.profileimg = profileImageUrl;
         await updatedTeacher.save();
       }
-
-      res.status(200).json({ message: 'Profile updated successfully', teacher: updatedTeacher });
+      req.flash('successMessage', 'Profile updated successfully')
+      res.status(200).redirect(`/teacher/teacherHome/${updatedTeacher._id}`);
     } catch (error) {
       console.error('Error updating profile:', error);
       res.status(500).send('Error updating profile');
     }
   }
-);
+);  
+//-----------------------------create-class----------------------------------
+router.post('/teacherHome/:teacherid/classroom/create', isTeacher, async (req, res) => {
+  const { teacherid } = req.params; // Extract the teacher ID from the URL
+  const { className, classCode } = req.body; // Extract the className and classCode from the form data
 
+  try {
+    // Create a new classroom document
+    const newClassroom = await Classrooms.create({
+      name: className,
+      code: classCode,
+      createdteacher: teacherid // Reference to the teacher
+    });
 
-  
+    // Find the teacher and update their created classrooms
+    const teacher = await Teacher.findById(teacherid);
+
+    if (teacher) {
+      // Push the new classroom to the teacher's classroomcreated array
+      teacher.classroomcreated.push(newClassroom._id); // Assuming classroomcreated stores IDs
+      await teacher.save(); // Await the save operation
+
+      // Flash a success message and redirect to the teacher's home page
+      req.flash('successMessage', 'Classroom created successfully.');
+      res.redirect(`/teacher/teacherHome/${teacherid}`);
+    } else {
+      // If the teacher is not found, handle the error
+      req.flash('errorMessage', 'Teacher not found.');
+      res.status(404).redirect(`/teacher/teacherHome/${teacherid}`);
+    }
+  } catch (error) {
+    console.error('Error creating classroom:', error); // Log the error for debugging
+    req.flash('errorMessage', 'Internal Server Error.');
+    res.status(500).redirect(`/teacher/teacherHome/${teacherid}`);
+  }
+});
+
 // -----------------------------Teacher-Logout---------------------------
 
 router.get('/logout', (req, res) => {
