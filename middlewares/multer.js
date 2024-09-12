@@ -6,4 +6,4 @@ const storage = multer.memoryStorage();
 // Configure Multer for single file upload named 'profileImage'
 const upload = multer({ storage });
 
-module.exports = { upload };
+module.exports = upload ;

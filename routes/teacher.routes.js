@@ -4,6 +4,9 @@ const Teacher = require('../models/teacher.model.js');
 const isTeacher = require('../middlewares/isTeacher.js');
 const Admin = require('../models/admin.model.js');
 const { validationRules, handleValidationErrors } = require('../utils/validationUtils.js');
+const upload = require('../middlewares/multer.js');
+const uploadToCloudinary = require('../middlewares/uploadToCloudinary.js');
+
 
 // -----------------------------Teacher-Register---------------------------
 router.get('/register', (req, res) => {
@@ -79,7 +82,11 @@ router.post('/login',validationRules.loginTeacher, handleValidationErrors, async
 router.get('/teacherHome/:teacherid', isTeacher, async(req, res) => {
   try{
     const teacher=await Teacher.findOne({_id:req.params.teacherid})
-    res.render('teacher/teacherHome',{teacher});
+    res.render('teacher/teacherHome',{
+      successMessage: req.flash('successMessage'),
+      errorMessage: req.flash('errorMessage'),
+      teacher
+    });
   }catch{
     console.log('something went wrong')
   }
@@ -87,49 +94,44 @@ router.get('/teacherHome/:teacherid', isTeacher, async(req, res) => {
 
 // -----------------------------Teacher-update---------------------------
 router.post(
-    '/:teacherid/profile/update',
-    isTeacher,
-    upload.single('profileimg'), // Handle single file upload named 'profileImage'
-    validationRules.updateTeacher,
-    handleValidationErrors,
-    async (req, res) => {
-      try {
-        const { teacherid } = req.params;
-        const { name, phone, email } = req.body;
-  
-        // Handle file upload if a new image is provided
-        let profileImageUrl = req.body.existingImageUrl; // Default to existing image URL
-  
-        if (req.file) {
-          const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-            folder: 'classConnect/teacherProfiles', // Upload folder in Cloudinary
-            use_filename: true,
-          });
-          profileImageUrl = uploadResult.secure_url; // Update the profile image URL
-        }
-  
-        // Update the teacher's profile in the database
-        const updatedTeacher = await updateTeacher(teacherid, {
+  '/:teacherid/profile/update',
+  isTeacher,
+  upload.single('profileimg'), // Handle single file upload named 'profileimg'
+  uploadToCloudinary, // Upload to Cloudinary middleware
+  validationRules.updateTeacher,
+  handleValidationErrors,
+  async (req, res) => {
+    try {
+      const { teacherid } = req.params;
+      const { name, phone, email } = req.body;
+
+      // Find the teacher by ID and update basic details
+      const updatedTeacher = await Teacher.findByIdAndUpdate(
+        teacherid,
+        {
           name,
           phone,
           email,
-          profileimg: profileImageUrl,
-        });
-  
-        if (updatedTeacher) {
-          req.flash('success', 'Profile updated successfully!');
-          res.redirect(`/teacher/teacherHome/${teacherid}`); // Redirect to the updated profile page
-        } else {
-          req.flash('error', 'Failed to update profile. Please try again.');
-          res.redirect(`/teacher/teacherHome/${teacherid}`); // Redirect back to the update form
-        }
-      } catch (error) {
-        console.error('Error updating profile:', error);
-        req.flash('error', 'An error occurred while updating the profile.');
-        res.redirect(`/teacher/teacherHome/${teacherid}`); 
+        },
+        { new: true } // Return the updated document
+      );
+
+      // If a new file was uploaded and Cloudinary URL is available, update profile image
+      if (req.file && req.file.cloudinaryUrl) {
+        const profileImageUrl = req.file.cloudinaryUrl.url;
+        updatedTeacher.profileimg = profileImageUrl;
+        await updatedTeacher.save();
       }
+
+      res.status(200).json({ message: 'Profile updated successfully', teacher: updatedTeacher });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      res.status(500).send('Error updating profile');
     }
+  }
 );
+
+
   
 // -----------------------------Teacher-Logout---------------------------
 

@@ -1,6 +1,7 @@
 <%- include('../components/header') %>
 
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
   <!-- Navbar -->
   <nav class="bg-white shadow-md">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -99,6 +100,12 @@
 
   <!-- Main Content -->
   <main class="p-4 md:ml-64">
+
+    <!-- <%- include('../components/snackbar', { 
+      successMessage: successMessage, 
+      errorMessage: errorMessage 
+  }) %> -->
+  
     <div class="container mx-auto">
 
       <!-- Display List of Created Classes -->
@@ -172,7 +179,7 @@
   <div id="settingsModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
       <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
-      <form id="editProfileForm" action="/teacher/<%=teacher._id%>/profile/update" method="post">
+      <form id="editProfileForm" action="/teacher/<%=teacher._id%>/profile/update" method="post" enctype="multipart/form-data">
         <div class="mb-4">
           <label for="uid" class="block text-gray-700">UID</label>
           <input type="text" id="uid" name="uid" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= teacher.uid %>" readonly>
