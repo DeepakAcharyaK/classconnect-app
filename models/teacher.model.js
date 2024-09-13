@@ -36,6 +36,12 @@ const teacherSchema=new mongoose.Schema({
         ref:'Classroom'
       }
     ],
+    announcement:[
+      {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Notice'
+      }
+    ],
     quizcreated:[
       {
           type:mongoose.Schema.Types.ObjectId,

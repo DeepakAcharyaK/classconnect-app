@@ -3,22 +3,30 @@ const mongoose = require('mongoose');
 const noticeSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true
+    required: true, // Ensuring that the title is required
   },
-  content: String,
+  content: {
+    type: String,
+    required: true, // Ensuring that the content is required
+  },
   createdby: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'createdbyModel'  // Dynamically references the model specified in 'createdbyModel'
-  },
-  createdbyModel: {
-    type: String,
-    required: true,
-    enum: ['Teacher', 'Placementofficer']  // Restricts to the allowed model names
+    ref: 'Teacher',
   },
   classroom: {
-    type: Schema.Types.ObjectId,
-    ref: 'Classroom'
-  }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Classroom',
+  },
+  attachedFile: {
+    type: String, // Stores the path or URL of the attached file
+  },
+  coverImage: {
+    type: String, // Stores the path or URL of the cover image
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now, // Automatically sets the creation date
+  },
 });
 
 module.exports = mongoose.model('Notice', noticeSchema);

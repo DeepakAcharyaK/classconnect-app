@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Teacher = require('../models/teacher.model.js');
 const Classrooms = require('../models/classroom.model.js');
+const Notice = require('../models/notice.model.js');
 const isTeacher = require('../middlewares/isTeacher.js');
 const Admin = require('../models/admin.model.js');
 const { validationRules, handleValidationErrors } = require('../utils/validationUtils.js');
@@ -83,7 +84,7 @@ router.get('/teacherHome/:teacherid', isTeacher, async (req, res) => {
   try {
     // Find the teacher by ID and populate the 'classroomcreated' field
     const teacher = await Teacher.findOne({ _id: req.params.teacherid }).populate('classroomcreated');
-    console.log(teacher)
+    // console.log(teacher)
     res.render('teacher/teacherHome', {
       successMessage: req.flash('successMessage'),
       errorMessage: req.flash('errorMessage'),
@@ -95,7 +96,6 @@ router.get('/teacherHome/:teacherid', isTeacher, async (req, res) => {
     res.status(500).redirect('/error'); // Optionally redirect to an error page
   }
 });
-
 
 // -----------------------------Teacher-update-profile---------------------------
 
@@ -137,6 +137,7 @@ router.post(
   }
 );  
 //-----------------------------create-class----------------------------------
+
 router.post('/teacherHome/:teacherid/classroom/create', isTeacher, async (req, res) => {
   const { teacherid } = req.params; // Extract the teacher ID from the URL
   const { className, classCode } = req.body; // Extract the className and classCode from the form data
@@ -171,7 +172,41 @@ router.post('/teacherHome/:teacherid/classroom/create', isTeacher, async (req, r
     res.status(500).redirect(`/teacher/teacherHome/${teacherid}`);
   }
 });
+//------------------------------announcement-----------------------------
+router.post('/teacherHome/:teacherid/announcements/create', isTeacher, async (req, res) => {
+  const { teacherid } = req.params; // Extract the teacher ID from the URL
+  const { announcementTitle, announcementBody } = req.body; // Extract the className and classCode from the form data
 
+  try {
+    // Create a new classroom document
+    const newAnnouncement = await Notice.create({
+      title: announcementTitle,
+      content: announcementBody,
+      createdby: teacherid // Reference to the teacher
+    });
+
+    // Find the teacher and update their created classrooms
+    const teacher = await Teacher.findById(teacherid);
+
+    if (teacher) {
+      // Push the new classroom to the teacher's classroomcreated array
+      teacher.announcement.push(newAnnouncement._id); // Assuming classroomcreated stores IDs
+      await teacher.save(); // Await the save operation
+
+      // Flash a success message and redirect to the teacher's home page
+      req.flash('successMessage', 'Announcement announced successfully.');
+      res.redirect(`/teacher/teacherHome/${teacherid}`);
+    } else {
+      // If the teacher is not found, handle the error
+      req.flash('errorMessage', 'Something went wrong.');
+      res.status(404).redirect(`/teacher/teacherHome/${teacherid}`);
+    }
+  } catch (error) {
+    console.error('Error creating classroom:', error); // Log the error for debugging
+    req.flash('errorMessage', 'Internal Server Error.');
+    res.status(500).redirect(`/teacher/teacherHome/${teacherid}`);
+  }
+})
 // -----------------------------Teacher-Logout---------------------------
 
 router.get('/logout', (req, res) => {
@@ -186,13 +221,3 @@ router.get('/logout', (req, res) => {
 });
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-

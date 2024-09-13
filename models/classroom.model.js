@@ -13,6 +13,12 @@ const classroomSchema = new mongoose.Schema({
      type: mongoose.Schema.Types.ObjectId,
      ref: 'Teacher'
   },
+  announcementby:[
+      {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Teacher'
+      }
+    ],
   studentsenrolled: [
     {
         type:mongoose.Schema.Types.ObjectId,
