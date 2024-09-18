@@ -3,117 +3,34 @@
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
 
   <!-- Navbar -->
-  <nav class="bg-white shadow-md">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <div class="flex items-center">
-        <span class="text-lg font-semibold text-gray-700">classConnect</span>
-      </div>
-      <div class="flex items-center space-x-4">
-        <div class="relative">
-          <button id="profile-button" class="ml-4 w-12 h-12 flex items-center  justify-center rounded-full overflow-hidden object-cover object-center hover:bg-gray-100">
-            <img src="<%= teacher.profileimg %>" alt="User Avatar" class="w-10 h-10 rounded-full object-center object-cover " />
-          </button>
-          <!-- Profile Dialog Box -->
-          <div id="profile-dialog" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl p-4">
-            <div class="flex flex-col items-center text-center">
-              <img src="<%= teacher.profileimg %>" alt="User Avatar" class="w-16 h-16 rounded-full object-cover object-center  border-2 border-gray-300" />
-              <p class="text-gray-900 text-xl font-bold">Hi, <%= teacher.name %></p>
-              <p class="text-gray-700 font-semibold mt-2"><%= teacher.email %></p>
-              <button id="settingsButton" class="mt-2 px-4 py-2 text-blue-600 border rounded-lg font-semibold hover:bg-blue-50">Manage your Account</button>
-            </div>
-            <!-- Actions -->
-            <div class="mt-4 space-y-2">
-              <a href="/teacher/logout">
-                <button  class="w-full flex items-center justify-center p-2 text-gray-700 border border-gray-200   rounded-lg hover:bg-gray-50">
-                  <span>Sign out</span>
-                </button>
-              </a>
-            </div>
-            <!-- Footer Links -->
-            <div class="mt-4 flex justify-center space-x-2 text-xs text-gray-500">
-              <a href="#" class="hover:underline">Privacy policy</a>
-              <span>·</span>
-              <a href="#" class="hover:underline">Terms of service</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
-
+  <%- include('../components/navbar',{ teacher }) %>  
+  
   <!-- Sidebar -->
-  <div id="sidebar" class="fixed inset-0 bg-gray-800 bg-opacity-75 z-50 hidden md:flex md:flex-col md:w-64 md:fixed md:top-0 md:left-0 md:h-full">
-    <div class="flex flex-col flex-grow bg-white p-4 space-y-4">
-      <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
-      <ul class="space-y-2">
-        <li>
-          <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
-            <i class="fa-solid fa-house mr-2"></i>
-            <span>Home</span>
-          </a>
-        </li>
-        <li>
-          <a href="#create-class" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
-            <i class="fa-solid fa-chalkboard-teacher mr-2"></i>
-            <span>Create Classroom</span>
-          </a>
-        </li>
-        <li>
-          <a href="#upload-materials" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
-            <i class="fa-solid fa-upload mr-2"></i>
-            <span>Upload Materials</span>
-          </a>
-        </li>
-        <li>
-          <a href="#announcements" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
-            <i class="fa-solid fa-bullhorn mr-2"></i>
-            <span>Announcements</span>
-          </a>
-        </li>
-        <!-- Settings Menu Option -->
-        <li>
-          <a href="#" id="settingsButton" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
-            <i class="fa-solid fa-cog mr-2"></i>
-            <span>Settings</span>
-          </a>
-        </li>
-      </ul>
-      <div class="flex-grow"></div>
-      <a href="/teacher/logout" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
-        <button id="logout" class="w-full h-full">Logout</button>
-      </a>
-    </div>
-  </div>
+  <%- include('../components/sidebar') %>
 
   <!-- Main Content -->
-  <main class="p-4 md:ml-64">
+  <main class="main-container p-4 md:ml-64 md:mt-28 ">
     <%- include('../components/snackbar', { 
       successMessage: successMessage, 
       errorMessage: errorMessage 
     }) %>
-    <div class="container mx-auto">
-
-      <!-- Display List of Created Classes -->
-      <section id="created-classes" class="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 class="text-2xl font-semibold mb-4">Created Classes</h2>
-        <ol id="classList" class="space-y-2">
-          <% teacher.classroomcreated.forEach((val)=>{ %>
-            <li class="w-full flex bg-gray-100 gap-5">
-              <span>Class Name :<%= val.name %></span>
-              <span>Class Code :<%= val.code %></span>
-              <span>Class Code :<%= val.createdAt %></span>
-            </li>
-          <% }) %>
-        </ol>
-      </section>
+    <div class="inisde-main-container flex flex-col gap-3 justify-evenly mx-auto ">
 
       <!-- Create Classroom Section -->
-      <section id="create-class" class="bg-white p-6 rounded-lg shadow-md mb-6">
+      <section id="create-class" class=" bg-white p-6 rounded-lg shadow-md mt-0 mb-6 w-full">
         <h2 class="text-2xl font-semibold mb-4">Create Classroom</h2>
-        <form id="createClassForm" action="/teacher/teacherHome/<%= teacher._id %>/classroom/create" method="post">
+        <form id="createClassForm" action="/teacher/teacherHome/<%= teacher._id %>/classroom/create" method="post" enctype="multipart/form-data">
           <div class="mb-4">
             <label for="className" class="block text-gray-700">Class Name</label>
             <input type="text" id="className" name="className" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter class name">
+          </div>
+          <div class="mb-4">
+            <label for="subjectCode" class="block text-gray-700">Subject Code</label>
+            <input type="text" id="subjectCode" name="subjectCode" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter subject code">
+          </div>
+          <div class="mb-4">
+            <label for="coverImage" class="block text-gray-700">Cover Image</label>
+            <input type="file" id="coverImage" name="coverImage" class="mt-1 w-full text-gray-700">
           </div>
           <div class="mb-4">
             <label for="code" class="block text-gray-700">Code</label>
@@ -128,37 +45,28 @@
         </form>
       </section>
 
-      <!-- Upload Materials Section -->
-      <section id="upload-materials" class="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 class="text-2xl font-semibold mb-4">Upload Materials</h2>
-        <form>
-          <div class="mb-4">
-            <label for="materialTitle" class="block text-gray-700">Material Title</label>
-            <input type="text" id="materialTitle" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter material title">
-          </div>
-          <div class="mb-4">
-            <label for="materialFile" class="block text-gray-700">Upload File</label>
-            <input type="file" id="materialFile" class="mt-1 w-full border border-gray-300 rounded-lg">
-          </div>
-          <div class="flex justify-end">
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-              Upload
-            </button>
-          </div>
-        </form>
-      </section>
-
       <!-- Announcements Section -->
       <section id="announcements" class="bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-2xl font-semibold mb-4">Announcements</h2>
-        <form>
+        <!-- Add enctype attribute to handle file uploads -->
+        <form action="/teacher/teacherHome/<%=teacher._id%>/announcements/create" method="post" enctype="multipart/form-data">
           <div class="mb-4">
             <label for="announcementTitle" class="block text-gray-700">Announcement Title</label>
-            <input type="text" id="announcementTitle" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter announcement title">
+            <input type="text" id="announcementTitle" name="announcementTitle" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter announcement title">
           </div>
           <div class="mb-4">
             <label for="announcementBody" class="block text-gray-700">Announcement Body</label>
-            <textarea id="announcementBody" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" rows="4" placeholder="Enter announcement details"></textarea>
+            <textarea id="announcementBody" name="announcementBody" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" rows="4" placeholder="Enter announcement details"></textarea>
+          </div>
+          <!-- File attachment input -->
+          <div class="mb-4">
+            <label for="announcementFile" class="block text-gray-700">Attach File</label>
+            <input type="file" id="announcementFile" name="attachedFiles" class="mt-1 w-full text-gray-700">
+          </div>
+          <!-- Cover image input -->
+          <div class="mb-4">
+            <label for="coverImage" class="block text-gray-700">Cover Image</label>
+            <input type="file" id="coverImage" name="coverImage" class="mt-1 w-full text-gray-700">
           </div>
           <div class="flex justify-end">
             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
@@ -167,57 +75,16 @@
           </div>
         </form>
       </section>
+      
 
     </div>
   </main>
   
-
-  <!-- Settings Modal -->
-  <div id="settingsModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-      <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
-      <form id="editProfileForm" action="/teacher/<%=teacher._id%>/profile/update" method="post" enctype="multipart/form-data">
-        <div class="mb-4">
-          <label for="uid" class="block text-gray-700">UID</label>
-          <input type="text" id="uid" name="uid" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= teacher.uid %>" readonly>
-        </div>
-        <div class="mb-4">
-          <label for="name" class="block text-gray-700">Name</label>
-          <input type="text" id="teacherName" name="name" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= teacher.name %>">
-        </div>
-        <div class="mb-4">
-          <label for="email" class="block text-gray-700">Email</label>
-          <input type="email" name="email" id="teacherEmail" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= teacher.email %>">
-        </div>
-        <div class="mb-4">
-          <label for="phone" class="block text-gray-700">Phone</label>
-          <input type="text" name="phone" id="teacherPhone" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= teacher.phone %>">
-        </div>
-        <div class="mb-4">
-          <label for="profileimg" class="block text-gray-700">Profile Image</label>
-          <input type="file" name="profileimg" id="teacherProfileImage" class="mt-1 w-full border border-gray-300 rounded-lg">
-        </div>
-        <div class="flex justify-end">
-          <button type="button" id="closeSettings" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 mr-2">Cancel</button>
-          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Update</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <script src="/javascripts/script.js"></script>
-
- 
   <!-- Script for Sidebar Toggle and Modal Handling -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const menuToggle = document.getElementById('menuToggle');
     const sidebar = document.getElementById('sidebar');
-    const settingsButton = document.getElementById('settingsButton');
-    const settingsModal = document.getElementById('settingsModal');
-    const closeSettings = document.getElementById('closeSettings');
-    const profileButton = document.getElementById('profile-button');
-    const profileDialog = document.getElementById('profile-dialog');
 
     // Sidebar Toggle
     if (menuToggle) {
@@ -225,65 +92,28 @@
         sidebar.classList.toggle('hidden');
       });
     }
-
-    // Settings Modal Handling
-    if (settingsButton) {
-      settingsButton.addEventListener('click', function () {
-        settingsModal.classList.remove('hidden');
-      });
-    }
-
-    if (closeSettings) {
-      closeSettings.addEventListener('click', function () {
-        settingsModal.classList.add('hidden');
-      });
-    }
-
-    // Profile Dialog Toggle
-    if (profileButton) {
-      profileButton.addEventListener('click', () => {
-        profileDialog.classList.toggle('hidden');
-      });
-    }
-
-    // Create Classroom Form Handling
-    // const createClassForm = document.getElementById('createClassForm');
-    // if (createClassForm) {
-    //   createClassForm.addEventListener('submit', function (e) {
-    //     // e.preventDefault();
-    //     const className = document.getElementById('className').value;
-    //     if (className) {
-    //       const classList = document.getElementById('classList');
-    //       const newClassItem = document.createElement('li');
-    //       newClassItem.classList.add('flex', 'items-center', 'p-2', 'text-gray-700', 'hover:bg-gray-200', 'rounded-md');
-    //       newClassItem.innerHTML = `<i class="fa-solid fa-chalkboard mr-2"></i><span>${className}</span>`;
-    //       classList.appendChild(newClassItem);
-    //     }
-    //   });
-    // }
-  });
+  })
 
   //generate
-const generateClassroomCode = document.querySelector('#generateClassroomCode');
-const inputCode = document.querySelector('#code');
+    const generateClassroomCode = document.querySelector('#generateClassroomCode');
+    const inputCode = document.querySelector('#code');
 
-generateClassroomCode.addEventListener('click', (event) => {
-  event.preventDefault(); // Prevent the form from being submitted
+    generateClassroomCode.addEventListener('click', (event) => {
+    event.preventDefault(); // Prevent the form from being submitted
 
-  const length = 8; // Define the length inside the function
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let code = '';
+    const length = 8; // Define the length inside the function
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let code = '';
 
-  for (let i = 0; i < length; i++) {
+    for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * characters.length);
     code += characters[randomIndex];
-  }
+    }
 
-  inputCode.value = code; // Use `value` to set the input field's value
-});
+   inputCode.value = code; // Use `value` to set the input field's value
+    });
 
 </script>
-
 
 </body>
 

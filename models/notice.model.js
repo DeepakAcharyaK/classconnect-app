@@ -17,9 +17,7 @@ const noticeSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Classroom',
   },
-  attachedFile: {
-    type: String, // Stores the path or URL of the attached file
-  },
+  attachedFile: [String], 
   coverImage: {
     type: String, // Stores the path or URL of the cover image
   },

@@ -1,0 +1,125 @@
+<%- include('../components/header') %>
+
+<body>
+    <%- include('../components/navbar',{teacher}) %>
+    <%- include('../components/sidebar',{teacher}) %>
+
+    <div class="outer md:ml-64 relative md:mt-20">
+        <div id="quiz-popup" class="bg-gray-600 bg-opacity-50 flex justify-center items-center">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-2/3">
+              <h2 class="text-xl font-bold mb-4">Create Quiz</h2>
+          
+              <form id="quiz-form">
+                <div id="quiz-questions">
+                  <div class="quiz-question mb-4">
+                    <label class="block mb-2">Question 1</label>
+                    <input type="text" name="question" placeholder="Enter your question" class="w-full p-2 border rounded mb-2" required>
+          
+                    <label class="block mb-2">Options</label>
+                    <input type="text" name="options" placeholder="Option 1" class="w-full p-2 border rounded mb-2" required>
+                    <input type="text" name="options" placeholder="Option 2" class="w-full p-2 border rounded mb-2" required>
+                    <input type="text" name="options" placeholder="Option 3" class="w-full p-2 border rounded mb-2" required>
+                    <input type="text" name="options" placeholder="Option 4" class="w-full p-2 border rounded mb-2" required>
+          
+                    <label class="block mb-2">Correct Answer (Choose the correct option number)</label>
+                    <input type="number" name="correctAnswer" min="1" max="4" class="w-full p-2 border rounded mb-2" required>
+          
+                    <label class="block mb-2">Time to Answer (in seconds)</label>
+                    <input type="number" name="time" class="w-full p-2 border rounded mb-2" required>
+          
+                    <label class="block mb-2">Score for the Question</label>
+                    <input type="number" name="score" class="w-full p-2 border rounded mb-2" required>
+                  </div>
+                </div>
+          
+                <button type="button" id="add-question" class="mt-4 bg-blue-500 text-white py-2 px-4 rounded">Add Another Question</button>
+                <button type="submit" class="mt-4 bg-green-500 text-white py-2 px-4 rounded">Upload Quiz</button>
+                <button type="button" id="close-quiz-popup" class="mt-4 bg-red-500 text-white py-2 px-4 rounded">Cancel</button>
+              </form>
+            </div>
+        </div>
+    </div>
+    
+      
+      <script>
+        let questionCount = 1;
+        // const quizPopup = document.getElementById('quiz-popup');
+        const quizForm = document.getElementById('quiz-form');
+        const addQuestionButton = document.getElementById('add-question');
+        const closeQuizPopup = document.getElementById('close-quiz-popup');
+      
+        // Show popup
+        // function showQuizPopup() {
+        //   quizPopup.classList.remove('hidden');
+        // }
+      
+        // Add another question input
+        addQuestionButton.addEventListener('click', function () {
+          questionCount++;
+          const newQuestion = document.createElement('div');
+          newQuestion.classList.add('quiz-question', 'mb-4');
+          newQuestion.innerHTML = `
+            <label class="block mb-2">Question ${questionCount}</label>
+            <input type="text" name="question" placeholder="Enter your question" class="w-full p-2 border rounded mb-2" required>
+      
+            <label class="block mb-2">Options</label>
+            <input type="text" name="options" placeholder="Option 1" class="w-full p-2 border rounded mb-2" required>
+            <input type="text" name="options" placeholder="Option 2" class="w-full p-2 border rounded mb-2" required>
+            <input type="text" name="options" placeholder="Option 3" class="w-full p-2 border rounded mb-2" required>
+            <input type="text" name="options" placeholder="Option 4" class="w-full p-2 border rounded mb-2" required>
+      
+            <label class="block mb-2">Correct Answer (Choose the correct option number)</label>
+            <input type="number" name="correctAnswer" min="1" max="4" class="w-full p-2 border rounded mb-2" required>
+      
+            <label class="block mb-2">Time to Answer (in seconds)</label>
+            <input type="number" name="time" class="w-full p-2 border rounded mb-2" required>
+      
+            <label class="block mb-2">Score for the Question</label>
+            <input type="number" name="score" class="w-full p-2 border rounded mb-2" required>
+          `;
+          document.getElementById('quiz-questions').appendChild(newQuestion);
+        });
+      
+        // Submit quiz form
+        quizForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          const formData = new FormData(quizForm);
+          const questions = [];
+      
+          // Collect all questions
+          for (let i = 0; i < formData.getAll('question').length; i++) {
+            questions.push({
+              question: formData.getAll('question')[i],
+              options: formData.getAll('options').slice(i * 4, i * 4 + 4),  // Extract 4 options per question
+              correctAnswer: formData.getAll('correctAnswer')[i],
+              time: formData.getAll('time')[i],
+              score: formData.getAll('score')[i],
+            });
+          }
+      
+          // Send data to backend
+          const response = await fetch('/teacher/teacherHome/<%= teacher._id %>/quiz/create', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ questions }),
+          });
+      
+          if (response.ok) {
+            alert('Quiz uploaded successfully!');
+            quizPopup.classList.add('hidden');
+          } else {
+            alert('Failed to upload the quiz.');
+          }
+        });
+      
+        // Close the popup
+        closeQuizPopup.addEventListener('click', function () {
+          quizPopup.classList.add('hidden');
+        });
+      </script>
+      
+</body>
+
+<%- include('../components/footer') %>

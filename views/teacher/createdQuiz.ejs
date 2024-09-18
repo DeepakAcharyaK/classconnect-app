@@ -1,0 +1,28 @@
+<%- include('../components/header') %>
+
+<body>
+    <%- include('../components/navbar',{teacher}) %>
+    <%- include('../components/sidebar',{teacher}) %>
+
+    <div class="container mx-auto p-6">
+        <h2 class="text-2xl font-bold mb-4">My Created Quizzes</h2>
+      
+        <% if (quizzes.length > 0) { %>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <% quizzes.forEach(quiz => { %>
+              <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-bold mb-2">Quiz Created On: <%= new Date(quiz.createdAt).toLocaleDateString() %></h3>
+                <p class="mb-2">Number of Questions: <%= quiz.questions.length %></p>
+      
+                <a href="/teacherHome/<%= teacher._id %>/quiz/<%= quiz._id %>" class="inline-block bg-blue-500 text-white py-2 px-4 rounded">View Quiz</a>
+              </div>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <p class="text-gray-700">No quizzes created yet.</p>
+        <% } %>
+      </div>
+      
+</body>
+
+<%- include('../components/footer') %>

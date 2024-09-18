@@ -1,0 +1,79 @@
+<%- include('../components/header') %>
+
+<body>
+    <div class="cardscontainer w-full h-full">
+        <%- include('../components/navbar', { teacher }) %>  
+        <%- include('../components/sidebar') %>
+
+        <main class="main-container p-4 md:ml-64 md:mt-28 h-full ">
+            <div id="" class=" flex items-center justify-center">
+                <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                  <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
+                  <form id="editProfileForm" action="/teacher/<%=teacher._id%>/profile/update" method="post" enctype="multipart/form-data">
+                    <div class="mb-4">
+                      <label for="uid" class="block text-gray-700">UID</label>
+                      <input type="text" id="uid" name="uid" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= teacher.uid %>" readonly>
+                    </div>
+                    <div class="mb-4">
+                      <label for="name" class="block text-gray-700">Name</label>
+                      <input type="text" id="teacherName" name="name" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= teacher.name %>">
+                    </div>
+                    <div class="mb-4">
+                      <label for="email" class="block text-gray-700">Email</label>
+                      <input type="email" name="email" id="teacherEmail" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= teacher.email %>">
+                    </div>
+                    <div class="mb-4">
+                      <label for="phone" class="block text-gray-700">Phone</label>
+                      <input type="text" name="phone" id="teacherPhone" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= teacher.phone %>">
+                    </div>
+                    <div class="mb-4">
+                      <label for="profileimg" class="block text-gray-700">Profile Image</label>
+                      <input type="file" name="profileimg" id="teacherProfileImage" class="mt-1 w-full border border-gray-300 rounded-lg">
+                    </div>
+                    <div class="flex justify-end">
+                      <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Update</button>
+                    </div>
+                  </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- <script>
+        // Clear the form after successful submission
+        const editProfileForm = document.getElementById('editProfileForm');
+
+        editProfileForm.addEventListener('submit', function (event) {
+            // Wait for the form to submit and clear inputs
+            editProfileForm.reset();
+        });
+    </script> -->
+</body>
+
+<%- include('../components/footer') %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

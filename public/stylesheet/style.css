@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Baloo+Bhaijaan+2:wght@400..800&family=Gloria+Hallelujah&family=Maven+Pro:wght@400..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Niconne&family=Petemoss&display=swap');
+
+*{
+  font-family: "Baloo Bhaijaan 2", sans-serif;
+}
+
+
 /* student homepage */
 .menu-name:hover{
     font-weight: 600;

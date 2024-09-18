@@ -5,6 +5,12 @@ const classroomSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  subjectCode: {
+    type: String,
+  },
+  coverImage: {
+    type: String,
+  },
   code: {
     type: String,
     required: true,

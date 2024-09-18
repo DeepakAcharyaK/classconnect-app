@@ -1,47 +1,18 @@
 const mongoose=require('mongoose')
 
-const quizSchema=new mongoose.Schema({
-        classroomfrom:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'Classroom'
-        },
-        createdby: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'createdbyModel'  // Dynamically references the model specified in 'createdbyModel'
-        },
-        createdbyModel: {
-            type: String,
-            required: true,
-            enum: ['Teacher', 'Placementofficer']  // Restricts to the allowed model names
-        },
-        title:{
-            type:String
-        },
-        description:{
-            type:String
-        },
-        questions:[
-          {
-            // question_id: ObjectId(...),
-            questiontext: String,
-            options: [
-              {
-                optiontext: String,
-                iscorrect: Boolean
-              }
-            ],
-            createdat: Date,
-            updatedat: Date
-          }
-        ],
-        duration: {
-            type:Number
-        },
-        totalmarks:{
-            type:Number
-        } 
+const QuizSchema = new mongoose.Schema({
+  questions: [
+    {
+      question: { type: String, required: true },
+      options: [{ type: String, required: true }],
+      correctAnswer: { type: Number, required: true },  // Store the correct option index
+      time: { type: Number, required: true },  // Time to answer in seconds
+      score: { type: Number, required: true },  // Score for this question
+    },
+  ],
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher', required: true }
 },{
-    timestamps:true
-})
+  timestamps:true
+});
 
-module.exports=mongoose.model('Quiz',quizSchema)
+module.exports=mongoose.model('Quiz',QuizSchema)

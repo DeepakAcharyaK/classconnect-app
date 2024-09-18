@@ -1,0 +1,63 @@
+<div id="sidebar" class="fixed inset-0 bg-gray-800 bg-opacity-75 z-50 hidden md:flex md:flex-col md:w-64 md:fixed md:top-0 md:left-0 md:h-full">
+    <div class="flex flex-col flex-grow bg-white p-4 space-y-4">
+      <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
+      <ul class="space-y-2">
+        <li>
+          <a href="/teacher/teacherHome/<%= teacher._id %>/" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
+            <i class="fa-solid fa-house mr-2"></i>
+            <span>Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="/teacher/teacherHome/<%= teacher._id %>/#create-class" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
+            <i class="fa-solid fa-chalkboard-teacher mr-2"></i>
+            <span>Create Classroom</span>
+          </a>
+        </li>
+        <li>
+          <a href="/teacher/teacherHome/<%= teacher._id %>/#announcements" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
+            <i class="fa-solid fa-bullhorn mr-2"></i>
+            <span>Announcements</span>
+          </a>
+        </li>
+        <li>
+          <a href="/teacher/teacherHome/<%= teacher._id %>/quiz/create" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
+            <i class="fa-solid fa-brain mr-2"></i>
+            <span>Create Quiz</span>
+          </a>
+        </li>
+        <!-- Settings Menu Option -->
+        <li>
+          <a href="/teacher/teacherHome/<%= teacher._id %>/profile/settings" id="settingsButton" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
+            <i class="fa-solid fa-cog mr-2"></i>
+            <span>Settings</span>
+          </a>
+        </li>
+         <hr>
+
+         <li>
+          <a href="/teacher/teacherHome/<%= teacher._id %>/allcreatedclassess" id="settingsButton" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
+            <i class="fa-solid fa-chalkboard-teacher mr-2"></i>
+            <span>Created classess</span>
+          </a>
+        </li>
+         <li>
+          <a href="/teacher/teacherHome/<%= teacher._id %>/allpublishedaccouncements" id="settingsButton" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
+            <i class="fa-solid fa-bullhorn mr-2"></i>
+            <span>Published Announcement</span>
+          </a>
+        </li>
+        <li>
+          <a href="/teacher/teacherHome/<%= teacher._id %>/quiz/myquizzes" id="settingsButton" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
+            <i class="fa-solid fa-brain mr-2"></i>
+            <span>Quiz Created</span>
+          </a>
+        </li>
+
+      </ul>
+      <div class="flex-grow"></div>
+      <a href="/teacher/logout" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+        <button id="logout" class="w-full h-full">Logout</button>
+      </a>
+    </div>
+  </div>

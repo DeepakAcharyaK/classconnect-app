@@ -1,0 +1,56 @@
+<nav class="bg-white w-full fixed top-0 z-50 shadow-md">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <span class="text-lg font-semibold text-gray-700">classConnect</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <div class="relative">
+          <button id="profile-button" class="ml-4 w-12 h-12 flex items-center  justify-center rounded-full overflow-hidden bg-slate-400 object-cover object-center hover:bg-gray-100">
+            <img src="<%= teacher.profileimg %>" class="w-10 h-10 rounded-full bg-white object-center object-cover " />
+          </button>
+          <!-- Profile Dialog Box -->
+          <div id="profile-dialog" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl p-4">
+            <div class="flex flex-col items-center text-center">
+              <img src="<%= teacher.profileimg %>" alt="User Avatar" class="w-16 h-16 rounded-full object-cover object-center " />
+              <p class="text-gray-900 text-xl font-bold">Hi, <%= teacher.name %></p>
+              <p class="text-gray-700 font-semibold mt-2"><%= teacher.email %></p>
+              <a href="/teacher/teacherHome/<%= teacher._id %>/profile/settings"><button id="" class="mt-2 px-4 py-2 text-blue-600 border rounded-lg font-semibold hover:bg-blue-50">Manage your Account</button></a>
+            </div>
+
+            <!-- Actions -->
+            <div class="mt-4 space-y-2">
+              <a href="/teacher/logout">
+                <button  class="w-full flex items-center justify-center p-2 text-gray-700 border border-gray-200   rounded-lg hover:bg-gray-50">
+                  <span>Sign out</span>
+                </button>
+              </a>
+            </div>
+            <!-- Footer Links -->
+            <div class="mt-4 flex justify-center space-x-2 text-xs text-gray-500">
+              <a href="#" class="hover:underline">Privacy policy</a>
+              <span>·</span>
+              <a href="#" class="hover:underline">Terms of service</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <script>
+    // Select the profile button and the profile dialog
+    const profileButton = document.getElementById('profile-button');
+    const profileDialog = document.getElementById('profile-dialog');
+
+    // Toggle the visibility of the profile dialog when the profile button is clicked
+    profileButton.addEventListener('click', function () {
+        profileDialog.classList.toggle('hidden');
+    });
+
+    // Close the profile dialog when clicking outside
+    window.addEventListener('click', function (event) {
+        if (!profileButton.contains(event.target) && !profileDialog.contains(event.target)) {
+            profileDialog.classList.add('hidden');
+        }
+    });
+</script>
