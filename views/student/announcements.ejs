@@ -1,0 +1,68 @@
+<%- include('../components/header') %>
+
+<body class="bg-gray-200 overflow-x-hidden">
+
+    <%- include('./studentNavbar', {student}) %>
+    <%- include('./studentSidebar', {student, quiz}) %>
+
+    <div class="w-screen h-auto gap-5 flex flex-wrap justify-evenly p-5" style="margin-top: 100px;">
+        <% 
+            // Sort announcements by createdAt in descending order
+            const sortedAnnouncements = announcement.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); 
+        %>
+        
+        <% if (sortedAnnouncements.length === 0) { %>
+            <!-- No announcements message -->
+            <div class="flex items-center justify-center w-full h-64">
+                <p class="text-gray-600 text-xl">No announcements available.</p>
+            </div>
+        <% } else { %>
+            <% sortedAnnouncements.forEach((announce) => { %>
+                <a href="/student/<%= student._id %>/announcement/<%= announce._id %>/details">
+                <!-- Announcement Card -->
+                <div 
+                    class="bg-white rounded-lg shadow-2xl md:w-80 md:max-h-96 m-4 transition-transform transform hover:scale-105 cursor-pointer" 
+                    onclick="handleCardClick(this)" 
+                >
+                    <div class="p-4 flex items-center">
+                        <div class="rounded-full h-10 w-10 flex overflow-hidden items-center justify-center">
+                            <img src="<%= announce.createdby.profileimg %>" alt="" class="w-full h-full object-center object-cover">
+                        </div>
+                        <div class="ml-4">
+                            <div class="font-bold"><%= announce.createdby.name %></div>
+                            <div class="text-gray-500 text-sm">Posted on <%= new Date(announce.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></div>
+                        </div>
+                        <div class="ml-auto">
+                            <i class="fas fa-ellipsis-v text-gray-500"></i>
+                        </div>
+                    </div>
+                    <div class="bg-gray-300 h-40 flex items-center justify-center overflow-hidden">
+                        <img src="<%= announce.coverImage %>" alt="Announcement cover image" class="object-cover w-full h-full">
+                    </div>
+                    <div class="p-4">
+                        <div class="font-bold">
+                            <i class="fa-solid text-red-600 fa-xl fa-bullhorn"></i><%= announce.title %>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <% }) %>
+        <% } %>
+    </div>
+
+    <script>
+        function handleCardClick(card) {
+            // Add a click effect, e.g., change background color temporarily
+            card.classList.add('bg-gray-100'); // Change background on click
+
+            // Remove the effect after a short delay
+            setTimeout(() => {
+                card.classList.remove('bg-gray-100');
+            }, 200);
+        }
+    </script>
+</body>
+
+<%- include('../components/footer') %>
+
+

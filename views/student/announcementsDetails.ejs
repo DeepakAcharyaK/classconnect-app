@@ -1,0 +1,64 @@
+<%- include('../components/header') %>
+
+<body class="bg-gray-50 text-gray-900 font-sans antialiased">
+
+  <!-- Navbar -->
+  <%- include('./studentNavbar', { student }) %>
+  
+  <!-- Sidebar -->
+  <%- include('./studentSidebar', { student, quiz }) %>
+
+  <!-- Main Container -->
+  <div class="container mx-auto px-4 py-12 relative z-10">
+
+    <!-- Background Cover Image -->
+    
+    <!-- Announcement Card -->
+    <div class="relative bg-white shadow-2xl rounded-xl overflow-hidden backdrop-filter backdrop-blur-lg bg-opacity-70 border border-gray-200" style="margin-top: 80px;">
+      <div class="absolute inset-0 bg-center bg-cover" style="background-image: url('<%= announcement.coverImage %>'); opacity: 0.3;"></div>
+      
+      <!-- Announcement Title and Banner -->
+      <div class="relative bg-gradient-to-br from-indigo-600 to-purple-600 text-white p-6">
+        <h1 class="text-4xl text-red-600 font-bold"><%= announcement.title %></h1>
+        <p class="mt-2 text-lg opacity-90"><%= announcement.subtitle || "" %></p>
+      </div>
+      
+      <!-- Announcement Content -->
+      <div class="p-8 space-y-6">
+        <p class="text-lg leading-relaxed "><%= announcement.content %></p>
+
+        <!-- Creator and Date Information -->
+        <div class="flex flex-col md:flex-row md:justify-between items-center border-t border-gray-200 pt-4">
+          <p class="">
+            <span class="font-semibold">Created by:</span> <%= announcement.createdby.name %>
+          </p>
+          <p class=" mt-2 md:mt-0">
+            <span class="font-semibold">Posted on:</span> <%= announcement.createdAt.toDateString() %>
+          </p>
+        </div>
+
+        <!-- Attached Files Section -->
+        <div class="mt-8">
+          <h4 class="text-xl font-semibold mb-4">Attached Files</h4>
+          
+          <% if (announcement.attachedFile && announcement.attachedFile.length > 0) { %>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <% announcement.attachedFile.forEach(function(file) { %>
+              <div class="group relative bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transform transition duration-300 hover:scale-105 border border-gray-100">
+                <a href="<%= file %>" target="_blank" class="flex items-center text-blue-600 group-hover:text-blue-800 hover:underline transition-colors duration-300">
+                  <i class="fas fa-file-alt mr-2"></i> <span class="truncate"><%= file.split('/').pop() %></span>
+                </a>
+              </div>
+            <% }); %>
+          </div>
+          <% } else { %>
+            <p class="text-gray-500">No attached files available.</p>
+          <% } %>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  </body>
+
+<%- include('../components/footer') %>

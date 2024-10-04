@@ -1,32 +1,29 @@
 <%- include('../components/header') %>
 
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
-
-  <!-- Navbar -->
-  <%- include('../components/navbar',{ teacher }) %>  
-  
-  <!-- Sidebar -->
+  <%- include('../components/navbar', { teacher }) %>  
   <%- include('../components/sidebar') %>
 
   <!-- Main Content -->
-  <main class="main-container p-4 md:ml-64 md:mt-28 ">
+  <main class="main-container p-4 md:ml-64 md:mt-28">
     <%- include('../components/snackbar', { 
       successMessage: successMessage, 
       errorMessage: errorMessage 
     }) %>
-    <div class="inisde-main-container flex flex-col gap-3 justify-evenly mx-auto ">
 
+    <div class="inside-main-container flex flex-col gap-3 justify-evenly mx-auto">
+      
       <!-- Create Classroom Section -->
-      <section id="create-class" class=" bg-white p-6 rounded-lg shadow-md mt-0 mb-6 w-full">
+      <section id="create-class" class="bg-white p-6 rounded-lg shadow-md mt-0 mb-6 w-full">
         <h2 class="text-2xl font-semibold mb-4">Create Classroom</h2>
         <form id="createClassForm" action="/teacher/teacherHome/<%= teacher._id %>/classroom/create" method="post" enctype="multipart/form-data">
           <div class="mb-4">
             <label for="className" class="block text-gray-700">Class Name</label>
-            <input type="text" id="className" name="className" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter class name">
+            <input type="text" id="className" name="className" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter class name" required>
           </div>
           <div class="mb-4">
             <label for="subjectCode" class="block text-gray-700">Subject Code</label>
-            <input type="text" id="subjectCode" name="subjectCode" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter subject code">
+            <input type="text" id="subjectCode" name="subjectCode" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter subject code" required>
           </div>
           <div class="mb-4">
             <label for="coverImage" class="block text-gray-700">Cover Image</label>
@@ -34,13 +31,11 @@
           </div>
           <div class="mb-4">
             <label for="code" class="block text-gray-700">Code</label>
-            <input type="text" id="code" name="classCode" class="mt-1 px-4 py-2 w-1/5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" readonly>
-            <button id="generateClassroomCode" class="generateClassroomCode relative right-16 px-2 py-2 bg-slate-800 text-white rounded-full">generate</button>
+            <input type="text" id="code" name="classCode" class="mt-1 px-4 py-2 w-1/5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" readonly required>
+            <button id="generateClassroomCode" class="generateClassroomCode relative right-16 px-2 py-2 bg-slate-800 text-white rounded-full">Generate</button>
           </div>
           <div class="flex justify-end">
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-              Create Class
-            </button>
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Create Class</button>
           </div>
         </form>
       </section>
@@ -48,11 +43,10 @@
       <!-- Announcements Section -->
       <section id="announcements" class="bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-2xl font-semibold mb-4">Announcements</h2>
-        <!-- Add enctype attribute to handle file uploads -->
-        <form action="/teacher/teacherHome/<%=teacher._id%>/announcements/create" method="post" enctype="multipart/form-data">
+        <form action="/teacher/teacherHome/<%= teacher._id %>/announcements/create" method="post" enctype="multipart/form-data">
           <div class="mb-4">
             <label for="announcementTitle" class="block text-gray-700">Announcement Title</label>
-            <input type="text" id="announcementTitle" name="announcementTitle" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter announcement title">
+            <input type="text" id="announcementTitle" name="announcementTitle" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter announcement title" required>
           </div>
           <div class="mb-4">
             <label for="announcementBody" class="block text-gray-700">Announcement Body</label>
@@ -61,7 +55,7 @@
           <!-- File attachment input -->
           <div class="mb-4">
             <label for="announcementFile" class="block text-gray-700">Attach File</label>
-            <input type="file" id="announcementFile" name="attachedFiles" class="mt-1 w-full text-gray-700">
+            <input type="file" multiple id="announcementFile" name="attachedFiles" class="mt-1 w-full text-gray-700">
           </div>
           <!-- Cover image input -->
           <div class="mb-4">
@@ -69,52 +63,49 @@
             <input type="file" id="coverImage" name="coverImage" class="mt-1 w-full text-gray-700">
           </div>
           <div class="flex justify-end">
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-              Post Announcement
-            </button>
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Post Announcement</button>
           </div>
         </form>
       </section>
-      
 
     </div>
   </main>
   
   <!-- Script for Sidebar Toggle and Modal Handling -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const menuToggle = document.getElementById('menuToggle');
-    const sidebar = document.getElementById('sidebar');
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const menuToggle = document.getElementById('menuToggle');
+      const sidebar = document.getElementById('sidebar');
 
-    // Sidebar Toggle
-    if (menuToggle) {
-      menuToggle.addEventListener('click', function () {
-        sidebar.classList.toggle('hidden');
-      });
-    }
-  })
+      // Sidebar Toggle
+      if (menuToggle) {
+        menuToggle.addEventListener('click', function () {
+          sidebar.classList.toggle('hidden');
+        });
+      }
+    });
 
-  //generate
+    // Generate classroom code
     const generateClassroomCode = document.querySelector('#generateClassroomCode');
     const inputCode = document.querySelector('#code');
 
     generateClassroomCode.addEventListener('click', (event) => {
-    event.preventDefault(); // Prevent the form from being submitted
+      event.preventDefault(); // Prevent the form from being submitted
 
-    const length = 8; // Define the length inside the function
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let code = '';
+      const length = 8; // Define the length inside the function
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let code = '';
 
-    for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    code += characters[randomIndex];
-    }
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        code += characters[randomIndex];
+      }
 
-   inputCode.value = code; // Use `value` to set the input field's value
+      inputCode.value = code; // Use `value` to set the input field's value
     });
-
-</script>
+  </script>
 
 </body>
 
 <%- include('../components/footer') %>
+

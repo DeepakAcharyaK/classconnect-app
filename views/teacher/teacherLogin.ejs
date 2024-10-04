@@ -1,27 +1,27 @@
 <%- include('../components/header') %>
 
-<body class="bg-gray-100">
+<body style="background-color: #DEE6E8;">
     <div class="flex justify-center items-center min-h-screen">
         <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
             <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Sign In</h2>
-           
             <%- include('../components/snackbar', { 
                 successMessage: successMessage, 
                 errorMessage: errorMessage 
             }) %>
-              
-            <form action="/teacher/login" method="post">
+            <form id="loginForm" action="/teacher/login" method="post" novalidate>
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
                     <input type="email" id="email" name="email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="yoursemail@gmail.com">
+                    <span id="emailError" class="text-red-600 text-sm hidden">Please enter a valid email.</span>
                 </div>
                 <div class="mb-4">
                     <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                     <input type="password" id="password" name="password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="******">
+                    <span id="passwordError" class="text-red-600 text-sm hidden">Password must be at least 6 characters long.</span>
                 </div>
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <input type="checkbox" id="remember" name="remember" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <input type="checkbox" id="terms" name="terms" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" required>
                         <label for="remember" class="ml-2 block text-sm text-gray-900">Remember me</label>
                     </div>
                     <div>
@@ -33,9 +33,45 @@
                 </div>
             </form>
             <p class="mt-4 text-center text-sm text-gray-600">Don't have an account? <a href="/teacher/register" class="text-indigo-600 hover:underline">Register</a></p>
-
         </div>
     </div>
+
+    <script src="/javascripts/validationUtility.js"></script>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            const fields = [
+                {
+                    field: document.getElementById('email'),
+                    errorElement: document.getElementById('emailError'),
+                    validations: [
+                        { type: 'required', message: 'Email is required' },
+                        { type: 'email', message: 'Please enter a valid email address' }
+                    ]
+                },
+                {
+                    field: document.getElementById('password'),
+                    errorElement: document.getElementById('passwordError'),
+                    validations: [
+                        { type: 'required', message: 'Password is required' },
+                        { type: 'minLength', length: 6, message: 'Password must be at least 6 characters long' }
+                    ]
+                },
+                {
+                field: document.getElementById('terms'),
+                errorElement: document.getElementById('termsError'),
+                validations: [
+                    { type: 'required', message: 'You must agree to the terms' }
+                ]
+                }
+            ];
+
+            const isValid = validateForm(fields);
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    </script>
 </body>
 
 <%- include('../components/footer') %>

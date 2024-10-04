@@ -2,31 +2,32 @@
 
 <body>
     <div class="cardscontainer w-full h-full">
-        <%- include('../components/navbar',{ teacher }) %>  
+        <%- include('../components/navbar', { teacher }) %>  
         <%- include('../components/sidebar') %>
 
         <main class="main-container p-4 md:ml-64 md:mt-28 h-full ">
+            <%- include('../components/snackbar', { 
+                successMessage: successMessage, 
+                errorMessage: errorMessage 
+            }) %>
+            
             <h2 class="text-xl font-bold mb-4 text-center">Your Announcements</h2>
             <div class="flex flex-wrap align-top justify-start gap-3 relative">
                 <% announcements.forEach(announcement => { %>
                     <div class="w-72 h-80 bg-white p-4 rounded-lg shadow-md relative" id="announcement-<%= announcement._id %>">
+                        <a href="/teacher/announcement/details/<%= announcement._id %>"> <!-- Link to details page -->
+                            <% if (announcement.coverImage) { %>
+                                <img src="<%= announcement.coverImage %>" alt="announcement_post" class="h-36 w-full object-fill object-center">
+                            <% } else { %>
+                                <img src="https://thumbs.dreamstime.com/b/important-announcement-news-label-megaphone-vector-illustration-important-announcement-news-label-megaphone-334602537.jpg?w=768" alt="announcement_post" class="h-36 w-full object-fill object-center">
+                            <% } %> 
+                            <h3 class="text-lg font-semibold text-center text-red-600">
+                                <%= announcement.title %>
+                            </h3>
+                        </a>
                         <button class="absolute top-2 right-2 rounded-full bg-gray-100 delete-announcement" data-id="<%= announcement._id %>">
                             <i class="fa-solid fa-trash p-3" style="color: #f52500;"></i>
                         </button>
-                        <% if(announcement.coverImage){ %>
-                            <img src="<%= announcement.coverImage %>" alt="announcement_post" class="h-36 w-full object-fill object-center">
-                        <% } else { %>
-                            <img src="https://thumbs.dreamstime.com/b/important-announcement-news-label-megaphone-vector-illustration-important-announcement-news-label-megaphone-334602537.jpg?w=768" alt="announcement_post" class="h-36 w-full object-fill object-center">
-                        <% } %> 
-                        <h3 class="text-lg font-semibold text-center text-red-600">
-                            <%= announcement.title %>
-                        </h3>
-                        <p class="text-gray-700 mt-2">
-                            <%= announcement.content %>
-                        </p>
-                        <% announcement.attachedFile.forEach(file => { %>
-                            <a href="<%= file %>" class="text-blue-500 underline mt-2" target="_blank">View/Download</a>
-                        <% }); %>
                         <p class="text-sm text-gray-400 mt-4">
                             Created on: <%= new Date(announcement.createdAt).toLocaleDateString() %>
                         </p>
@@ -37,7 +38,6 @@
         
     </div>
 </body>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -76,5 +76,4 @@
     });
 </script>
 
-    
-<%- include('../components/footer') %>
+<%- include('../components/footer') %>  

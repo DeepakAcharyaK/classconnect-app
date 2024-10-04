@@ -1,0 +1,42 @@
+<%- include('../components/header') %>
+
+<body class="w-full h-screen overflow-hidden flex justify-center items-center">
+    
+    <%- include('./studentNavbar', {student}) %>
+    <%- include('./studentSidebar', {student, quiz}) %>
+
+    <!-- Main container for the suggestion form -->
+    <div class="max-w-xl md:w-1/2 mx-auto mt-10 p-6 bg-gray-200 shadow-lg rounded-lg">
+        <h2 class="text-2xl font-bold mb-4 text-center text-gray-800">Suggestion Box</h2>
+      
+        <!-- Suggestion form: the action route submits the suggestion -->
+        <form id="suggestionForm" action="/student/<%= student._id %>/class/comment" method="post">
+            <!-- Textarea for writing the suggestion -->
+            <div class="mb-4">
+                <label for="suggestion" class="block text-gray-700 font-bold mb-2">Drop Your Suggestion</label>
+                <textarea
+                    id="suggestion"
+                    name="content"
+                    rows="5"
+                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="Enter your suggestion here..."
+                    required
+                ></textarea>
+            </div>
+
+            <!-- Hidden input fields to send additional data -->
+            <input type="text" value="admin" name="type" hidden> <!-- Type of suggestion -->
+            <input type="text" value="<%= admin._id %>" name="targetId" hidden> <!-- Admin ID (target) -->
+            <input type="text" value="<%= student._id %>" name="createdBy" hidden> <!-- Student ID (creator) -->
+
+            <!-- Submit button -->
+            <button
+                type="submit"
+                class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300">
+                Send Suggestion
+            </button>
+        </form>
+    </div>
+</body>
+
+<%- include('../components/footer') %>

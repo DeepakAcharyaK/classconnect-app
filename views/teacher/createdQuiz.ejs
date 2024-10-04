@@ -1,28 +1,53 @@
 <%- include('../components/header') %>
 
-<body>
-    <%- include('../components/navbar',{teacher}) %>
-    <%- include('../components/sidebar',{teacher}) %>
+<body class="bg-gray-100">
+    <%- include('../components/navbar', { teacher }) %>
+    <%- include('../components/sidebar', { teacher }) %>
 
-    <div class="container mx-auto p-6">
-        <h2 class="text-2xl font-bold mb-4">My Created Quizzes</h2>
+    <div class="md:ml-64 md:mt-28">
+      <%- include('../components/snackbar', { 
+        successMessage: successMessage, 
+        errorMessage: errorMessage 
+      }) %>
       
-        <% if (quizzes.length > 0) { %>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <% quizzes.forEach(quiz => { %>
-              <div class="bg-white rounded-lg shadow-md p-4">
-                <h3 class="text-lg font-bold mb-2">Quiz Created On: <%= new Date(quiz.createdAt).toLocaleDateString() %></h3>
-                <p class="mb-2">Number of Questions: <%= quiz.questions.length %></p>
-      
-                <a href="/teacherHome/<%= teacher._id %>/quiz/<%= quiz._id %>" class="inline-block bg-blue-500 text-white py-2 px-4 rounded">View Quiz</a>
+        <div class="container mx-auto p-6">
+            <h2 class="text-3xl font-extrabold text-gray-800 mb-6">My Created Quizzes</h2>
+    
+            <% if (quizzes.length > 0) { %>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <% quizzes.forEach(quiz => { %>
+                  <div class="relative bg-white rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl p-6">
+                    <!-- Quiz Title and Creation Date -->
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4"> 
+                        <span><%= quiz.title %></span>
+                    </h3>
+                    <h1>Quiz Created On: <%= new Date(quiz.createdAt).toLocaleDateString() %></h1>
+                    <p class="text-gray-600 mb-4">Number of Questions: 
+                        <span class="font-bold"><%= quiz.questions.length %></span>
+                    </p>
+
+                    <!-- View Quiz Button -->
+                    <a href="/teacher/teacherHome/<%= teacher._id %>/quiz/<%= quiz._id %>" 
+                       class="block bg-gray-400 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out text-center">
+                       View Quiz
+                    </a>
+
+                    <!-- Delete Icon -->
+                    <form action="/teacher/teacherHome/<%= teacher._id %>/quiz/<%= quiz._id %>/delete" method="POST" class="absolute top-2 right-2">
+                      <button type="submit" class="text-red-500 hover:text-red-700">
+                        <i class="fa-solid fa-trash fa-lg"></i>
+                      </button>
+                    </form>
+                  </div>
+                <% }) %>
               </div>
-            <% }) %>
-          </div>
-        <% } else { %>
-          <p class="text-gray-700">No quizzes created yet.</p>
-        <% } %>
-      </div>
-      
+            <% } else { %>
+              <div class="text-center py-20">
+                <p class="text-xl text-gray-700 font-semibold">No quizzes created yet.</p>
+              </div>
+            <% } %>
+        </div>
+    </div> 
 </body>
 
 <%- include('../components/footer') %>

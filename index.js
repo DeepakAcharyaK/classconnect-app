@@ -15,8 +15,11 @@ app.use(session({
     secret: 'yourSecretKey', // Use a secure key in production
     resave: false,
     saveUninitialized: false,
-    // cookie: { maxAge:110000 } // Set to true if using HTTPS
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000, // 1 day in millisecond
+    }
 }));
+
   
  // Flash middleware
 app.use(flash());
@@ -40,6 +43,10 @@ app.use('/',landPageRoutes)
 app.use('/admin',adminRoutes)
 app.use('/student',studentRoutes)
 app.use('/teacher',teacherRoutes)
+
+app.use((req, res, next) => {
+    res.status(404).render('components/pageNotFound');
+});
 
 app.listen(process.env.PORT || 5500,()=>{
     console.log('Server is running on port',process.env.PORT )

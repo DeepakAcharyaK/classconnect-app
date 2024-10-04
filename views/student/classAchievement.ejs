@@ -1,0 +1,29 @@
+<%- include('../components/header') %>
+
+<body class="bg-gray-100">
+  <%- include('./studentNavbar',{student}) %>
+  <%- include('./studentSidebar',{student,quiz}) %>
+
+    <div class="container mx-auto" style="margin-top: 90px;padding: 0 20px;">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-10">Class Achievements Gallery</h1>
+
+        <!-- Responsive Gallery Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <% achievements.forEach(function(achievement) { %>
+                <div class="relative group overflow-hidden rounded-lg shadow-lg">
+                    <!-- Achievement Image -->
+                    <img src="<%= achievement.imageUrl %>" alt="Class Achievement Image" class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
+
+                    <!-- Overlay for Description -->
+                    <div class="absolute inset-0 bg-gray-800 bg-opacity-60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-white text-center px-4 font-medium text-lg"><%= achievement.description %></p>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</body>
+
+<%- include('../components/footer') %>
+
+-

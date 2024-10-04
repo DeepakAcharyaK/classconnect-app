@@ -1,0 +1,82 @@
+<%- include('../components/header') %>
+
+<body class="flex items-center justify-center min-h-screen" style="background-color:rgba(250, 245, 245, 0.87)">
+  <div class="fixed inset-0 flex items-center justify-center bg-opacity-50">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8 space-y-6">
+      
+      <!-- Quiz Result Header -->
+      <h2 class="text-3xl font-extrabold text-center text-gray-800">Quiz Results</h2>
+      
+      <!-- Score Display -->
+      <div class="text-center text-lg text-gray-700">
+        <p>Your Score: <span id="score" class="font-bold text-blue-600 text-2xl"><%= score %>/<%= total %></span></p>
+      </div>
+      <p class="text-center text-green-600 font-semibold mt-4">
+        Your response has been recorded successfully. Thank you for participating!
+      </p>
+      <!-- Horizontal Divider -->
+      <hr class="border-gray-200">
+  
+      <!-- Download Button -->
+      <div class="flex justify-center mt-4">
+        <button 
+          id="downloadAnswers" 
+          class="bg-blue-800 hover:bg-blue-900 transition-colors text-white font-semibold py-3 px-6 rounded-full shadow-md hover:shadow-lg transform hover:scale-105">
+          Download Answers
+        </button>
+      </div>
+  
+      <!-- Navigation Buttons -->
+      <div class="flex justify-between mt-6 space-x-4">
+        <a 
+          href="/student/home/<%= studentid %>" 
+          class="bg-gray-100 hover:bg-gray-300 transition-colors text-gray-500 font-semibold py-3 px-6 rounded-full shadow-md hover:shadow-lg transform hover:scale-105">
+          Home
+        </a>
+        <a 
+          href="/student/class/all/quiz" 
+          class="bg-gray-100 hover:bg-gray-300 transition-colors text-gray-500 font-semibold py-3 px-6 rounded-full shadow-md hover:shadow-lg transform hover:scale-105">
+          Search another quiz
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Include jsPDF for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
+  <script>
+    document.getElementById('downloadAnswers').addEventListener('click', function() {
+      // Access jsPDF
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      // Add Title
+      doc.setFontSize(18);
+      doc.text('Quiz Questions & Answers', 10, 10);
+      doc.setFontSize(12);
+  
+      // Loop through quiz questions and correct answers
+      const quiz = <%- JSON.stringify(quiz) %>;
+      let yPos = 20;  // Position for each line in the PDF
+  
+      quiz.questions.forEach((question, index) => {
+        // Add question
+        doc.text(`${index + 1}. ${question.question}`, 10, yPos);
+        yPos += 10;
+  
+        // Add correct answer
+        const correctOptionNumber = question.correctAnswer;
+        const correctAnswer = question.options[correctOptionNumber];
+        doc.text(`Correct Answer: ${correctAnswer}`, 10, yPos);
+        yPos += 10;
+      });
+  
+      // Save the PDF
+      doc.save('quiz-questions-and-answers.pdf');
+    });
+  </script>
+  
+</body>
+
+<% include('../components/footer') %>

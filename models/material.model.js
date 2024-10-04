@@ -16,11 +16,10 @@ const materialSchema=new mongoose.Schema({
         description:{
             type:String,
         },
-        fileurl:{
-            type:String
-        },
+        attachedFile: [String]
 },{
     timestamps:true
 })
 
 module.exports=mongoose.model('Material',materialSchema)
+

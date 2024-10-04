@@ -28,3 +28,4 @@ const noticeSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Notice', noticeSchema);
+

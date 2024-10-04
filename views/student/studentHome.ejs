@@ -1,162 +1,59 @@
 <%- include('../components/header') %>
 
-  <body class="bg-gray-100 font-sans leading-normal tracking-normal">
-    <!-- Navbar -->
-    <nav class="bg-white shadow">
-      <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div class="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="50" height="30" fill="currentColor"
-            class="btnshow cursor-pointer">
-            <path d="M3 4H21V6H3V4ZM3 11H15V13H3V11ZM3 18H21V20H3V18Z"></path>
-          </svg>
-          <span class="text-lg font-semibold text-gray-700">classConnect</span>
-        </div>
-        <div class="flex items-center">
-          <!-- Button to open the modal -->
-          <button id="openModal" class="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-            Join Class
-          </button>
-          <div id="modal" class="fixed inset-0 hidden bg-black bg-opacity-60  flex items-center justify-center">
-            <div class="bg-white rounded-lg overflow-hidden shadow-lg w-96 m-5">
-              <div class="px-6 py-4">
-                <div class="flex justify-between items-start">
-                 <div class="join-text">
-                  <h2 class="text-xl font-semibold text-gray-800">Join Class</h2>
-                  <p class=" text-gray-400 tracking-tighter rounded mt-2 mb-2">Ask your teacher for the class code, then enter it here.</p>
-                 </div>
-                  <button id="closeModal" class="text-gray-400 hover:text-gray-600">
-                    &times;
-                  </button>
-                </div>
-                <form class="mt-4">
-                  <div class="mb-4">
-                    <label for="classCode" class="block text-gray-700 font-medium">Class Code</label>
-                    <input type="text" id="classCode"
-                      class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                      placeholder="Enter class code" />
-                  </div>
-                  <div class="flex justify-end">
-                    <button type="button" id="submitForm"
-                      class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Join</button>
-                  </div>
-                </form>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+  <%- include('./studentNavbar', { student }) %>
+  <%- include('./studentSidebar', { student, quiz }) %>
+
+  <!-- Main Content -->
+  <main class="main-container p-4 md:mt-28">
+    <%- include('../components/snackbar', { 
+      successMessage: successMessage, 
+      errorMessage: errorMessage 
+    }) %>
+
+    <h1 class="text-2xl font-bold mb-4">Your Enrolled Classes</h1>
+
+    <% if (!classes || classes.length === 0) { %>
+      <p class="text-gray-600">You are not enrolled in any classes yet.</p>
+    <% } else { %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <% classes.forEach(function(classroom) { %>
+          <div class="bg-white shadow-lg rounded-lg overflow-hidden relative flex flex-col hover:shadow-2xl">
+            <div class="bg-blue-900 p-4 flex flex-row-reverse justify-between">
+              <div class="flex items-center">
+                <img src="<%= classroom.createdteacher.profileimg || 'https://images.pexels.com/photos/1642228/pexels-photo-1642228.jpeg?auto=compress&cs=tinysrgb&w=600' %>" 
+                     alt="Class Avatar" 
+                     class="w-20 h-20 rounded-full object-cover object-center border-2" />
+              </div>
+              <div class="flex flex-col justify-center items-start">
+                <h2 class="text-white font-semibold text-xl text-center mt-2"><%= classroom.name %></h2>
+                <h3 class="text-white text-sm">Instructor: <span class="text-lg"><%= classroom.createdteacher.name %></span></h3>
               </div>
             </div>
-          </div>
-
-          <!-- profile icon and dialogue box -->
-          <div class="relative">
-            <button id="profile-button" class="ml-4 w-12 h-12 flex items-center  justify-center rounded-full overflow-hidden object-cover object-center hover:bg-gray-100">
-              <img src="<%= user.profileimg %>" alt="User Avatar" class="w-10 h-10 rounded-full " />
-            </button>
-            <!-- Profile Dialog Box -->
-            <div id="profile-dialog" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl p-4">
-            <!-- User Info -->
-            <div class="flex flex-col items-center text-center">
-            <img src="<%= user.profileimg %>" alt="User Avatar" class="w-16 h-16 rounded-full object-cover border-2 border-gray-300" />
-            <p class="text-gray-900 text-xl font-bold">Hi, <%= user.name %></p>
-            <p class="text-gray-700 font-semibold mt-2"><%= user.email %></p>
-            <button class="mt-2 px-4 py-2 text-blue-600 border rounded-lg font-semibold hover:bg-blue-50">Manage your Account</button>
+            <div class="p-4">
+              <p class="text-gray-600 text-sm">Subject code: <span class="text-lg"><%= classroom.subjectCode %></span></p>
+              <p class="text-gray-600 text-sm">Class code: <span class="text-lg"><%= classroom.code %></span></p>
             </div>
-            <!-- Actions -->
-            <div class="mt-4 space-y-2">
-              <a href="/student/logout">
-              <button  class="w-full flex items-center justify-center p-2 text-gray-700 border border-gray-200   rounded-lg hover:bg-gray-50">
-                <span>Sign out</span>
-              </button>
-              </a>
-            </div>
-            <!-- Footer Links -->
-            <div class="mt-4 flex justify-center space-x-2 text-xs text-gray-500">
-              <a href="#" class="hover:underline">Privacy policy</a>
-              <span>·</span>
-              <a href="#" class="hover:underline">Terms of service</a>
-            </div>
+            <div class="px-4 py-2 bg-gray-100 text-center">
+              <a href="/student/<%= student._id %>/enrolled/class/<%= classroom._id %>" class="text-blue-600 text-sm font-semibold hover:underline">Visit Class</a>
             </div>
           </div>
-          
-        </div>
+        <% }) %>
       </div>
+    <% } %>
+  </main>
 
-      <div class="menu hide sm:w-3/4 lg:w-1/2 h-screen absolute top-0 left-0 rounded-md overflow-y-scroll px-5 py-3">
-        <div class="menu-inner">
-          <ul class="text-2xl w-full md:w-3/4 h-full flex flex-col gap-10">
-            <li class="">
-              <i class="fa-solid fa-house"></i>
-              <span class="ml-2 cursor-pointer menu-name">Home</span>
-            </li>
-            <li class="">
-              <i class="fa-regular fa-calendar"></i>
-              <span class="ml-2 cursor-pointer">Calendar</span>
-            </li>
-            <li class="">
-              <i class="fa-solid fa-graduation-cap"></i>
-              <span class="ml-2">Enrolled</span>
-              <ul class="px-10 flex flex-col flex-wrap gap-5 text-xl py-4">
-                <li
-                  class="min-h-16 max-h-auto md:h-16 border-2 border-black-900 rounded-lg flex items-center flex-wrap justify-between px-3 py-3">
-                  <p>Computer Network</p>
-                  <i class="fa-solid fa-trash cursor-pointer" style="color: #e40707"></i>
-                </li>
-                <li
-                  class="min-h-16 max-h-auto md:h-16 border-2 border-black-900 rounded-lg flex items-center flex-wrap justify-between px-3 py-3">
-                  <p>Computer Network</p>
-                  <i class="fa-solid fa-trash cursor-pointer" style="color: #e40707"></i>
-                </li>
-                <li
-                  class="min-h-16 max-h-auto md:h-16 border-2 border-black-900 rounded-lg flex items-center flex-wrap justify-between px-3 py-3">
-                  <p>Computer Network</p>
-                  <i class="fa-solid fa-trash cursor-pointer" style="color: #e40707"></i>
-                </li>
-              </ul>
-            </li>
-            <li class="">
-              <i class="fa-solid fa-gear"></i>
-              <span class="ml-2 cursor-pointer">Settings</span>
-            </li>
-          </ul>
-          <div
-            class="close-icon cursor-pointer absolute top-2 md:top-1/2 right-6 text-4xl rounded-full w-16 h-16 md:w-20 md:h-20 bg-gray-300 flex items-center justify-center">
-            <i class="fa-solid fa-xmark btnhide"></i>
-          </div>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <!-- Example Class Card -->
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-          <div class="bg-blue-600 p-4">
-            <img src="https://images.pexels.com/photos/1642228/pexels-photo-1642228.jpeg?auto=compress&cs=tinysrgb&w=600" alt="User Avatar" class="ml-4 w-20 h-20 rounded-full object-cover object-center" />
-            <h2 class="text-white font-semibold text-lg">Biology 101</h2>
-            <p class="text-white text-sm">Mr. Smith</p>
-          </div>
-          <div class="p-4">
-            <p class="text-gray-600 text-sm">Class code: ABC123</p>
-            <p class="text-gray-600 text-sm mt-2">Announcements and materials</p>
-          </div>
-          <div class="px-4 py-2 bg-gray-100">
-            <a href="#" class="text-blue-600 text-sm font-semibold hover:underline">View Class</a>
-          </div>
-        </div>
-      </div>
-    </main>
-    
-    <script>
-      // JavaScript to toggle dialog visibility
-      const profileButton = document.getElementById('profile-button');
-      const profileDialog = document.getElementById('profile-dialog');
-    
-      profileButton.addEventListener('click', () => {
-        profileDialog.classList.toggle('hidden');
-      });
-    </script>
-
-    <script src="/javascripts/script.js"></script>
-  </body>
-
-
+  <script>
+    // JavaScript to toggle profile dialog visibility
+    const profileButton = document.getElementById('profile-button');
+    const profileDialog = document.getElementById('profile-dialog');
   
+    profileButton?.addEventListener('click', () => {
+      profileDialog?.classList.toggle('hidden');
+    });
+  </script>
+  
+</body>
+
 <%- include('../components/footer') %>
+

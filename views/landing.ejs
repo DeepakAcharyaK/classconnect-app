@@ -1,30 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClassConnect</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/stylesheet/font.css">
-</head>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+<%- include('./components/header') %>
 
-  <!-- Centered Text -->
-  <div class="text-center">
-    <h1 class="text-6xl font-extrabold text-blue-600" id="title">
-      <h1 class="title font-extrabold text-blue-600" id="title">
-        <span>c</span><span>l</span><span>a</span><span>s</span><span>s</span><span>C</span><span>o</span><span>n</span><span>n</span><span>e</span><span>c</span><span>t</span>
+<style>
+  .cursor {
+    position: fixed; /* Make it fixed so it stays visible during scroll */
+    z-index: 1000;   /* Ensure it appears above all other content */
+    pointer-events: none; /* Prevent the cursor from interfering with clicks */
+  }
+</style>
+
+<body class="body w-full h-full overflow-x-hidden">
+  <div class="cursor w-16 h-16 rounded-full border-2 border-black absolute">
+    <div class="cursor-inner w-full h-full rounded-full absolute" style="background-color: rgba(254, 253, 253, 0.69);"></div>
+  </div>
+
+  <div class="container w-screen h-auto" style="background-color: #000000;">
+    <div class="navbar"></div>
+
+    <!-- Page 1 -->
+    <div class="page1 h-screen flex items-center justify-center" style="background-color: #DEE6E8;">
+      <h1 class="text-10rem tracking-tight font-bold" style="font-family:fantasy;">
+        class<span class="bg-black " style="color:  #DEE6E8;; font-family:fantasy;">Connect</span>
       </h1>
-      <h3 class="slogan">Learn Together, Grow Together!</h3>
-    </h1>
+    </div>
 
-    <div class="start">
-      <button class="w-20 h-20 bg-gray-200 rounded-full "><a href="/student/register">lets go</a></button>
+    <!-- Page 2 -->
+    <div class="page2 h-screen">
+      <h1 class="text-white text-center text-5xl">Page 2</h1>
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="/javascripts/gsapanimation.js"></script>
+  <script>
+    const cursor = document.querySelector('.cursor');
+    
+    // Track mouse movements
+    window.addEventListener('mousemove', (event) => {
+      const xPos = event.clientX;
+      const yPos = event.clientY;
+      
+      cursor.style.left = `${xPos}px`;
+      cursor.style.top = `${yPos}px`;
+    });
+  </script>
 
 </body>
-</html>
+
+<%- include('./components/footer') %>

@@ -1,0 +1,59 @@
+<%- include('../components/header') %>
+
+<body class="bg-gray-100">
+<%- include('./studentNavbar',{student}) %>
+<%- include('./studentSidebar',{student,quiz}) %>
+
+    <div class="container mx-auto py-8" style="margin-top: 90px; padding:0 20px">
+        <h1 class="text-3xl font-bold mb-8 text-center">Available Quizzes</h1>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-700 text-left">
+                        <th class="py-2 px-4 border-b">Quiz Title</th>
+                        <th class="py-2 px-4 border-b">Status</th>
+                        <th class="py-2 px-4 border-b">Marks Obtained</th>
+                        <th class="py-2 px-4 border-b">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% quizzes.forEach(quizObj => { %>
+                        <tr class="hover:bg-gray-100">
+                            <td class="py-2 px-4 border-b">
+                                <div class="truncate w-48 md:w-auto"><%= quizObj.quiz.title %></div>
+                            </td>
+                            <td class="py-2 px-4 border-b">
+                                <% if (quizObj.isTaken) { %>
+                                    <span class="text-green-500">You have taken this quiz.</span>
+                                <% } else { %>
+                                    <span class="text-red-500">Not Taken</span>
+                                <% } %>
+                            </td>
+                            <td class="py-2 px-4 border-b">
+                                <% if (quizObj.isTaken) { %>
+                                    <%= quizObj.marks %> / <%= quizObj.quiz.questions.reduce((acc, q) => acc + q.score, 0) %>
+                                <% } else { %>
+                                    N/A
+                                <% } %>
+                            </td>
+                            <td class="py-2 px-4 border-b">
+                                <% if (!quizObj.isTaken) { %>
+                                    <form action="/student/class/quiz/<%= quizObj.quiz._id %>/take" method="GET">
+                                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                            Take Quiz
+                                        </button>
+                                    </form>
+                                <% } else { %>
+                                    <span class="text-gray-500">Completed</span>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+<%- include('../components/footer') %>

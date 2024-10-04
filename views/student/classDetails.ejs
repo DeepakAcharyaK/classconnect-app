@@ -1,0 +1,81 @@
+<%- include('../components/header') %>
+
+<body class="bg-gray-100 min-h-screen w-full bg-white">
+    <%- include('./studentNavbar', {student, quiz}) %>
+
+    <div class="max-w-4xl mx-auto pt-20 px-4 sm:px-6 lg:px-8">
+        <!-- Loop through each material -->
+        <div class="bg-white shadow-md rounded-lg p-6 mb-6" style="margin-top: 50px;">
+            <div class="flex items-center mb-4">
+                <div class="text-white w-10 h-10 rounded-full overflow-hidden">
+                    <img src="<%= material.teacheruploaded.profileimg %>" alt="" class="w-10 h-10 object-cover object-center">
+                </div>
+                <h1 class="text-2xl font-semibold ml-4">
+                    <%= material.title %>
+                </h1>
+            </div>
+            <p class="text-gray-600 mb-4">
+                <%= material.teacheruploaded.name %> • <%= new Date(material.createdAt).toLocaleString('en-US', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true
+                }) %>
+            </p>
+            <div class="mb-4">
+                <p class="text-gray-600 mb-2">
+                    <%= material.description %>
+                </p>
+
+                <!-- Loop through each attached file -->
+                <% material.attachedFile.forEach(function(file) { %> 
+                    <div class="border rounded-lg p-4 flex items-center justify-between mb-4">
+                        <% const fileExtension = file.split('.').pop().toLowerCase(); %>
+                        <% if(fileExtension === 'pdf') { %>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-file-pdf fa-2xl" style="color: #df1111;"></i>
+                                <p>.pdf</p>
+                            </div>
+                        <% } else { %> <!-- For image files -->
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-image fa-2xl" style="color: #05990f;"></i>
+                                <p>.img</p>
+                            </div>
+                        <% } %>
+                        <div>
+                            <a href="<%= file %>" download class="text-gray-600 hover:text-blue-500">
+                                <i class="fa-solid fa-download"></i> 
+                            </a>
+                            <a href="<%= file %>" class="ml-4 text-gray-600 hover:text-blue-500" target="_blank">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+
+            <!-- Comment Section -->
+            <div class="border-t pt-4">
+                <p class="text-gray-600 mb-2 flex items-center">
+                    Personal Comments
+                </p>
+                <div class="flex items-center">
+                    <img alt="User avatar" class="w-10 h-10 object-cover object-center rounded-full mr-4" src="<%= student.profileimg %>"/>
+                    <form action="/student/<%= student._id %>/class/comment" method="post" class="w-full flex">
+                        <input class="flex-grow border rounded-full px-4 py-2" name="content" placeholder="Add a comment..." type="text"/>
+                        <input type="hidden" value="teacher" name="type">
+                        <input type="hidden" value="<%= material.teacheruploaded._id %>" name="targetId">
+                        <input type="hidden" value="<%= student._id %>" name="createdBy">
+                        <button type="submit" class="ml-2 text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<%- include('../components/footer') %>

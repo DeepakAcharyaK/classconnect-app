@@ -4,6 +4,9 @@ const router = express.Router();
 const Teacher = require('../models/teacher.model.js');
 const Student = require('../models/student.model.js');
 const Admin = require('../models/admin.model.js'); // Assuming the HOD model is used for login and management
+const Gallery = require('../models/gallery.model.js');
+const upload = require('../middlewares/upload.js');
+
 
 // Middleware to check if the user is HOD
 const isAdmin = (req, res, next) => {
@@ -170,6 +173,30 @@ router.post('/delete/student/:id', isAdmin, async (req, res) => {
     return res.redirect(`/admin/adminPanel/${req.session.user._id}`);
   }
 });
+
+
+
+//Gallery
+router.post('/gallery', upload.single('image'), async (req, res) => {
+  try {
+      const { description } = req.body;
+      const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;// Assuming `upload` middleware provides Cloudinary URL
+
+      const galleryItem = new Gallery({
+          description,
+          imageUrl,
+          uploadedBy: req.session.user // Assuming Admin is logged in and `req.user` has Admin details
+      });
+
+      await galleryItem.save();
+      res.redirect(`/admin/adminPanel/${req.session.user._id}`);
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Error uploading image');
+  }
+});
+
+
 
 // Logout route
 router.get('/logout', (req, res) => {

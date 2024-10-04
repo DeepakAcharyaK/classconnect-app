@@ -1,0 +1,4 @@
+/*<%- include('../components/snackbar', { 
+  successMessage: successMessage, 
+  errorMessage: errorMessage 
+}) %> */

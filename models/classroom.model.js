@@ -10,6 +10,7 @@ const classroomSchema = new mongoose.Schema({
   },
   coverImage: {
     type: String,
+    default:'https://img.freepik.com/premium-vector/education-school-pattern-design_260839-1.jpg?w=996'
   },
   code: {
     type: String,

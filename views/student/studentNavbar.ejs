@@ -1,0 +1,92 @@
+<nav class="bg-white w-full fixed top-0 z-50 shadow-md">
+  <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+    <div class="flex items-center">
+      <p class="menu"><i class="fa-solid text-2xl bg-white fa-bars"></i></p>
+      <span class="md:text-2xl  text-xl ml-5 font-semibold text-gray-700">classConnect</span>
+    </div>
+    <div class="flex items-center space-x-4">
+      <!-- Join Class Button -->
+      <button id="join-class-button" class="md:px-4 md:py-2 px-1 py-2 bg-green-700 text-white font-semibold rounded-lg hover:bg-green-900 transition duration-300">Join Class</button>
+      
+      <!-- Profile Section -->
+      <div class="relative">
+        <button id="profile-button" class="ml-4 w-12 h-12 flex items-center justify-center rounded-full overflow-hidden hover:bg-gray-200 transition duration-300">
+          <img src="<%= student.profileimg %>" alt="User Avatar" class="w-10 h-10 rounded-full object-cover" />
+        </button>
+        <!-- Profile Dialog Box -->
+        <div id="profile-dialog" class="hidden absolute right-0 mt-2 w-80 bg-gray-100 rounded-lg shadow-lg p-4">
+          <div class="flex flex-col items-center text-center">
+            <img src="<%= student.profileimg %>" alt="User Avatar" class="w-16 h-16 rounded-full object-cover" />
+            <p class="text-gray-900 text-xl font-bold mt-2">Hi, <%= student.name %></p>
+            <p class="text-gray-600 font-semibold mt-1"><%= student.usn %></p>
+            <p class="text-gray-600 font-semibold mt-1"><%= student.email %></p>
+            <a href="/student/studentHome/<%= student._id %>/profile/settings" class="w-full">
+              <button class="w-full mt-4 px-4 py-2 text-blue-600 border shadow-lg rounded-lg font-semibold hover:bg-blue-100 transition duration-300">
+                Manage Account
+              </button>
+            </a>
+          </div>
+          <!-- Actions -->
+          <div class="mt-4">
+            <a href="/student/logout" class="w-full">
+              <button class="w-full px-4 py-2 text-gray-700 border shadow-lg rounded-lg hover:bg-red-200 transition duration-300">Sign Out</button>
+            </a>
+          </div>
+          <div class="mt-4 flex justify-center space-x-2 text-xs text-gray-500">
+            <a href="#" class="hover:underline">Privacy policy</a>
+            <span>·</span>
+            <a href="#" class="hover:underline">Terms of service</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Join Class Modal -->
+<div id="join-class-modal" class="hidden fixed z-50 inset-0 overflow-y-auto flex items-center justify-center">
+  <div class="w-full h-full bg-transparent flex justify-center items-center" style="background-color: rgba(145, 145, 145, 0.515);">
+    <div class="bg-gray-200 p-6 rounded-lg shadow-lg">
+      <h2 class="text-lg font-bold mb-4">Join a Class</h2>
+      <form id="join-class-form" action="/student/<%= student._id %>/class/join" method="post" onsubmit="form.reset()">
+        <label for="class-code" class="block text-gray-700 mb-2">Enter Class Code:</label>
+        <input type="text" id="class-code" name="classCode" class="w-full px-4 py-2 shadow-lg rounded-lg" placeholder="Class Code" required />
+        <div class="mt-4 flex justify-end space-x-2">
+          <button type="button" id="cancel-join" class="px-4 py-2 bg-gray-300 rounded-lg">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg">Join</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const profileButton = document.getElementById('profile-button');
+  const profileDialog = document.getElementById('profile-dialog');
+  const joinClassButton = document.getElementById('join-class-button');
+  const joinClassModal = document.getElementById('join-class-modal');
+  const cancelJoinButton = document.getElementById('cancel-join');
+  const joinClassForm = document.getElementById('join-class-form');
+
+  // Toggle profile dialog
+  profileButton?.addEventListener('click', function () {
+    profileDialog?.classList.toggle('hidden');
+  });
+
+  // Close profile dialog when clicking outside
+  window.addEventListener('click', function (event) {
+    if (profileDialog && !profileButton.contains(event.target) && !profileDialog.contains(event.target)) {
+      profileDialog.classList.add('hidden');
+    }
+  });
+
+  // Show join class modal
+  joinClassButton?.addEventListener('click', function () {
+    joinClassModal?.classList.remove('hidden');
+  });
+
+  // Hide join class modal
+  cancelJoinButton?.addEventListener('click', function () {
+    joinClassModal?.classList.add('hidden');
+  });
+</script>

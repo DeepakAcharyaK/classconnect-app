@@ -31,6 +31,12 @@
           <div>
             <h1 class="text-white text-3xl font-semibold"><%= classroom.name %></h1>
             <p class="text-white text-lg">MCA</p>
+            <li>
+              <a href="/teacher/teacherHome/<%= teacher._id %>/classroom/<%= classroom._id %>/enrolledStudents" target="_blank" id="enrolledStudentsButton" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
+                <i class="fa-solid fa-brain mr-2"></i>
+                <span>Enrolled Students</span>
+              </a>
+            </li>
           </div>
 
           <!-- Upload Material Button and Pop-up -->
@@ -54,7 +60,7 @@
                   </div>
                   <div class="mb-4">
                     <label for="materialFile" class="block">Attach File</label>
-                    <input type="file" id="materialFile" name="material" class="w-full p-2 border">
+                    <input type="file" id="materialFile" name="material" class="w-full p-2 border" multiple>
                   </div>
                   <button type="submit" class="bg-blue-500 text-white p-2 rounded">Upload Material</button>
                   <button type="button" id="closePopupBtn" class="bg-gray-400 text-white p-2 rounded">Cancel</button>

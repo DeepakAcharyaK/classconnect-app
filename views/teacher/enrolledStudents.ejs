@@ -1,0 +1,39 @@
+<%- include('../components/header') %>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto mt-10 px-4">
+        <h1 class="text-3xl font-bold mb-6 text-center md:text-left">Enrolled Students for Classroom: <%= classroom.name %></h1>
+        
+        <!-- Table container for responsiveness -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white shadow-md rounded-lg">
+                <thead class="bg-gray-800 text-white">
+                    <tr>
+                        <th class="py-3 px-6 text-left font-semibold uppercase tracking-wider">Profile</th>
+                        <th class="py-3 px-6 text-left font-semibold uppercase tracking-wider">USN</th>
+                        <th class="py-3 px-6 text-left font-semibold uppercase tracking-wider">Name</th>
+                        <th class="py-3 px-6 text-left font-semibold uppercase tracking-wider">Enrolled Date</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">
+                    <% students.forEach(student => { %>
+                    <tr class="hover:bg-gray-100 transition-colors duration-200">
+                        <!-- Profile Image Column -->
+                        <td class="py-3 px-6 border-b border-gray-200">
+                            <img src='<%= student.profileimg %>' alt="Profile Image" class="w-10 h-10 rounded-full object-cover">
+                        </td>
+                        <!-- USN Column -->
+                        <td class="py-3 px-6 border-b border-gray-200"><%= student.usn %></td>
+                        <!-- Name Column -->
+                        <td class="py-3 px-6 border-b border-gray-200"><%= student.name %></td>
+                        <!-- Enrolled Date Column -->
+                        <td class="py-3 px-6 border-b border-gray-200"><%= student.createdAt.toLocaleDateString() %></td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+<%- include('../components/footer') %>

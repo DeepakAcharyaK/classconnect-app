@@ -1,0 +1,87 @@
+<%- include('../components/header') %>
+
+<body>
+    <div class="cardscontainer w-full h-full">
+        <%- include('./studentNavbar', { student }) %>  
+        <%- include('./studentSidebar', { student, quiz }) %>
+
+        <main class="main-container flex justify-center md:mt-28 h-full">
+            <div class="flex items-center justify-center w-full h-full">
+                <div class="p-6 rounded-lg shadow-lg w-full max-w-lg bg-gray-200">
+                    <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
+                    <form id="editProfileForm" action="/student/<%= student._id %>/profile/update" method="post" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label for="uid" class="block text-gray-700">USN</label>
+                            <input type="text" id="uid" name="uid" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= student.usn %>" readonly>
+                        </div>
+                        <div class="mb-4">
+                            <label for="name" class="block text-gray-700">Name</label>
+                            <input type="text" id="studentName" name="name" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= student.name %>">
+                            <div id="nameError" class="text-red-500 hidden"></div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="email" class="block text-gray-700">Email</label>
+                            <input type="email" name="email" id="studentEmail" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= student.email %>">
+                            <div id="emailError" class="text-red-500 hidden"></div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="phone" class="block text-gray-700">Phone</label>
+                            <input type="text" name="phone" id="studentPhone" class="mt-1 px-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" value="<%= student.phone %>">
+                            <div id="phoneError" class="text-red-500 hidden"></div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="profileimg" class="block text-gray-700">Profile Image</label>
+                            <input type="file" name="profileimg" id="studentProfileImage" class="mt-1 w-full border border-gray-300 rounded-lg">
+                        </div>
+                        <div class="flex justify-end space-x-2">
+                            <a href="/student/home/<%= student._id %>" class="px-4 py-2 bg-gray-300 text-white rounded-lg hover:bg-gray-400">Cancel</a>
+                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Update</button>
+                        </div>
+                    </form>                  
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/javascripts/validationUtility.js"></script>
+    <script>
+        document.getElementById('editProfileForm').onsubmit = function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const fields = [
+                {
+                    field: document.getElementById('studentName'),
+                    errorElement: document.getElementById('nameError'),
+                    validations: [
+                        { type: 'required', message: 'Name is required' },
+                        { type: 'minLength', length: 2, message: 'Name must be at least 2 characters long' }
+                    ]
+                },
+                {
+                    field: document.getElementById('studentEmail'),
+                    errorElement: document.getElementById('emailError'),
+                    validations: [
+                        { type: 'required', message: 'Email is required' },
+                        { type: 'email', message: 'Please enter a valid email address' }
+                    ]
+                },
+                {
+                    field: document.getElementById('studentPhone'),
+                    errorElement: document.getElementById('phoneError'),
+                    validations: [
+                        { type: 'required', message: 'Phone number is required' },
+                        { type: 'tel', message: 'Please enter a valid phone number' }
+                    ]
+                }
+            ];
+
+            // Validate form fields
+            if (validateForm(fields)) {
+                this.submit(); // Only submit the form if valid
+            }
+        };
+    </script>
+
+</body>
+
+<%- include('../components/footer') %>

@@ -1,0 +1,109 @@
+<div id="sidebar" class="hide fixed inset-0  bg-opacity-75 z-50 md:flex md:flex-col md:w-1/4 h-full overflow-y-scroll">
+    <i class="close absolute top-5 right-3 fa-solid fa-circle-xmark text-2xl cursor-pointer"></i> <!-- Close icon -->
+    <div class="flex flex-col flex-grow p-4 space-y-4 bg-gray-200">
+        <ul class="space-y-2" id="quiz-list">
+            <li>
+                <a href="/student/home/<%= student._id %>/"
+                    class="flex items-center justify-center gap-2 text-gray-700 rounded-md">
+                    <i class="fa-solid text-lg fa-school"></i>
+                    <span class="text-lg font-extrabold">classConnect</span>
+                </a>
+            </li>
+            <br>
+
+            <li>
+                <a href="/student/<%= student._id %>/class/all/quiz">
+                <h2 class="font-bold text-xl p-2 hover:bg-gray-700 hover:rounded-md hover:text-white">Take Quiz</h2>
+            </a>
+                <% if (quiz && quiz.length > 0) { 
+                    // Sort the quizzes by createdAt in descending order
+                    const sortedQuiz = quiz.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                %>
+                    <% sortedQuiz.forEach((quizItem, index) => { 
+                        // Check if the student has taken the quiz
+                        const hasTakenQuiz = student.quiztaken.some(quizval => String(quizval.quizId) === String(quizItem._id));
+
+                        // Check if the quiz is open
+                        const isQuizOpen = quizItem.isOpen; 
+                    %>
+                    
+                    <% if (!hasTakenQuiz && isQuizOpen) { %>
+                        <div class="relative flex items-center p-1 mt-3 quiz-item" id="quiz-<%= index %>">
+                            <a href="/student/<%= student._id %>/quiz/<%= quizItem._id %>"
+                                class="w-full flex flex-col gap-0.5 justify-center p-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">
+                                <span><%= quizItem.title %></span>
+                                <span class="text-gray-400 text-sm">
+                                    <%= new Date(quizItem.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+                                </span>
+                                <i class="fa-solid fa-circle text-2xs absolute top-0 left-0" style="color:red;"></i>
+                            </a>
+                            <div class="absolute top-0 right-0 cursor-pointer bg-black rounded-full p-3 w-5 h-5 flex justify-center items-center">
+                                <i class="fa-solid fa-xmark fa-sm text-lg close-quiz" style="color: #e60000;" data-index="<%= index %>"></i>
+                            </div>
+                        </div>
+                    <% } %>
+                    <% }) %>
+                <% } else { %>
+                    <p class="ml-5 text-gray-500">No Quiz is found..</p>
+                <% } %>
+            </li>
+
+            <li>
+                <a href="/student/home/<%= student._id %>/announcements"
+                    class="flex items-center p-2 text-gray-700 hover:bg-gray-200 hover:bg-gray-700 hover:rounded-md hover:text-white rounded-md">
+                    <h1 class="font-bold text-xl">Announcements</h1>
+                </a>
+            </li>
+            <li>
+                <a href="/student/<%= student._id %>/class/classachievement"
+                    class="flex items-center p-2 text-gray-700 hover:bg-gray-200 hover:bg-gray-700 hover:rounded-md hover:text-white rounded-md">
+                    <h1 class="font-bold text-xl">Class Achievement</h1>
+                </a>
+            </li>
+            <li>
+                <a href="/student/studentHome/<%= student._id %>/profile/settings"
+                    class="flex items-center p-2 text-gray-700 hover:bg-gray-200 hover:bg-gray-700 hover:rounded-md hover:text-white rounded-md">
+                    <h1 class="font-bold text-xl">Profile Setting</h1>
+                </a>
+            </li>
+            <li>
+                <a href="/student/<%= student._id %>/class/suggestion"
+                    class="flex items-center p-2 text-gray-700 hover:bg-gray-700 hover:rounded-md hover:text-white rounded-md">
+                    <h1 class="font-bold text-xl">Suggestion box</h1>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    const sidebar = document.querySelector('#sidebar');
+    const closeSidebar = document.querySelector('.close');
+    const menu = document.querySelector('.menu');
+
+    // Remove quiz item from the sidebar
+    const closeQuizIcons = document.querySelectorAll('.close-quiz');
+    closeQuizIcons.forEach(icon => {
+        icon.addEventListener('click', (event) => {
+            const quizIndex = event.target.getAttribute('data-index');
+            const quizElement = document.querySelector(`#quiz-${quizIndex}`);
+            if (quizElement) {
+                quizElement.remove(); // Remove the quiz from the frontend
+            }
+        });
+    });
+
+    // Close the sidebar
+    if (closeSidebar) {
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.add('hide');
+        });
+    }
+
+    // Open the sidebar
+    if (menu) {
+        menu.addEventListener('click', () => {
+            sidebar.classList.remove('hide');
+        });
+    }
+</script>

@@ -1,52 +1,66 @@
-const mongoose=require('mongoose')
+const mongoose = require('mongoose');
 
-const studentSchema=new mongoose.Schema({
-    usn:{ 
-      type:String, 
-      unique:true,
-      required:true 
+const studentSchema = new mongoose.Schema({
+    usn: { 
+        type: String, 
+        required: true 
     },
-    name:{ 
-      type:String, 
-      minLength: 1,
-      required:true 
+    name: { 
+        type: String, 
+        required: true 
     },
-    email:{ 
-      type:String, 
-      pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-      unique: true,
-      required:true
+    email: { 
+        type: String, 
+        required: true 
     },
-    phone:{ 
-      type:Number,  
-      pattern: "^[0-9]{10}$",
-      required:true 
+    phone: { 
+        type: Number,  
+        required: true 
     },
-    password:{ 
-      type:String, 
-      required:true 
+    password: { 
+        type: String, 
+        required: true 
     },
-    classroomerolled:[
-      {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Classroom'
-      }
+    classroomerolled: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Classroom'
+        }
     ],
-    quiztaken:[
-      {
-          type:mongoose.Schema.Types.ObjectId,
-          ref:'Quiz'
-          // "score": Number, // Score obtained in the quiz
-          // "taken_at": Date // Timestamp of when the quiz was taken
-      }
-    ] ,
-    profileimg:{
-      type: String,
-      default:'https://res.cloudinary.com/dtfz2ftmr/image/upload/v1725025681/vifb0hlupt5ybcmimmi3.png',
+    quiztaken: [
+        {
+            quizId: { type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' },
+            marks: { type: Number },
+            isTaken:{
+                type:Boolean,
+                default:false
+            }
+        }
+    ],
+    materialsuploaded: [
+        {
+            attachedFile: [{ type: String }],
+            description: { type: String },
+            materialId: { 
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Material'
+            }  
+        }
+    ],
+    messages: [
+        {
+            content: { type: String, required: true }, // Message content
+            sentBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher' }, // Reference to the teacher
+            timestamp: { type: Date, default: Date.now } // Timestamp of the message
+        }
+    ],
+    profileimg: {
+        type: String,
+        default: 'https://res.cloudinary.com/dtfz2ftmr/image/upload/v1725025681/vifb0hlupt5ybcmimmi3.png'
     }
-},{
-  timestamps:true
-})
+}, {
+    timestamps: true
+});
 
-module.exports=mongoose.model('Student',studentSchema)
-  
+module.exports = mongoose.model('Student', studentSchema);
+
