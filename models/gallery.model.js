@@ -7,7 +7,6 @@ const gallerySchema = new mongoose.Schema({
     },
     imageUrl: {
         type: String,
-        required: true
     },
     uploadedBy: {
         type: mongoose.Schema.Types.ObjectId,

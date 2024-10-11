@@ -7,12 +7,17 @@ const commentSchema = new mongoose.Schema({
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Student', // Assuming comments are created by students
+    refPath: 'createdByModel',  // Dynamically reference 'Student', 'Teacher', or 'Admin'
+    required: true,
+  },
+  createdByModel: {
+    type: String,
+    enum: ['Student', 'Teacher', 'Admin'],  // Specifies which model the createdBy field refers to
     required: true,
   },
   context: {
     type: String,
-    enum: ['classroom', 'teacher', 'admin'],  // Specifies the context type
+    enum: ['classroom', 'teacher', 'admin', 'student'],  // Specifies the context of the comment
     required: true,
   },
   classroom: {
@@ -23,6 +28,10 @@ const commentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Teacher',
   },
+  student: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Student',
+  },
   admin: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Admin',
@@ -30,4 +39,3 @@ const commentSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 module.exports = mongoose.model('Comment', commentSchema);
-

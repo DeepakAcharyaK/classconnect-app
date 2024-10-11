@@ -1,0 +1,91 @@
+<%- include('../components/header') %>
+
+<body class="bg-gray-900 text-white flex">
+  <%- include('./navbar') %>
+  <%- include('./sidebar') %>
+
+  <!-- Snackbar for displaying success/error messages -->
+  <%- include('../components/snackbar', { 
+      successMessage: successMessage, 
+      errorMessage: errorMessage 
+  }) %>
+
+  <!-- Main Content -->
+  <div class="flex-1 p-4">
+    <h1 class="text-3xl font-bold mb-6">Get Student Data</h1>
+
+    <!-- Form to input USN and get student data -->
+    <div class="bg-gray-800 p-4 rounded-md shadow-lg">
+      <label for="usn" class="block mb-2 text-sm">Enter USN:</label>
+      <input id="usnInput" type="text" class="w-full p-2 rounded-md bg-gray-700 text-white" placeholder="Enter USN">
+
+      <button id="getDataBtn" class="mt-4 bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700">Get Data</button>
+    </div>
+
+    <!-- Modal to display student data -->
+    <div id="studentDataModal" class="fixed mt-4 bg-gray-800  bg-opacity-50 hidden justify-center items-center">
+      <div class="border p-4  rounded-md w-full max-w-2xl">
+        <h2 class="text-2xl font-bold mb-4">Student Details</h2>
+        
+        <div id="studentDetails" class="space-y-4">
+          <!-- Dynamic student details will be inserted here -->
+        </div>
+
+        <button id="closeModal" class="mt-6 bg-red-600 px-4 py-2 rounded-md hover:bg-red-700">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get references to HTML elements
+    const getDataBtn = document.getElementById('getDataBtn');
+    const usnInput = document.getElementById('usnInput');
+    const studentDataModal = document.getElementById('studentDataModal');
+    const studentDetails = document.getElementById('studentDetails');
+    const closeModal = document.getElementById('closeModal');
+
+    // Function to fetch student data based on USN
+    getDataBtn.addEventListener('click', async () => {
+      const usn = usnInput.value;
+
+      if (!usn) {
+        alert("Please enter a USN.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`/admin/student/${usn}`);
+        const student = await response.json();
+
+        if (!student) {
+          alert("Student not found.");
+          return;
+        }
+
+        // Populate modal with student data
+        studentDetails.innerHTML = `
+          <p><strong>Name:</strong> <span class="text-xl">${student.name}</span></p>
+          <p><strong>Email:</strong> <span class="text-xl">${student.email}</span></p>
+          <p><strong>Phone:</strong><span class="text-xl"> ${student.phone}</span></p>
+          <p><strong>Classrooms Enrolled:</strong> <span class="text-xl">${student.classroomerolled.map(cls => cls.name).join(', ')}</span></p>
+          <p><strong>Quizzes Taken:</strong> <span class="text-xl">${student.quiztaken.length}</span></p>
+          <p><strong>Materials Uploaded:</strong> <span class="text-xl">${student.materialsuploaded.length}</span></p>
+          <img src="${student.profileimg}" alt="Profile Image" class="w-16 h-16 rounded-full mt-4">
+        `;
+
+        // Show the modal
+        studentDataModal.classList.remove('hidden');
+      } catch (error) {
+        console.error(error);
+        alert("Error fetching student data.");
+      }
+    });
+
+    // Function to close the modal
+    closeModal.addEventListener('click', () => {
+      studentDataModal.classList.add('hidden');
+    });
+  </script>
+</body>
+
+<%- include('../components/footer') %>

@@ -30,7 +30,7 @@
         <li>
           <a href="/teacher/teacherHome/<%= teacher._id %>/profile/settings" id="settingsButton" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
             <i class="fa-solid fa-cog mr-2"></i>
-            <span>Settings</span>
+            <span>Profile Settings</span>
           </a>
         </li>
          <hr>
@@ -38,7 +38,7 @@
          <li>
           <a href="/teacher/teacherHome/<%= teacher._id %>/allcreatedclassess" id="settingsButton" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
             <i class="fa-solid fa-chalkboard-teacher mr-2"></i>
-            <span>Created classess</span>
+            <span>Created Class</span>
           </a>
         </li>
          <li>
@@ -51,6 +51,18 @@
           <a href="/teacher/teacherHome/<%= teacher._id %>/quiz/myquizzes" id="settingsButton" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
             <i class="fa-solid fa-brain mr-2"></i>
             <span>All Quiz Created</span>
+          </a>
+        </li>
+        <li>
+          <a href="/teacher/<%= teacher._id %>/message" id="settingsButton" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
+            <i class="fa-regular fa-message mr-2"></i>
+            <span>message</span>
+          </a>
+        </li>
+        <li>
+          <a href="/teacher/message" id="settingsButton" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
+            <i class="fa-regular fa-message mr-2"></i>
+            <span>Inbox</span>
           </a>
         </li>
       </ul>

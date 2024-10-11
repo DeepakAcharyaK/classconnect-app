@@ -1,0 +1,68 @@
+<%- include('../components/header') %>
+
+<div class="container mx-auto py-8">
+  <%- include('../components/navbar', { teacher }) %>
+  <%- include('../components/sidebar') %>
+
+  <div class="bg-white shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto pt-20">
+    
+    <%- include('../components/sidebar') %>
+    <!-- Material Title and Description -->
+    <div class="m-2 px-6 py-6 bg-gradient-to-r from-gray-500 to-gray-100 text-white">
+      <h1 class="text-4xl font-semibold text-gray-900 mb-2">
+        <%= material.title %>
+      </h1>
+      <p class="text-gray-700 text-base mb-4">
+        <%= material.description %>
+      </p>
+    </div>
+
+    <!-- Attached Files Section -->
+    <div class="px-6 py-4">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Attached Files</h2>
+
+      <% if (material.attachedFile.length > 0) { %>
+        <ul class="space-y-4">
+          <% material.attachedFile.forEach((file, index) => { %>
+            <li class="flex justify-between items-center bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-sm">
+              <a href="<%= file %>" class="text-blue-500 font-medium underline hover:text-blue-700" target="_blank">
+                Attached File <%= index + 1 %>
+              </a>
+              <button 
+                class="text-red-600 hover:text-red-800 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50"
+                onclick="deleteFile('<%= material._id %>', '<%= file %>')"
+              >
+                <i class="fa-solid fa-trash text-lg"></i> <!-- Trash Icon -->
+              </button>
+            </li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <p class="text-gray-500">No files attached.</p>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Function to delete an attached file
+  function deleteFile(materialId, fileUrl) {
+    if (confirm("Are you sure you want to delete this file?")) {
+      fetch(`/teacher/material/${materialId}/file`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ fileUrl })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          location.reload();  // Reload to reflect deletion
+        } else {
+          alert('Failed to delete the file');
+        }
+      });
+    }
+  }
+</script>

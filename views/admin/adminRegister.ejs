@@ -1,29 +1,130 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
-  <title>HOD Register</title>
-</head>
-<body class="bg-gray-100">
-  <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-6">HOD Registration</h1>
-    <form action="/admin/register" method="POST" class="bg-white p-6 rounded shadow-md">
-      <div class="mb-4">
-        <label for="name" class="block text-gray-700">Username</label>
-        <input type="text" id="name" name="name" required class="border rounded p-2 w-full">
+<%- include('../components/header') %>
+
+<body class="bg-gray-900 min-h-screen flex items-center justify-center p-2">
+  <div class="max-w-lg w-full bg-gray-800 p-8 rounded-lg shadow-lg">
+
+    <%- include('../components/snackbar', { 
+      successMessage: successMessage, 
+      errorMessage: errorMessage 
+    }) %>
+
+    <h1 class="text-3xl font-bold text-center text-gray-100 mb-8">Admin Registration</h1>
+    <form id="registerForm" action="/admin/register" method="POST" class="space-y-6">
+      <!-- Username -->
+      <div>
+        <label for="name" class="block text-gray-400 font-semibold mb-2">Username</label>
+        <input type="text" id="name" name="name" required 
+               class="w-full border border-gray-600 bg-gray-700 text-gray-200 rounded-lg p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition duration-300 ease-in-out">
+        <p id="nameError" class="text-red-500 text-sm hidden"></p> <!-- Error message for name -->
       </div>
-      <div class="mb-4">
-        <label for="email" class="block text-gray-700">Email</label>
-        <input type="email" id="email" name="email" required class="border rounded p-2 w-full">
+      
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-gray-400 font-semibold mb-2">Email</label>
+        <input type="email" id="email" name="email" required 
+               class="w-full border border-gray-600 bg-gray-700 text-gray-200 rounded-lg p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition duration-300 ease-in-out">
+        <p id="emailError" class="text-red-500 text-sm hidden"></p> <!-- Error message for email -->
       </div>
-      <div class="mb-4">
-        <label for="password" class="block text-gray-700">Password</label>
-        <input type="password" id="password" name="password" required class="border rounded p-2 w-full">
+
+      <!-- Password -->
+      <div>
+        <label for="password" class="block text-gray-400 font-semibold mb-2">Password</label>
+        <input type="password" id="password" name="password" required 
+               class="w-full border border-gray-600 bg-gray-700 text-gray-200 rounded-lg p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition duration-300 ease-in-out">
+        <p id="passwordError" class="text-red-500 text-sm hidden"></p> <!-- Error message for password -->
       </div>
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Register</button>
+
+      <!-- Register Button -->
+      <button type="submit" 
+              class="w-full bg-gray-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-gray-500 transition duration-300 ease-in-out transform hover:scale-105">
+        Register
+      </button>
     </form>
   </div>
+
+  <script src="/javascripts/validationUtility.js"></script>
+  <!-- Validation Script -->
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const fieldsToValidate = [
+        {
+          field: document.getElementById('name'),
+          errorElement: document.getElementById('nameError'),
+          validations: [
+            { type: 'required', message: 'Username is required' },
+            { type: 'minLength', length: 3, message: 'Username must be at least 3 characters long' }
+          ]
+        },
+        {
+          field: document.getElementById('email'),
+          errorElement: document.getElementById('emailError'),
+          validations: [
+            { type: 'required', message: 'Email is required' },
+            { type: 'email', message: 'Enter a valid email address' }
+          ]
+        },
+        {
+          field: document.getElementById('password'),
+          errorElement: document.getElementById('passwordError'),
+          validations: [
+            { type: 'required', message: 'Password is required' },
+            { type: 'minLength', length: 6, message: 'Password must be at least 6 characters long' }
+          ]
+        }
+      ];
+
+      // Call the validateForm function and proceed only if valid
+      if (validateForm(fieldsToValidate)) {
+        this.submit(); // Proceed to form submission if valid
+      }
+    });
+
+    function validateForm(fields) {
+      let isValid = true;
+
+      fields.forEach(({ field, errorElement, validations }) => {
+        const value = field.value.trim();
+        let fieldIsValid = true;
+
+        validations.forEach((validation) => {
+          switch (validation.type) {
+            case 'required':
+              if (!value) {
+                errorElement.textContent = validation.message;
+                errorElement.classList.remove('hidden');
+                fieldIsValid = false;
+              }
+              break;
+            case 'email':
+              const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              if (!emailPattern.test(value)) {
+                errorElement.textContent = validation.message;
+                errorElement.classList.remove('hidden');
+                fieldIsValid = false;
+              }
+              break;
+            case 'minLength':
+              if (value.length < validation.length) {
+                errorElement.textContent = validation.message;
+                errorElement.classList.remove('hidden');
+                fieldIsValid = false;
+              }
+              break;
+          }
+        });
+
+        if (fieldIsValid) {
+          errorElement.classList.add('hidden');
+        } else {
+          isValid = false;
+        }
+      });
+
+      return isValid;
+    }
+  </script>
 </body>
-</html>
+
+<%- include('../components/footer') %>

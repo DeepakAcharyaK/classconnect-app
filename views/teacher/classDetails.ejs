@@ -1,217 +1,265 @@
 <%- include('../components/header') %>
 
-<body class="bg-gray-100 font-sans">
-  <div class="flex flex-col md:flex-row h-screen">
-    <%- include('../components/navbar', { teacher }) %>
+  <body class="bg-gray-100 font-sans">
+    <div class="flex flex-col md:flex-row h-screen">
+      <%- include('../components/navbar', { teacher }) %>
+        <%- include('../components/sidebar') %>
 
-    <!-- Sidebar -->
-    <%- include('../components/sidebar') %>
+        <%- include('../components/snackbar', { 
+          successMessage: successMessage, 
+          errorMessage: errorMessage 
+      }) %>
 
-    <!-- Main Content -->
-    <div class="md:ml-64 flex-1 flex flex-col">
-      <!-- Header -->
-      <div class="flex items-center bg-white">
-        <span class="text-xl font-semibold">Classroom ></span>
-        <span class="ml-2 text-gray-500"><%= classroom.name %></span>
-      </div>
+          <!-- Main Content -->
+          <div class="md:ml-64 flex-1 flex flex-col">
+            <!-- Header -->
+            <div class="flex items-center bg-white">
+              <span class="text-xl font-semibold">Classroom</span>
+              <span class="ml-2 text-gray-500">
+                <%= classroom.name %>
+              </span>
+            </div>
 
-      <!-- Tabs -->
-      <div class="flex items-center justify-between bg-white h-12 px-6 border-b">
-        <div class="flex space-x-8">
-          <a class="text-blue-600 border-b-2 border-blue-600 py-2" href="#">Stream</a>
-          <a class="text-gray-600 py-2" href="#">Classwork</a>
-          <a class="text-gray-600 py-2" href="#">People</a>
-          <a class="text-gray-600 py-2" href="#">Marks</a>
-        </div>
-      </div>
-
-      <!-- Main Section -->
-      <div class="flex-1 p-6">
-        <div class="bg-blue-950 h-48 rounded-lg flex items-center justify-between p-6 bg-cover bg-center">
-          <div>
-            <h1 class="text-white text-3xl font-semibold"><%= classroom.name %></h1>
-            <p class="text-white text-lg">MCA</p>
-            <li>
-              <a href="/teacher/teacherHome/<%= teacher._id %>/classroom/<%= classroom._id %>/enrolledStudents" target="_blank" id="enrolledStudentsButton" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded-md">
-                <i class="fa-solid fa-brain mr-2"></i>
-                <span>Enrolled Students</span>
-              </a>
-            </li>
-          </div>
-
-          <!-- Upload Material Button and Pop-up -->
-          <div>
-            <!-- Button to open the pop-up -->
-            <button id="openPopupBtn" class="bg-blue-500 text-white px-4 py-2 rounded-3xl">Upload materials</button>
-
-            <!-- Pop-up window -->
-            <div id="popupWindow" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-              <div class="bg-white p-6 rounded-lg">
-                <h2 class="text-xl mb-4">Upload Material</h2>
-                <form action="/teacher/<%= teacher._id %>/class/<%= classroom._id %>/materials/upload" method="POST" enctype="multipart/form-data">
-                  <input type="hidden" name="classroomId" value="<%= classroom._id %>">
-                  <div class="mb-4">
-                    <label for="materialTitle" class="block">Title</label>
-                    <input type="text" id="materialTitle" name="title" class="w-full p-2 border" required>
-                  </div>
-                  <div class="mb-4">
-                    <label for="materialDescription" class="block">Description</label>
-                    <textarea id="materialDescription" name="description" class="w-full p-2 border" rows="4"></textarea>
-                  </div>
-                  <div class="mb-4">
-                    <label for="materialFile" class="block">Attach File</label>
-                    <input type="file" id="materialFile" name="material" class="w-full p-2 border" multiple>
-                  </div>
-                  <button type="submit" class="bg-blue-500 text-white p-2 rounded">Upload Material</button>
-                  <button type="button" id="closePopupBtn" class="bg-gray-400 text-white p-2 rounded">Cancel</button>
-                </form>
+            <!-- Tabs -->
+            <div class="flex items-center justify-between bg-white h-12 px-6 border-b">
+              <div class="flex space-x-8">
+                <a class="text-blue-600 border-b-2 border-blue-600 py-2" href="#">Stream</a>
+                <a class="text-gray-600 py-2" href="#">Classwork</a>
+                <a class="text-gray-600 py-2" href="#">People</a>
+                <a class="text-gray-600 py-2" href="#">Marks</a>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Class Code and Announcement Section -->
-        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-white p-4 rounded-lg shadow">
-            <h2 class="text-gray-700 text-lg font-semibold">Class code</h2>
-            <p class="text-blue-600 text-2xl font-semibold"><%= classroom.code %></p>
-          </div>
+            <!-- Main Section -->
+            <div class="flex-1 p-6">
+              <div class="bg-blue-950 h-48 rounded-lg flex items-center justify-between p-6 bg-cover bg-center">
+                <div>
+                  <h1 class="text-white text-3xl font-semibold">
+                    <%= classroom.name %>
+                  </h1>
+                  <p class="text-white text-lg">MCA</p>
+                  <li>
+                    <a href="/teacher/teacherHome/<%= teacher._id %>/classroom/<%= classroom._id %>/enrolledStudents"
+                      target="_blank" id="enrolledStudentsButton"
+                      class="flex items-center bg-slate-400 p-2 gap-1 text-gray-700 hover:bg-gray-200 rounded-md">
+                      <span>Enrolled Students</span>
+                      <i class="fa-solid fa-person fa-xl"></i>
+                    </a>
+                  </li>
+                </div>
 
-          <div class="bg-white p-4 rounded-lg shadow col-span-2">
-            <div class="flex items-center">
-              <div class="w-10 h-10 rounded-full overflow-hidden">
-                <img alt="User profile picture" height="40" src="<%= teacher.profileimg %>" width="40" class="w-16 h-16 rounded-full object-cover object-center" />
+                <!-- Upload Material Button and Pop-up -->
+                <div>
+                  <!-- Button to open the pop-up -->
+                  <button id="openPopupBtn" class="bg-blue-500 text-white px-4 py-2 rounded-3xl">
+                    Upload materials
+                  </button>
+
+                  <!-- Pop-up window -->
+                  <div id="popupWindow"
+                    class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+                    <div class="bg-white p-6 rounded-lg">
+                      <h2 class="text-xl mb-4">Upload Material</h2>
+                      <form action="/teacher/<%= teacher._id %>/class/<%= classroom._id %>/materials/upload"
+                        method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="classroomId" value="<%= classroom._id %>" />
+                        <div class="mb-4">
+                          <label for="materialTitle" class="block">Title</label>
+                          <input type="text" id="materialTitle" name="title" class="w-full p-2 border" required />
+                        </div>
+                        <div class="mb-4">
+                          <label for="materialDescription" class="block">Description</label>
+                          <textarea id="materialDescription" name="description" class="w-full p-2 border"
+                            rows="4"></textarea>
+                        </div>
+                        <div class="mb-4">
+                          <label for="materialFile" class="block">Attach File</label>
+                          <input type="file" id="materialFile" name="material" class="w-full p-2 border" multiple required/>
+                        </div>
+                        <button type="submit" class="bg-blue-500 text-white p-2 rounded">
+                          Upload Material
+                        </button>
+                        <button type="button" id="closePopupBtn" class="bg-gray-400 text-white p-2 rounded">
+                          Cancel
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <input class="ml-4 flex-1 border border-gray-300 rounded-lg px-4 py-2" placeholder="Announce something to your class" type="text" />
+
+              <!-- Class Code and Announcement Section -->
+              <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-4 rounded-lg shadow">
+                  <h2 class="text-gray-700 text-lg font-semibold">Class code</h2>
+                  <p class="text-blue-600 text-2xl font-semibold">
+                    <%= classroom.code %>
+                  </p>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow col-span-2">
+                  <div class="flex gap-2 items-center">
+                    <div class="w-10 h-10 rounded-full overflow-hidden">
+                      <img alt="User profile picture" height="40" src="<%= teacher.profileimg %>" width="40"
+                        class="w-16 h-16 rounded-full object-cover object-center" />
+                    </div>
+                    <form action="/teacher/<%= teacher._id %>/class/<%= classroom._id %>/comment" method="post" class="w-full flex">
+                      <input class="flex-grow border rounded-full px-4 py-2" name="content" placeholder="Add class comment..." type="text"/>
+                      <input type="hidden" value="classroom" name="type">
+                      <input type="hidden" value="<%= classroom._id %>" name="targetId">
+                      <input type="hidden" value="<%= classroom.createdteacher._id %>" name="createdBy">
+                      <button type="submit" class="ml-2 text-gray-500">
+                          <i class="fas fa-paper-plane"></i>
+                      </button>
+                  </form>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Uploaded Materials List -->
+              <% material.forEach((material)=> { %>
+                <div id="material-<%= material._id %>"
+                  class="mt-6 bg-white p-4 rounded-lg shadow flex flex-col md:flex-row items-center justify-between">
+                  <div class="flex items-center mb-4 md:mb-0">
+                    <img alt="Illustration" class="w-10 h-10 object-cover object-center rounded-full"
+                      src="<%= teacher.profileimg %>" />
+                    <div class="ml-4">
+                      <h2 class="text-gray-700 text-lg font-semibold">
+                        <%= material.title %>
+                      </h2>
+                      <p class="text-gray-500">
+                        <%= material.description %>
+                      </p>
+                      <!-- Action Icons -->
+                      <div class="flex justify-start mt-2">
+                        <div class="right flex gap-10">
+                          <button class="delete-material" data-id="<%= material._id %>">
+                            <i class="fas fa-trash text-red-600"></i>
+                          </button>
+                          <button class="edit-material" data-teacherid="<%= teacher._id %>"
+                            data-classid="<%= classroom._id %>" data-id="<%= material._id %>"
+                            data-title="<%= material.title %>" data-description="<%= material.description %>">
+                            <i class="fas fa-edit text-green-600"></i>
+                          </button>
+                          <a href="/teacher/<%= teacher._id %>/material/<%=material._id %>/details">View More</a>
+                        </div>
+                        <!-- Edit Material Modal -->
+                        <div id="editMaterialModal"
+                          class="hidden fixed inset-0 bg-opacity-50 flex justify-center items-center"
+                          style="background-color: rgba(251, 248, 248, 0.895)">
+                          <div class="bg-white p-6 rounded-lg">
+                            <h2 class="text-xl mb-4">Edit Material</h2>
+                            <form id="editMaterialForm" method="post">
+                              <div class="mb-4">
+                                <label for="editMaterialTitle" class="block">Title</label>
+                                <input type="text" id="editMaterialTitle" name="title" class="w-full p-2 border"
+                                  required />
+                              </div>
+                              <div class="mb-4">
+                                <label for="editMaterialDescription" class="block">Description</label>
+                                <textarea id="editMaterialDescription" name="description" class="w-full p-2 border"
+                                  rows="4"></textarea>
+                              </div>
+                              <button type="submit" class="bg-blue-500 text-white p-2 rounded">
+                                Update Material
+                              </button>
+                              <button type="button" id="closeModal" class="bg-gray-400 text-white p-2 rounded">
+                                Cancel
+                              </button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              <% }) %>
             </div>
           </div>
-        </div>
-
-        <!-- Uploaded Materials List -->
-        <% material.forEach((material) => { %>
-        <div id="material-<%= material._id %>" class="mt-6 bg-white p-4 rounded-lg shadow flex flex-col md:flex-row items-center justify-between">
-          <div class="flex items-center mb-4 md:mb-0">
-            <img alt="Illustration" class="w-10 h-10 object-cover object-center rounded-full" src="<%= teacher.profileimg %>" />
-            <div class="ml-4">
-              <h2 class="text-gray-700 text-lg font-semibold"><%= material.title %></h2>
-              <p class="text-gray-500"><%= material.description %></p>
-              <!-- Action Icons -->
-              <div class="flex justify-evenly mt-2">
-               <div class="left">
-                <a href="<%= material.fileurl %>" target="_blank" class="text-blue-500 hover:text-blue-700"><i class="fas fa-eye"></i> View</a>
-                <a href="<%= material.fileurl %>" download class="text-green-500 hover:text-green-700"><i class="fas fa-download"></i> Download</a>
-              </div> 
-              <div class="right">
-                <button class="delete-material bg-red-500 text-white p-2 rounded-full" data-id="<%= material._id %>">
-                  <i class="fas fa-trash"></i> Delete
-                </button>
-                <button class="edit-material bg-blue-500 text-white p-2 rounded-full" data-teacherid="<%= teacher._id %>" data-classid="<%= classroom._id %>" data-id="<%= material._id %>" data-title="<%= material.title %>" data-description="<%= material.description %>">
-                  <i class="fas fa-edit"></i> Edit
-                </button>
-              </div>
-                <!-- Edit Material Modal -->
-<div id="editMaterialModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-  <div class="bg-white p-6 rounded-lg">
-    <h2 class="text-xl mb-4">Edit Material</h2>
-    <form id="editMaterialForm" method="post">
-      <div class="mb-4">
-        <label for="editMaterialTitle" class="block">Title</label>
-        <input type="text" id="editMaterialTitle" name="title" class="w-full p-2 border" required>
-      </div>
-      <div class="mb-4">
-        <label for="editMaterialDescription" class="block">Description</label>
-        <textarea id="editMaterialDescription" name="description" class="w-full p-2 border" rows="4"></textarea>
-      </div>
-      <button type="submit" class="bg-blue-500 text-white p-2 rounded">Update Material</button>
-      <button type="button" id="closeModal" class="bg-gray-400 text-white p-2 rounded">Cancel</button>
-    </form>
-  </div>
-</div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-        <% }) %>
-      </div>
     </div>
-  </div>
-</body>
+  </body>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Open the pop-up window for uploading materials
-    document.getElementById('openPopupBtn').addEventListener('click', function () {
-        document.getElementById('popupWindow').classList.remove('hidden');
-    });
-
-    // Close the pop-up window for uploading materials
-    document.getElementById('closePopupBtn').addEventListener('click', function () {
-        document.getElementById('popupWindow').classList.add('hidden');
-    });
-
-    // Delete Material
-    document.querySelectorAll('.delete-material').forEach(button => {
-        button.addEventListener('click', function () {
-            const materialId = this.getAttribute('data-id');
-            if (confirm('Are you sure you want to delete this material?')) {
-                fetch(`/teacher/material/delete/${materialId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const materialElement = document.getElementById(`material-${materialId}`);
-                        materialElement.remove();
-                    } else {
-                        alert('Failed to delete the material.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while deleting the material.');
-                });
-            }
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Open the pop-up window for uploading materials
+      document
+        .getElementById("openPopupBtn")
+        .addEventListener("click", function () {
+          document.getElementById("popupWindow").classList.remove("hidden");
         });
-    });
 
-    // Edit Material
-    const editMaterialModal = document.getElementById('editMaterialModal');
-    const editMaterialForm = document.getElementById('editMaterialForm');
-    const editMaterialTitle = document.getElementById('editMaterialTitle');
-    const editMaterialDescription = document.getElementById('editMaterialDescription');
-    const closeModal = document.getElementById('closeModal');
-
-    document.querySelectorAll('.edit-material').forEach(button => {
-        button.addEventListener('click', function () {
-            const teacherid = this.getAttribute('data-teacherid');
-            const classid = this.getAttribute('data-classid');
-            const materialId = this.getAttribute('data-id');
-            const materialTitle = this.getAttribute('data-title');
-            const materialDescription = this.getAttribute('data-description');
-
-            // Populate the form with existing values
-            editMaterialTitle.value = materialTitle;
-            editMaterialDescription.value = materialDescription;
-
-            // Set the form action dynamically
-            editMaterialForm.action = `/teacher/${teacherid}/class/${classid}/details/material/${materialId}/edit`;
-
-            // Show the modal
-            editMaterialModal.classList.remove('hidden');
+      // Close the pop-up window for uploading materials
+      document
+        .getElementById("closePopupBtn")
+        .addEventListener("click", function () {
+          document.getElementById("popupWindow").classList.add("hidden");
         });
+
+      // Delete Material
+      document.querySelectorAll(".delete-material").forEach((button) => {
+        button.addEventListener("click", function () {
+          const materialId = this.getAttribute("data-id");
+          if (confirm("Are you sure you want to delete this material?")) {
+            fetch(`/teacher/material/delete/${materialId}`, {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  const materialElement = document.getElementById(
+                    `material-${materialId}`
+                  );
+                  materialElement.remove();
+                } else {
+                  alert("Failed to delete the material.");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("An error occurred while deleting the material.");
+              });
+          }
+        });
+      });
+
+      // Edit Material
+      const editMaterialModal = document.getElementById("editMaterialModal");
+      const editMaterialForm = document.getElementById("editMaterialForm");
+      const editMaterialTitle = document.getElementById("editMaterialTitle");
+      const editMaterialDescription = document.getElementById(
+        "editMaterialDescription"
+      );
+      const closeModal = document.getElementById("closeModal");
+
+      document.querySelectorAll(".edit-material").forEach((button) => {
+        button.addEventListener("click", function () {
+          const teacherid = this.getAttribute("data-teacherid");
+          const classid = this.getAttribute("data-classid");
+          const materialId = this.getAttribute("data-id");
+          const materialTitle = this.getAttribute("data-title");
+          const materialDescription = this.getAttribute("data-description");
+
+          // Populate the form with existing values
+          editMaterialTitle.value = materialTitle;
+          editMaterialDescription.value = materialDescription;
+
+          // Set the form action dynamically
+          editMaterialForm.action = `/teacher/${teacherid}/class/${classid}/details/material/${materialId}/edit`;
+
+          // Show the modal
+          editMaterialModal.classList.remove("hidden");
+        });
+      });
+
+      // Close the edit modal
+      closeModal.addEventListener("click", function () {
+        editMaterialModal.classList.add("hidden");
+      });
     });
+  </script>
 
-    // Close the edit modal
-    closeModal.addEventListener('click', function () {
-        editMaterialModal.classList.add('hidden');
-    });
-});
-
-</script>
-
-<%- include('../components/footer') %>
-
+  <%- include('../components/footer') %>

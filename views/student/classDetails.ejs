@@ -2,6 +2,13 @@
 
 <body class="bg-gray-100 min-h-screen w-full bg-white">
     <%- include('./studentNavbar', {student, quiz}) %>
+    <%- include('./studentSidebar', {student}) %>
+
+    <%- include('../components/snackbar', { 
+        successMessage: successMessage, 
+        errorMessage: errorMessage 
+    }) %>
+    
 
     <div class="max-w-4xl mx-auto pt-20 px-4 sm:px-6 lg:px-8">
         <!-- Loop through each material -->
@@ -64,7 +71,7 @@
                 <div class="flex items-center">
                     <img alt="User avatar" class="w-10 h-10 object-cover object-center rounded-full mr-4" src="<%= student.profileimg %>"/>
                     <form action="/student/<%= student._id %>/class/comment" method="post" class="w-full flex">
-                        <input class="flex-grow border rounded-full px-4 py-2" name="content" placeholder="Add a comment..." type="text"/>
+                        <input class="flex-grow border rounded-full px-4 py-2" name="content" placeholder="Add a comment..." type="text" required/>
                         <input type="hidden" value="teacher" name="type">
                         <input type="hidden" value="<%= material.teacheruploaded._id %>" name="targetId">
                         <input type="hidden" value="<%= student._id %>" name="createdBy">

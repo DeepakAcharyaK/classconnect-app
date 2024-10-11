@@ -3,11 +3,12 @@ const router = express.Router();
 
 const Teacher = require('../models/teacher.model.js');
 const Student = require('../models/student.model.js');
-const Material=require('../models/material.model.js')
+const Material=require('../models/material.model.js');
 const Classrooms = require('../models/classroom.model.js');
 const Notice = require('../models/notice.model.js');
 const Quiz = require('../models/quiz.model');
-// const Admin = require('../models/admin.model.js');
+const Admin = require('../models/admin.model.js');
+const Comment = require('../models/comment.model.js');
 
 const isTeacher = require('../middlewares/isTeacher.js');
 const bcrypt = require('bcrypt');
@@ -84,7 +85,6 @@ router.get('/login', (req, res) => {
   });
 });
 
-//POST route for login 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -98,11 +98,13 @@ router.post('/login', async (req, res) => {
 
     if (!foundTeacher) {
       req.flash('errorMessage', 'Invalid Email or Password');
+      console.log('Invalid Email or Password')
       return res.status(401).redirect('/teacher/login');
     }
 
     if (!foundTeacher.isApproved) {
       req.flash('errorMessage', 'Your registration is pending approval');
+      console.log('Your registration is pending approval')
       return res.status(401).redirect('/teacher/login');
     }
 
@@ -110,6 +112,7 @@ router.post('/login', async (req, res) => {
 
     if (!isMatch) {
       req.flash('errorMessage', 'Invalid Email or Password');
+      console.log('Invalid Email or Password')
       return res.status(401).redirect('/teacher/login');
     }
 
@@ -119,12 +122,8 @@ router.post('/login', async (req, res) => {
     // Set a success flash message
     req.flash('successMessage', 'Login successful');
 
-    // Pass the flash messages to the render function
-    return res.status(200).render('teacher/teacherHome', { 
-      teacher: foundTeacher, 
-      successMessage: req.flash('successMessage'),
-      errorMessage: req.flash('errorMessage') 
-    });
+    // Redirect to the teacher's home page instead of rendering it directly
+    return res.status(200).redirect(`/teacher/teacherHome/${foundTeacher._id}`);
 
   } catch (error) {
     console.log(error);
@@ -421,7 +420,7 @@ router.post('/:teacherid/class/:classid/materials/upload', isTeacher, upload.arr
 });
 
 //DELETE route for DELETE Material (along with attachments)
-router.delete('/material/delete/:id', async (req, res) => {
+router.delete('/material/delete/:id',isTeacher, async (req, res) => {
   try {
       const materialId = req.params.id;
       
@@ -454,9 +453,8 @@ router.delete('/material/delete/:id', async (req, res) => {
   }
 });
 
-
 //POST route EDIT Material (POST request) (only title and description)
-router.post('/:teacherid/class/:classid/details/material/:materialid/edit', async (req, res) => {
+router.post('/:teacherid/class/:classid/details/material/:materialid/edit',isTeacher, async (req, res) => {
   try {
     const { materialid, teacherid, classid } = req.params;
     const { title, description } = req.body;
@@ -485,6 +483,47 @@ router.post('/:teacherid/class/:classid/details/material/:materialid/edit', asyn
     console.error('Error while updating material:', error);
     req.flash('errorMessage', 'Server error while updating material.');
     res.status(500).redirect(`/teacher/${req.params.teacherid}/class/${req.params.classid}/details`);
+  }
+});
+
+//GET Route to get the details of a material uploaded by the teacher
+router.get('/:teacherid/material/:materialid/details', async (req, res) => {
+  try {
+    const teacher = await Teacher.findOne({ _id: req.params.teacherid });
+    if (!teacher) {
+      console.log('Teacher not found');
+      return res.status(404);
+    }
+
+    const material = await Material.findById(req.params.materialid).populate('teacheruploaded');
+    if (!material) {
+      return res.status(404).send('Material not found');
+    }
+    res.render('teacher/materialDetails', { material,teacher });
+  } catch (error) {
+    res.status(500).send('Server Error');
+  }
+});
+
+// Route to delete an attached file from the material
+router.delete('/material/:materialid/file', async (req, res) => {
+  try {
+    const { fileUrl } = req.body;
+    const material = await Material.findById(req.params.materialid);
+    
+    if (!material) {
+      return res.status(404).json({ success: false, message: 'Material not found' });
+    }
+
+    // Remove the file from attachedFile array
+    material.attachedFile = material.attachedFile.filter(file => file !== fileUrl);
+
+    // Save updated material
+    await material.save();
+
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server Error' });
   }
 });
 
@@ -800,7 +839,7 @@ router.get('/teacherHome/:teacherid/quiz/:quizid',isTeacher, async (req, res) =>
 });
 
 //POST Route to start/stop the quiz
-router.post('/teacherHome/:teacherid/quiz/:quizid/toggle', async (req, res) => {
+router.post('/teacherHome/:teacherid/quiz/:quizid/toggle',isTeacher, async (req, res) => {
   try {
     const quiz = await Quiz.findById(req.params.quizid);
     if (!quiz) {
@@ -821,7 +860,7 @@ router.post('/teacherHome/:teacherid/quiz/:quizid/toggle', async (req, res) => {
 });
 
 // POST Route to delete a quiz
-router.post('/teacherHome/:teacherId/quiz/:quizId/delete', async (req, res) => {
+router.post('/teacherHome/:teacherId/quiz/:quizId/delete',isTeacher, async (req, res) => {
   const { teacherId, quizId } = req.params;
 
   try {
@@ -846,10 +885,9 @@ router.post('/teacherHome/:teacherId/quiz/:quizId/delete', async (req, res) => {
   }
 });
 
-
 // ----------------------SEE ENROLLED STUDENTS--------------------
 
-router.get('/teacherHome/:teacherId/classroom/:classroomId/enrolledStudents', async (req, res) => {
+router.get('/teacherHome/:teacherId/classroom/:classroomId/enrolledStudents',isTeacher, async (req, res) => {
   const { classroomId } = req.params;
 
   try {
@@ -872,13 +910,177 @@ router.get('/teacherHome/:teacherId/classroom/:classroomId/enrolledStudents', as
   }
 });
 
+//--------------------------COMMENT-------------------------------
+
+// Route to render the message page with students enrolled in the teacher's classroom
+router.get('/:teacherid/message',isTeacher, async (req, res) => {
+  try {
+    const { teacherid } = req.params;
+
+    // Find classrooms created by the teacher
+    const classrooms = await Classrooms.find({ createdteacher: teacherid }).populate('studentsenrolled');
+
+    // Extract students from those classrooms
+    let studentIds = [];
+    classrooms.forEach(classroom => {
+      studentIds = studentIds.concat(classroom.studentsenrolled);
+    });
+
+    // Fetch student details
+    const students = await Student.find({ _id: { $in: studentIds } });
+
+    // Render the message page and pass the students
+    res.render('teacher/message', { 
+      students, 
+      teacher:req.session.teacher,
+      successMessage:req.flash('successMessage'),
+      errorMessage:req.flash('errorMessage'),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+
+// POST Route to handle comment/suggestion creation for CLASSROOM
+router.post('/:teacherid/class/:classid/comment', isTeacher, async (req, res) => {
+  const { content, type, targetId, createdBy, createdByModel } = req.body; // added createdByModel to track the creator's model
+  const { teacherid, classid } = req.params;
+
+  console.log(createdBy, createdByModel);
+
+  try {
+    // Create base comment data
+    let commentData = {
+      content,
+      createdBy:teacherid,       // The creator's ID (could be a teacher, student, or admin)
+      createdByModel:'Teacher',  // The creator's model ('Teacher', 'Student', or 'Admin')
+      context: type,   // The context of the comment (e.g., 'classroom', 'teacher', 'admin')
+    };
+
+    // Handle different comment contexts
+    switch (type) {
+      case 'classroom':
+        const classroom = await Classrooms.findById(targetId);
+        if (!classroom) {
+          req.flash('errorMessage', 'Classroom not found');
+          return res.status(404).redirect(`/teacher/${teacherid}/class/${classid}/details`);
+        }
+        commentData.classroom = targetId; // Associate the comment with the classroom
+        break;
+
+      default:
+        req.flash('errorMessage', 'Invalid context or target.');
+        return res.status(400).redirect(`/teacher/${teacherid}/class/${classid}/details`);
+    }
+
+    // Save the new comment to the database
+    const newComment = new Comment(commentData);
+    await newComment.save();
+
+    // Respond with success message and the new comment
+    req.flash('successMessage', 'Message sent successfully');
+    res.status(201).redirect(`back`); ///teacher/${teacherid}/class/${classid}/details
+
+  } catch (error) {
+    // Handle errors and respond with a 500 status
+    console.log('Error adding comment', error);
+    req.flash('errorMessage', 'Server error.');
+    res.status(500).redirect(`/teacher/${teacherid}/class/${classid}/details`);
+  }
+});
+
+
+// POST route to send a message to ADMIN or STUDENTS
+router.post('/:teacherid/message', isTeacher, async (req, res) => {
+  const { content, type, targetId } = req.body;
+  const { teacherid } = req.params;
+
+  try {
+    // Base comment data with teacher as the creator
+    let commentData = {
+      content,
+      createdBy: teacherid, // Reference to the teacher's ID
+      createdByModel: 'Teacher', // Reference the 'Teacher' model dynamically
+      context: type,  // Set the context of the comment ('student', 'admin', etc.)
+    };
+
+    // Handle different comment contexts based on 'type'
+    switch (type) {
+      case 'student':
+        const student = await Student.findById(targetId);
+        if (!student) {
+          req.flash('errorMessage', 'Student not found');
+          return res.status(404).redirect(`/teacher/${teacherid}/message`);
+        }
+        commentData.student = targetId; // Save the student ID
+        break;
+
+      case 'admin':
+        const admin = await Admin.findOne({ name: 'Admin' });
+        if (!admin) {
+          req.flash('errorMessage', 'Admin not found');
+          return res.status(404).redirect(`/teacher/${teacherid}/message`);
+        }
+        commentData.admin = admin._id; // Save the admin ID
+        break;
+
+      default:
+        req.flash('errorMessage', 'Invalid receiver type.');
+        return res.status(400).redirect(`/teacher/${teacherid}/message`);
+    }
+
+    // Save the new comment in the database
+    const newComment = new Comment(commentData);
+    await newComment.save();
+
+    // Success message and redirect
+    req.flash('successMessage', 'Message sent successfully');
+    res.status(201).redirect(`/teacher/${teacherid}/message`);
+
+  } catch (error) {
+    console.log('Error adding comment', error);
+    req.flash('errorMessage', 'Server error.');
+    res.status(500).redirect(`/teacher/${teacherid}/message`);
+  }
+});
+
+//inbox
+router.get('/message', isTeacher, async (req, res) => {
+  try {
+
+    // Fetch messages where the context is 'student', createdByModel is 'Teacher' or 'Admin', and the student matches
+    const messages = await Comment.find({
+      teacher: req.session.teacher._id, // Directly match the student object ID
+      context: 'teacher',
+      createdByModel: { $in: ['Student', 'Admin'] } // Check for both 'Teacher' and 'Admin'
+    }).populate('createdBy'); // Populate the 'createdBy' field
+
+    // If no messages found, return 404 with a message
+    if (!messages || messages.length === 0) {
+      console.log('No messages found');
+    }
+
+    // Render the 'student/inbox' view with the messages and student data
+    res.render('teacher/inbox', { 
+      messages,
+      teacher:req.session.teacher
+    });
+  } catch (error) {
+    console.error('Error fetching chat messages', error);
+    req.flash('errorMessage', 'Error fetching chat messages');
+    // Redirect to the admin panel in case of error (you may want to modify this if the error occurs for students)
+    res.status(500).redirect(`/admin/adminPanel/${req.session.admin._id}`);
+  }
+});
+
 // ---------------------------TEACHER LOGOUT------------------------✅
-router.get('/logout', (req, res) => {
+router.get('/logout',isTeacher, (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       console.error('Error logging out:', err);
       req.flash('errorMessage', 'Error logging out. Please try again.');
-      return res.redirect('/teacher/teacherHome'); // Redirect back to home on error
+      return res.redrect(`/teacher/teacherHome/${req.session.teacher._id}`); // Redirect back to home on error
     }
     res.redirect('/teacher/login'); // Redirect to login page after logout
   });

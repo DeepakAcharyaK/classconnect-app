@@ -30,7 +30,7 @@
                 <div class="bg-white p-4 rounded-lg shadow-md flex items-center space-x-4">
                     <img alt="User avatar" class="w-10 h-10 rounded-full mr-4" height="40" src="<%= student.profileimg %>" width="40"/>
                     <form action="/student/<%= student._id %>/class/comment" method="post" class="w-full flex">
-                        <input class="flex-grow border rounded-full px-4 py-2" name="content" placeholder="Add class comment..." type="text"/>
+                        <input class="flex-grow border rounded-full px-4 py-2" name="content" placeholder="Add class comment..." type="text" required/>
                         <input type="hidden" value="classroom" name="type">
                         <input type="hidden" value="<%= classroom._id %>" name="targetId">
                         <input type="hidden" value="<%= student._id %>" name="createdBy">
@@ -45,47 +45,55 @@
                 <% if (allItems.length > 0) { %>
                     <% allItems.forEach((item) => { %>
                         <!-- Check if item is a comment -->
-                        <% if (item.type === 'comment') { %>
+                       <!-- Check if item is a comment -->
+<% if (item.type === 'comment') { %>
 
-                            <div class="bg-gray-100 p-4 rounded-lg shadow-md flex items-start space-x-4 relative">
-                                <div class="p-2 rounded-full overflow-hidden">
-                                    <img src="<%= item.createdBy.profileimg %>" alt="" class="w-10 h-10 object-cover object-center rounded-full overflow-hidden">
-                                </div>
-                                <div>
-                                    <p class="font-semibold">
-                                        <%= item.createdBy.name %> commented:
-                                    </p>
-                                    <p class="text-gray-500 text-sm">
-                                        <%= item.content %>
-                                    </p>
-                                    <p class="text-gray-500 text-sm">
-                                        <%= new Date(item.createdAt).toLocaleString('en-US', {
-                                            day: 'numeric',
-                                            month: 'long',
-                                            year: 'numeric',
-                                            hour: 'numeric',
-                                            minute: 'numeric',
-                                            hour12: true
-                                        }) %>
-                                    </p>
-                                </div>
+    <div class="bg-gray-100 p-4 rounded-lg shadow-md flex items-start space-x-4 relative">
+        <div class="p-2 rounded-full overflow-hidden">
+            <% if (item.createdBy) { %> 
+                <img src="<%= item.createdBy.profileimg %>" alt="" class="w-10 h-10 object-cover object-center rounded-full overflow-hidden">
+            <% } else { %>
+                <img src="/images/defaultInstructor.png" alt="Default Avatar" class="w-10 h-10 object-cover object-center rounded-full overflow-hidden">
+            <% } %>
+        </div>
+        <div>
+            <p class="font-semibold text-gray-400">
+                <% if (item.createdBy) { %>
+                    <%= item.createdBy.name %> commented:
+                <% } else { %>
+                    Instructor commented:
+                <% } %>
+            </p>
+            <p class="text-gray-500 text-sm">
+                <%= item.content %>
+            </p>
+            <p class="text-gray-500 text-sm">
+                <%= new Date(item.createdAt).toLocaleString('en-US', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true
+                }) %>
+            </p>
+        </div>
 
-                                <!-- Show delete option only if the comment creator is the current user -->
-                                <% if (item.createdBy._id.toString() === student._id.toString()) { %>
-                                    <div class="ml-auto absolute right-5 top-5">
-                                        <i class="fas fa-ellipsis-v text-gray-500 cursor-pointer" onclick="toggleDropdown('<%= item._id %>')"></i>
-                                        <!-- Dropdown for delete option -->
-                                        <div id="dropdown-<%= item._id %>" class="absolute right-0 mt-2 bg-white shadow-md rounded-md hidden">
-                                            <button class="text-red-500 px-4 py-2 w-full text-left" onclick="showModal('<%= item._id %>')">
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </div>
-                                <% } %>
-                            </div>
+        <!-- Show delete option only if the comment creator is the current user -->
+        <% if (item.createdBy && item.createdBy._id.toString() === student._id.toString()) { %>
+            <div class="ml-auto absolute right-5 top-5">
+                <i class="fas fa-ellipsis-v text-gray-500 cursor-pointer" onclick="toggleDropdown('<%= item._id %>')"></i>
+                <!-- Dropdown for delete option -->
+                <div id="dropdown-<%= item._id %>" class="absolute right-0 mt-2 bg-white shadow-md rounded-md hidden">
+                    <button class="text-red-500 px-4 py-2 w-full text-left" onclick="showModal('<%= item._id %>')">
+                        Delete
+                    </button>
+                </div>
+            </div>
+        <% } %>
+    </div>
 
-                        <!-- Check if item is a material -->
-                        <% } else if (item.type === 'material') { %>
+<% } else if (item.type === 'material') { %>
                             <a href="/student/<%= student._id %>/enrolled/class/<%= classroom._id %>/material/<%= item._id %>/details" class="block no-underline"> <!-- Wrap the div with a clickable anchor tag -->
                                 <div class="bg-white p-4 rounded-lg shadow-md flex items-start space-x-4 relative">
                                     <!-- Display teacher profile image and name -->
@@ -141,7 +149,7 @@
         function showModal(commentId) {
             const modal = document.getElementById('deleteModal');
             const deleteForm = document.getElementById('deleteForm');
-            deleteForm.action = `/comments/${commentId}/delete`;
+            deleteForm.action = `/student/comments/${commentId}/delete`;
             modal.classList.remove('hidden');
         }
 

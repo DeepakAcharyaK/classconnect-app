@@ -1,0 +1,89 @@
+<%- include('../components/header') %>
+
+
+<body class="bg-gray-900 text-gray-300 flex">
+  <%- include('./navbar') %>
+  <%- include('./sidebar') %>
+
+  <%- include('../components/snackbar', { 
+    successMessage: successMessage, 
+    errorMessage: errorMessage 
+  }) %>
+
+  <!-- Main Content -->
+  <div class="flex-1 p-4">
+    <h1 class="text-3xl font-bold mb-6">Manage Teacher</h1>
+
+    <!-- Pending Teacher List -->
+    <div class="border border-gray-500 p-2 rounded-md">
+      <h2 class="text-xl font-semibold mb-4">Pending Teachers</h2>
+      <% if (pendingTeachers && pendingTeachers.length > 0) { %>
+        <div class="overflow-x-auto shadow-md rounded-lg mb-6 bg-gray-800">
+          <table class="min-w-full divide-y divide-gray-700">
+            <thead class="bg-gray-700">
+              <tr>
+                <th class="py-3 px-4 text-left text-sm font-medium">Username</th>
+                <th class="py-3 px-4 text-left text-sm font-medium">Email</th>
+                <th class="py-3 px-4 text-left text-sm font-medium">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-600">
+              <% pendingTeachers.forEach(teacher => { %>
+                <tr>
+                  <td class="py-4 px-6 text-sm"><%= teacher.name %></td>
+                  <td class="py-4 px-6 text-sm"><%= teacher.email %></td>
+                  <td class="py-4 px-6 text-sm">
+                    <form action="/admin/approve/teacher/<%= teacher._id %>" method="POST" class="inline">
+                      <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Approve</button>
+                    </form>
+                    <form action="/admin/reject/teacher/<%= teacher._id %>" method="POST" class="inline ml-2">
+                      <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Reject</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <p class="text-gray-500 ml-5">No pending teacher registrations.</p>
+      <% } %>
+    </div>
+
+    <!-- Approved Teacher List -->
+    <div class="border border-gray-500 p-2 rounded-md mt-4">
+      <h2 class="text-xl font-semibold mb-4">Approved Teachers</h2>
+      <% if (approvedTeachers && approvedTeachers.length > 0) { %>
+        <div class="overflow-x-auto shadow-md rounded-lg mb-6 bg-gray-800">
+          <table class="min-w-full divide-y divide-gray-700">
+            <thead class="bg-gray-700">
+              <tr>
+                <th class="py-3 px-4 text-left text-sm font-medium">Username</th>
+                <th class="py-3 px-4 text-left text-sm font-medium">Email</th>
+                <th class="py-3 px-4 text-left text-sm font-medium">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-600">
+              <% approvedTeachers.forEach(teacher => { %>
+                <tr>
+                  <td class="py-4 px-6 text-sm"><%= teacher.name %></td>
+                  <td class="py-4 px-6 text-sm"><%= teacher.email %></td>
+                  <td class="py-4 px-6 text-sm">
+                    <form action="/admin/delete/teacher/<%= teacher._id %>" method="POST" class="inline">
+                      <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <p class="text-gray-500 ml-5">No approved teachers available.</p>
+      <% } %>
+    </div>
+  </div>
+</body>
+
+<%- include('../components/footer') %>
+

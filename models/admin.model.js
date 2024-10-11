@@ -3,13 +3,10 @@ const mongoose=require('mongoose')
 const hodSchema=new mongoose.Schema({
     name:{ 
         type:String, 
-        minLength: 1,
         required:true 
     },
     email:{ 
         type:String, 
-        pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-        unique: true,
     },
     password:{ 
         type:String, 

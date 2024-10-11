@@ -1,0 +1,58 @@
+<%- include('../components/header') %>
+
+<body class="">
+<%- include('../components/navbar',{teacher}) %>
+<%- include('../components/sidebar') %>
+  
+  <div class="md:ml-64 container flex-col mt-28">
+    <div class="bg-white rounded-lg p-2 flex flex-col flex-grow">
+      <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold text-gray-900">Inbox</h1>
+      </div>
+
+      <!-- Chat window -->
+      <div id="chat-window" class="overflow-y-auto flex-grow h-full p-2 mb-4">
+      <% if(messages.length > 0){ %>
+        <!-- Messages will be rendered here -->
+        <% messages.forEach(function(message) { %>
+          <% const messageTime = new Date(message.createdAt).toLocaleString(); %> <!-- Format date and time -->
+
+          <% if (message.createdBy && message.createdBy.role === 'Student') { %>
+            <!-- Message from Teacher (right-aligned) -->
+            <div class="flex justify-end mb-6">
+              <div class="flex items-end space-x-2">
+                <div class="text-sm text-gray-600 dark:text-gray-400"><%= messageTime %></div>
+                <div class="bg-blue-500 text-white p-2 rounded-lg max-w-xs">
+                    <%= message.content %>
+                </div>
+              </div>
+            </div>
+          <% } else { %>
+            <!-- Message from Admin (left-aligned) -->
+            <div class="flex justify-start mb-6">
+              <div class="flex items-end space-x-2">
+                <img src="<%=message.createdBy.profileimg%>" alt="" class="w-10 h-10 rounded-full object-cover object-center">
+                <div class="bg-gray-300 dark:bg-gray-600 text-black dark:text-white p-2 rounded-lg max-w-xs">
+                    <%= message.createdBy.name %> texted:<%= message.content %>
+                </div>
+                <div class="text-sm text-gray-600 dark:text-gray-400"><%= messageTime %></div>
+              </div>
+            </div>
+          <% } %>
+        <% }); %>
+
+        <%}else{ %>
+            <p class="text-gray-500">No message found</p>
+          <%}%>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Scroll to the bottom of the chat window when the page loads
+    const chatWindow = document.getElementById('chat-window');
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  </script>
+</body>
+
+<%- include('../components/footer') %>

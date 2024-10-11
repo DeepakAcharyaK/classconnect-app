@@ -1,0 +1,63 @@
+<%- include('../components/header') %>
+
+<body class="bg-gray-100">
+<%- include('../components/navbar',{teacher}) %>
+<%- include('../components/sidebar') %>
+
+<%- include('../components/snackbar', { 
+  successMessage: successMessage, 
+  errorMessage: errorMessage 
+}) %>
+    <!-- Container -->
+    <div class="max-w-6xl ml-64 p-4 pt-32" style="margin-left: 300px;">
+      
+      <!-- Heading -->
+      <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Send a Message</h1>
+  
+      <!-- Two-Part Message Section -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  
+        <!-- Message to Admin -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <h2 class="text-2xl font-semibold text-gray-700 mb-4">Message to Admin</h2>
+          <form action="/teacher/<%= teacher._id %>/message" method="POST">
+
+            <input type="text" name="type" value="admin" hidden>
+            <div class="mb-4">
+              <label for="adminMessage" class="block text-sm font-medium text-gray-600">Message</label>
+              <textarea id="adminMessage" name="content" rows="5" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" placeholder="Write your message..."></textarea>
+            </div>
+            <button type="submit" class="w-full bg-indigo-500 text-white font-semibold py-2 rounded-lg hover:bg-indigo-600 transition">Send to Admin</button>
+          </form>
+        </div>
+  
+        <!-- Message to Student -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <h2 class="text-2xl font-semibold text-gray-700 mb-4">Message to Student</h2>
+          <form action="/teacher/<%= teacher._id %>/message" method="POST">
+            <div class="mb-4">
+              <label for="student" class="block text-sm font-medium text-gray-600">Select Student</label>
+              <select id="student" name="targetId" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                <!-- Loop through the students passed from the backend -->
+                <% students.forEach(function(student) { %>
+                  <option value="<%= student._id %>"><%= student.usn %> - <%= student.name %></option>
+                <% }) %>
+              </select>
+            </div>
+            <input type="text" name="type" value="student" hidden>
+            <div class="mb-4">
+              <label for="studentMessage" class="block text-sm font-medium text-gray-600">Message</label>
+              <textarea id="studentMessage" name="content" rows="5" class="mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" placeholder="Write your message..."></textarea>
+            </div>
+            <button type="submit" class="w-full bg-indigo-500 text-white font-semibold py-2 rounded-lg hover:bg-indigo-600 transition">Send to Student</button>
+          </form>
+          
+        </div>
+  
+      </div>
+  
+    </div>
+  
+  </body>
+
+<%- include('../components/footer') %>

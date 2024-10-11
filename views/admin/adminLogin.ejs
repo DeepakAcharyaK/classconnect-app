@@ -1,25 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
-  <title>HOD Login</title>
-</head>
-<body class="bg-gray-100">
-  <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-6">HOD Login</h1>
-    <form action="/admin/login" method="POST" class="bg-white p-6 rounded shadow-md">
-      <div class="mb-4">
-        <label for="name" class="block text-gray-700">Username</label>
-        <input type="text" id="name" name="name" required class="border rounded p-2 w-full">
-      </div>
-      <div class="mb-4">
-        <label for="password" class="block text-gray-700">Password</label>
-        <input type="password" id="password" name="password" required class="border rounded p-2 w-full">
-      </div>
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Login</button>
-    </form>
+<%- include('../components/header') %>
+
+<body class="bg-gray-900 text-white">
+  <%- include('../components/snackbar', { 
+    successMessage: successMessage, 
+    errorMessage: errorMessage 
+  }) %>
+  
+  <div class="container mx-auto p-4 flex justify-center items-center min-h-screen">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
+      <h1 class="text-3xl font-bold mb-6 text-center">Admin Login</h1>
+      <form id="loginForm" action="/admin/login" method="POST">
+        <!-- Username -->
+        <div class="mb-4">
+          <label for="name" class="block text-gray-300">Username</label>
+          <input type="text" id="name" name="name" required class="border border-gray-600 rounded p-2 w-full bg-gray-700 text-white focus:ring-2 focus:ring-blue-500">
+          <p id="nameError" class="text-red-500 text-sm hidden"></p> <!-- Error message for username -->
+        </div>
+
+        <!-- Password -->
+        <div class="mb-6">
+          <label for="password" class="block text-gray-300">Password</label>
+          <input type="password" id="password" name="password" required class="border border-gray-600 rounded p-2 w-full bg-gray-700 text-white focus:ring-2 focus:ring-blue-500">
+          <p id="passwordError" class="text-red-500 text-sm hidden"></p> <!-- Error message for password -->
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition duration-200 ease-in-out">Login</button>
+      </form>
+    </div>
   </div>
+
+  <!-- Validation Script -->
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const fieldsToValidate = [
+        {
+          field: document.getElementById('name'),
+          errorElement: document.getElementById('nameError'),
+          validations: [
+            { type: 'required', message: 'Username is required' },
+            { type: 'minLength', length: 3, message: 'Username must be at least 3 characters long' }
+          ]
+        },
+        {
+          field: document.getElementById('password'),
+          errorElement: document.getElementById('passwordError'),
+          validations: [
+            { type: 'required', message: 'Password is required' },
+            { type: 'minLength', length: 6, message: 'Password must be at least 6 characters long' }
+          ]
+        }
+      ];
+
+      // Call the validateForm function and proceed only if valid
+      if (validateForm(fieldsToValidate)) {
+        this.submit(); // Submit form if valid
+      }
+    });
+
+    function validateForm(fields) {
+      let isValid = true;
+
+      fields.forEach(({ field, errorElement, validations }) => {
+        const value = field.value.trim();
+        let fieldIsValid = true;
+
+        validations.forEach((validation) => {
+          switch (validation.type) {
+            case 'required':
+              if (!value) {
+                errorElement.textContent = validation.message;
+                errorElement.classList.remove('hidden');
+                fieldIsValid = false;
+              }
+              break;
+            case 'minLength':
+              if (value.length < validation.length) {
+                errorElement.textContent = validation.message;
+                errorElement.classList.remove('hidden');
+                fieldIsValid = false;
+              }
+              break;
+          }
+        });
+
+        if (fieldIsValid) {
+          errorElement.classList.add('hidden');
+        } else {
+          isValid = false;
+        }
+      });
+
+      return isValid;
+    }
+  </script>
 </body>
-</html>
+
+<%- include('../components/footer') %>

@@ -1,0 +1,66 @@
+<%- include('../components/header') %>
+
+
+
+<body class="bg-gray-900 text-gray-300 flex">
+  <%- include('./navbar') %>
+  <%- include('./sidebar') %>
+
+  <%- include('../components/snackbar', { 
+    successMessage: successMessage, 
+    errorMessage: errorMessage 
+  }) %>
+  <!-- Main Content -->
+  <div class="flex-1 p-4">
+    <h1 class="text-3xl font-bold mb-6">Manage Students</h1>
+
+    <!-- Student List -->
+    <div class="border border-gray-500 p-2 rounded-md">
+      <h2 class="text-xl font-semibold mb-4">Students</h2>
+      <% if (students && students.length > 0) { %>
+        <div class="overflow-x-auto shadow-md rounded-lg bg-gray-800">
+          <table class="min-w-full divide-y divide-gray-700">
+            <thead class="bg-gray-700">
+              <tr>
+                <th class="py-3 px-4 text-left text-sm font-medium">USN</th>
+                <th class="py-3 px-4 text-left text-sm font-medium">Username</th>
+                <th class="py-3 px-4 text-left text-sm font-medium">Email</th>
+                <th class="py-3 px-4 text-left text-sm font-medium">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-600">
+              <% students.forEach(student => { %>
+                <tr>
+                  <td class="py-4 px-6 text-sm"><%= student.usn %></td>
+                  <td class="py-4 px-6 text-sm"><%= student.name %></td>
+                  <td class="py-4 px-6 text-sm"><%= student.email %></td>
+                  <td class="py-4 px-6 text-sm">
+                    <form action="/admin/delete/student/<%= student._id %>" method="POST" class="inline">
+                      <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <p class="text-gray-500 ml-5">No students available.</p>
+      <% } %>
+    </div>
+  </div>
+
+  <%- include('../components/footer') %>
+
+  <script>
+    // Toggle sidebar visibility on smaller screens
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    const sidebar = document.querySelector('aside');
+    toggleSidebar.addEventListener('click', () => {
+      sidebar.classList.toggle('hidden');
+    });
+  </script>
+</body>
+
+<%- include('../components/footer') %>
+

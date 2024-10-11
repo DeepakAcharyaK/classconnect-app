@@ -1,4 +1,4 @@
-const express= require('express')
+const express=require('express')
 const router=express.Router()
 
 const Student=require('../models/student.model.js')
@@ -329,6 +329,7 @@ router.get('/:studentid/enrolled/class/:classroomid',isStudent, async (req, res)
     // Sort the combined array by 'createdAt' in descending order (latest first)
     allItems.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
+    
     // Render the view 'classesCreated' with all necessary data
     res.render('student/classesCreated', {
       student,
@@ -368,7 +369,10 @@ router.get('/:studentid/enrolled/class/:classroomid/material/:materialid/details
     }
 
     // Render the 'classDetails' view, passing the student, material, and quiz data
-    res.render('student/classDetails', { student, material, quiz });
+    res.render('student/classDetails', { student, material, quiz ,
+      successMessage: req.flash('successMessage'),
+      errorMessage: req.flash('errorMessage')
+    });
 
   } catch (error) {
     // Catch and handle any errors during database operations or rendering
@@ -384,7 +388,7 @@ router.get('/:studentid/enrolled/class/:classroomid/material/:materialid/details
 router.get('/:studentid/class/suggestion',isStudent, async (req, res) => {
   const { studentid } = req.params;
   try {
-    const admin = await Admin.findOne({ name: 'admin' });
+    const admin = await Admin.findOne({ name: 'Admin' });
     const quiz = await Quiz.find();
     const student = await Student.findOne({ _id: studentid }).populate('quiztaken');
 
@@ -428,17 +432,43 @@ router.post('/:studentid/class/comment/:commentid/delete',isStudent, async (req,
   }
 });
 
+//class comment delete
+router.post('/comments/:commentId/delete', isStudent, async (req, res) => {
+  try {
+      const commentId = req.params.commentId;
+
+      // Find the comment by ID
+      const comment = await Comment.findById(commentId);
+
+      // Ensure the comment exists and belongs to the current user
+      if (!comment || comment.createdBy.toString() !== req.session.student._id.toString()) {
+          return res.status(403).json({ message: 'Unauthorized or comment not found' });
+      }
+
+      // Delete the comment
+      await Comment.findByIdAndDelete(commentId);
+
+      // Redirect back to the page after deletion
+      res.redirect('back');
+  } catch (error) {
+      console.error('Error deleting comment:', error);
+      req.flash('errorMessage', 'Error deleting comment');
+      res.status(500).redirect(`/student/home/${req.session.student._id}`);
+  }
+});
+
 //POST Route to handle comment/suggestion creation
-router.post('/:studentId/class/comment',isStudent, async (req, res) => {
-  const { content, type, targetId, createdBy } = req.body;
-  const {studentid}=req.params;
+router.post('/:studentid/class/comment', isStudent, async (req, res) => {
+  const { content, type, targetId } = req.body; // Removed `createdBy` from destructuring as it's derived from studentid
+  const { studentid } = req.params;
 
   try {
     // Create base comment data
     let commentData = {
       content,
-      createdBy,
-      context: type,
+      createdBy: studentid,          // Set the creator to the logged-in student
+      createdByModel: 'Student',     // Specify that the creator is a Student
+      context: type,                 // Context of the comment (e.g., 'classroom', 'teacher', 'admin')
     };
 
     // Handle different comment contexts
@@ -446,36 +476,32 @@ router.post('/:studentId/class/comment',isStudent, async (req, res) => {
       case 'classroom':
         const classroom = await Classroom.findById(targetId);
         if (!classroom) {
-          req.flash('errorMessage','Classroom not found')
-          console.log('Classroom not found')
+          req.flash('errorMessage', 'Classroom not found');
           return res.status(404).redirect(`/student/${studentid}/class/suggestion`);
         }
-        commentData.classroom = targetId;
+        commentData.classroom = targetId;  // Attach classroom ID to the comment
         break;
 
       case 'teacher':
         const teacher = await Teacher.findById(targetId);
         if (!teacher) {
-          req.flash('errorMessage','Teacher not found')
-          console.log('Teacher not found')
+          req.flash('errorMessage', 'Teacher not found');
           return res.status(404).redirect(`/student/${studentid}/class/suggestion`);
         }
-        commentData.teacher = targetId;
+        commentData.teacher = targetId;    // Attach teacher ID to the comment
         break;
 
       case 'admin':
         const admin = await Admin.findById(targetId);
         if (!admin) {
-          req.flash('errorMessage','Admin not found')
-          console.log( 'Admin not found')
+          req.flash('errorMessage', 'Admin not found');
           return res.status(404).redirect(`/student/${studentid}/class/suggestion`);
         }
-        commentData.admin = targetId;
+        commentData.admin = targetId;      // Attach admin ID to the comment
         break;
 
       default:
-        console.log('Invalid receiver type')
-        req.flash('errorMessage','Receiver not found.')
+        req.flash('errorMessage', 'Invalid context or target.');
         return res.status(400).redirect(`/student/${studentid}/class/suggestion`);
     }
 
@@ -484,16 +510,49 @@ router.post('/:studentId/class/comment',isStudent, async (req, res) => {
     await newComment.save();
 
     // Respond with success message and the new comment
-    req.flash('successMessage','Message sent successfully');
-    res.status(201).redirect(`/student/home/${studentid}`);
+    req.flash('successMessage', 'Message sent successfully');
+    res.status(201).redirect(`back`);///student/home/${studentid}
     
   } catch (error) {
     // Handle errors and respond with a 500 status
-    console.log('Error adding comment',error);
-    req.flash('errorMessage','Message not sent.')
+    console.log('Error adding comment', error);
+    req.flash('errorMessage', 'Message not sent.');
     res.status(500).redirect(`/student/home/${studentid}`);
   }
 });
+
+//inbox
+router.get('/message', isStudent, async (req, res) => {
+  try {
+    // Fetch all quizzes (you can modify this if you need to filter by some criteria)
+    const quiz = await Quiz.find(); 
+
+    // Fetch messages where the context is 'student', createdByModel is 'Teacher' or 'Admin', and the student matches
+    const messages = await Comment.find({
+      student: req.session.student._id, // Directly match the student object ID
+      context: 'student',
+      createdByModel: { $in: ['Teacher', 'Admin'] } // Check for both 'Teacher' and 'Admin'
+    }).populate('createdBy'); // Populate the 'createdBy' field
+
+    // If no messages found, return 404 with a message
+    if (!messages || messages.length === 0) {
+      console.log('No messages found');
+    }
+
+    // Render the 'student/inbox' view with the messages and student data
+    res.render('student/inbox', { 
+      messages,
+      student: req.session.student,
+      quiz
+    });
+  } catch (error) {
+    console.error('Error fetching chat messages', error);
+    req.flash('errorMessage', 'Error fetching chat messages');
+    // Redirect to the admin panel in case of error (you may want to modify this if the error occurs for students)
+    res.status(500).redirect(`/student/home/${req.session.student._id}`);
+  }
+});
+
 
 // ---------------------------QUIZ----------------------------✅
 
@@ -560,7 +619,7 @@ router.post('/:studentid/quiz/:quizid/submitQuiz', async (req, res) => {
     const hasTakenQuiz = student.quiztaken.some(q => q.quizId.toString() === quizid);
     if (hasTakenQuiz) {
       req.flash('errorMessage', 'You have already taken this quiz');
-      return res.redirect(`/student/class/all/quiz/`); // Redirect to the quiz page or some other page
+      return res.redirect(`/student/${student._id}/class/all/quiz`); // Redirect to the quiz page or some other page
     }
 
     let score = 0; // Variable to track the score
@@ -598,7 +657,7 @@ router.post('/:studentid/quiz/:quizid/submitQuiz', async (req, res) => {
 
     console.log(`Success You scored ${score} out of ${total}`);
     res.render('student/scoreDetails',{
-      score,total,quiz,studentid
+      score,total,quiz,studentid,
     }); // Redirect to the result page or any other page
   } catch (error) {
     console.error('Error submitting quiz:', error);
@@ -653,38 +712,40 @@ router.get('/:studentid/announcement/:announceid/details',isStudent,async (req,r
 
 //--------------------ACHEIVEMENTS-----------------------✅
 
-//GET Route to display class achievements for a student
-router.get('/:studentid/class/classachievement',isStudent,async (req,res)=>{
-  const {studentid} =req.params
-  
+// GET Route to display class achievements for a student
+router.get('/:studentid/class/classachievement', isStudent, async (req, res) => {
+  const { studentid } = req.params;
+
   try {
-      const student = await Student.findOne({ _id: studentid }).populate('quiztaken');
-      
-      // Check if the student exists
-      if (!student) {
-          console.log('Student not found for ID:', studentid);
-          return res.status(404);
-      }
+    const student = await Student.findOne({ _id: studentid }).populate('quiztaken');
 
-      // Fetch all quizzes
-      const quiz = await Quiz.find();
-      if (!quiz) {
-        console.log('Quiz not found:');
-        return res.status(404);
-      }
+    // Check if the student exists
+    if (!student) {
+      console.log('Student not found for ID:', studentid);
+      return res.status(404).send('Student not found'); // Added response message
+    }
 
-       const achievements=await Gallery.find()
-       if (!achievements){
-        console.log('Achievemts not found:');
-        return res.status(404);
-      }
+    // Fetch all quizzes
+    const quiz = await Quiz.find();
+    if (!quiz) {
+      console.log('Quiz not found:');
+      return res.status(404).send('Quiz not found'); // Added response message
+    }
 
-      res.render('student/classAchievement',{achievements,student,quiz});
-  } catch{
+    // Fetch achievements sorted by createdAt in descending order
+    const achievements = await Gallery.find().sort({ createdAt: -1 }); // Sorting by createdAt field
+    if (!achievements || achievements.length === 0) {
+      console.log('Achievements not found:');
+      return res.status(404).send('Achievements not found'); // Added response message
+    }
+
+    res.render('student/classAchievement', { achievements, student, quiz });
+  } catch (error) {
     console.error('Error fetching achievements:', error);
     res.status(500).redirect(`/student/home/${studentid}`);
   }
-})
+});
+
 
 // ----------------------ALLQUIZES---------------------------✅
 
