@@ -1,47 +1,123 @@
 <%- include('./components/header') %>
 
-<style>
-  .cursor {
-    position: fixed; /* Make it fixed so it stays visible during scroll */
-    z-index: 1000;   /* Ensure it appears above all other content */
-    pointer-events: none; /* Prevent the cursor from interfering with clicks */
-  }
-</style>
+<body class="w-screen h-screen">
+  <div class="w-full h-full max-w-screen-xl mx-auto bg-white">
 
-<body class="body w-full h-full overflow-x-hidden">
-  <div class="cursor w-16 h-16 rounded-full border-2 border-black absolute">
-    <div class="cursor-inner w-full h-full rounded-full absolute" style="background-color: rgba(254, 253, 253, 0.69);"></div>
+   <div id="loader" class="w-full h-full overflow-hidden bg-white flex flex-col items-center justify-center">
+    <div class="spinner-container mb-8">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Dancing classConnect letters -->
+    <div id="dancing-letters" class="flex space-x-1 text-4xl font-bold text-black">
+      <span class="letter">c</span>
+      <span class="letter">l</span>
+      <span class="letter">a</span>
+      <span class="letter">s</span>
+      <span class="letter">s</span>
+      <span class="letter">C</span>
+      <span class="letter">o</span>
+      <span class="letter">n</span>
+      <span class="letter">n</span>
+      <span class="letter">e</span>
+      <span class="letter">c</span>
+      <span class="letter">t</span>
+    </div>
   </div>
 
-  <div class="container w-screen h-auto" style="background-color: #000000;">
-    <div class="navbar"></div>
-
-    <!-- Page 1 -->
-    <div class="page1 h-screen flex items-center justify-center" style="background-color: #DEE6E8;">
-      <h1 class="text-10rem tracking-tight font-bold" style="font-family:fantasy;">
-        class<span class="bg-black " style="color:  #DEE6E8;; font-family:fantasy;">Connect</span>
+   <main class="flex flex-col md:flex-row items-center justify-between px-8 py-16">
+    <div class="max-w-lg mb-8 md:mb-0">
+     <div class="flex items-center space-x-2 mb-4">
+      <h1 class="text-4xl font-bold">
+       Uniting Students and Teachers for <span class="text-blue-600">Success</span>
       </h1>
-    </div>
+     </div>
+     <p class="text-gray-600 mb-8">
+      We’ll help you educate your children at home.
+     </p>
+     <div class="flex space-x-4">
+      <a href="/student/register">
+      <button class="border hover:bg-green-500 hover:text-white border-green-500 text-green-500 px-6 py-2 rounded-full">
+       Are you Student?
+      </button>
+      </a>
 
-    <!-- Page 2 -->
-    <div class="page2 h-screen">
-      <h1 class="text-white text-center text-5xl">Page 2</h1>
+      <a href="/teacher/register">
+        <button class="border hover:bg-green-500 hover:text-white border-green-500 text-green-500 px-6 py-2 rounded-full">
+         Are you Teacher?
+        </button>
+        </a>
+
+     </div>
     </div>
+    <div>
+      <img src="/images/land.png" alt="">
+    </div>
+   </main>
+   <footer class="flex flex-col md:flex-row justify-between items-center py-4 px-8 bg-white">
+    <span>
+     www.classconnect.com
+    </span>
+   </footer>
   </div>
-
   <script>
-    const cursor = document.querySelector('.cursor');
-    
-    // Track mouse movements
-    window.addEventListener('mousemove', (event) => {
-      const xPos = event.clientX;
-      const yPos = event.clientY;
-      
-      cursor.style.left = `${xPos}px`;
-      cursor.style.top = `${yPos}px`;
-    });
+   document.getElementById('menu-btn').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
   </script>
 
-</body>
+   <!-- Include GSAP Library -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+
+   <!-- Custom CSS for Spinner -->
+   <style>
+     /* Spinner container styles */
+     .spinner-container {
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       width: 100px;
+       height: 100px;
+     }
+ 
+     /* Spinner styles */
+     .spinner {
+       border: 6px solid rgba(0, 0, 0, 0.1); /* Subtle light border */
+       border-top: 6px solid #4A90E2; 
+       border-radius: 50%;
+       width: 80px;
+       height: 80px;
+       animation: spin 1.5s linear infinite; /* Infinite spin animation */
+     }
+ 
+     /* Spinner keyframes */
+     @keyframes spin {
+       0% { transform: rotate(0deg); }
+       100% { transform: rotate(360deg); }
+     }
+   </style>
+ 
+   <script>
+     // GSAP animation for dancing letters
+     gsap.fromTo(".letter", 
+       {y: 0},   // Start position
+       {
+         y: -20,  // Move the letters upward slightly
+         duration: 0.5,
+         ease: "bounce.inOut",  // Bounce effect
+         repeat: -1,            // Infinite loop
+         stagger: 0.1,          // Delay each letter
+         yoyo: true             // Animate back to original position
+       });
+ 
+     // Hide the loader and show the main content after a certain time
+     setTimeout(function() {
+       document.getElementById("loader").style.display = "none"; // Hide loader
+       document.getElementById("main-content").style.display = "flex"; // Show main content
+     }, 5000); // 5 seconds duration
+   </script>
+ </body>
+
 
 <%- include('./components/footer') %>

@@ -1,4 +1,6 @@
-<aside class="bg-gray-800 text-white w-64 h-screen p-4 hidden md:block md:relative fixed top-0 left-0">
+<aside id="sidebar" class="bg-gray-800 text-white w-64 h-screen p-4  top-0 left-0 absolute">
+  <i class="close absolute top-5 right-3 fa-solid fa-circle-xmark text-2xl cursor-pointer"></i> <!-- Close icon -->
+
     <h2 class="text-white text-xl font-bold mb-4">Admin Menu</h2>
     <ul class="space-y-2">
       <li>
@@ -26,3 +28,23 @@
     </ul>
   </aside>
   
+
+  <script>
+    const sidebar = document.querySelector('#sidebar');
+    const closeSidebar = document.querySelector('.close');
+    const menu = document.querySelector('.menu');
+
+    // Close the sidebar
+    if (closeSidebar) {
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.add('hide');
+        });
+    }
+
+    // Open the sidebar
+    if (menu) {
+        menu.addEventListener('click', () => {
+            sidebar.classList.remove('hide');
+        });
+    }
+</script>

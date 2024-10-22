@@ -1,6 +1,6 @@
 <%- include('../components/header') %>
 
-<body class="flex bg-gray-700">
+<body class=" bg-gray-700 h-screen overflow-hidden">
     <%- include('./navbar') %>
     <%- include('./sidebar') %>
 
@@ -9,6 +9,7 @@
         errorMessage: errorMessage 
     }) %>
 
+    <div class="flex item-center justify-center h-full">
     <div class="flex-1 flex justify-center items-center">
     <form action="/admin/gallery" method="POST" enctype="multipart/form-data" class="max-w-lg mx-auto p-4 rounded shadow-lg bg-gray-800">
         <div class="mb-4">
@@ -41,6 +42,7 @@
         </button>
     </form>
     </div>
+  </div>
 </body>
 
 <%- include('../components/footer') %>

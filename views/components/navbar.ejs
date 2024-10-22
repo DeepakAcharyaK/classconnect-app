@@ -1,11 +1,12 @@
 <nav class="bg-white w-full fixed top-0 z-50 shadow-md">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
       <div class="flex items-center">
+        <p class="menu"><i class="fa-solid text-2xl bg-white fa-bars"></i></p>
         <span class="text-lg font-semibold text-gray-700">classConnect</span>
       </div>
       <div class="flex items-center space-x-4">
         <div class="relative">
-          <button id="profile-button" class="ml-4 w-12 h-12 flex items-center  justify-center rounded-full overflow-hidden bg-slate-400 object-cover object-center hover:bg-gray-100">
+          <button id="profile-button" class="ml-4 w-12 h-12 flex items-center  justify-center rounded-full overflow-hidden object-cover object-center hover:bg-gray-200">
             <img src="<%= teacher.profileimg %>" class="w-10 h-10 rounded-full bg-white object-center object-cover " />
           </button>
           <!-- Profile Dialog Box -->
@@ -13,10 +14,11 @@
             <div class="flex flex-col items-center text-center">
               <img src="<%= teacher.profileimg %>" alt="User Avatar" class="w-16 h-16 rounded-full object-cover object-center " />
               <p class="text-gray-900 text-xl font-bold">Hi, <%= teacher.name %></p>
+              <p class="text-gray-700 font-semibold mt-2"><%= teacher.uid %></p>
               <p class="text-gray-700 font-semibold mt-2"><%= teacher.email %></p>
-              <a href="/teacher/teacherHome/<%= teacher._id %>/profile/settings"><button id="" class="mt-2 px-4 py-2 text-blue-600 border rounded-lg font-semibold hover:bg-blue-50">Manage your Account</button></a>
             </div>
-
+            
+            <a href="/teacher/teacherHome/<%= teacher._id %>/profile/settings"><button id="" class="mt-2 w-full px-4 py-2 text-blue-600 border rounded-lg font-semibold hover:bg-blue-50">Manage your Account</button></a>
             <!-- Actions -->
             <div class="mt-4 space-y-2">
               <a href="/teacher/logout">

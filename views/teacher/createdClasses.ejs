@@ -4,25 +4,25 @@
     <div class="cardscontainer w-full h-full">
         <%- include('../components/navbar', { teacher }) %>
         <%- include('../components/sidebar') %>
-        <main class="main-container p-4 md:ml-64 md:mt-28 h-full">
+        <main class="main-container p-4  md:mt-28 h-full">
 
             <%- include('../components/snackbar', { 
                 successMessage: successMessage, 
                 errorMessage: errorMessage 
             }) %>
             
-            <h2 class="text-xl font-bold mb-4 text-center">Your Created Classes</h2>
-            <div class="flex flex-wrap align-top justify-start gap-3 relative">
+            <h2 class="text-2xl font-bold mb-4 text-center">Your Created Classes</h2>
+            <div class="flex flex-wrap align-top justify-start gap-6 relative">
                 <% if (teacher.classroomcreated.length > 0) { %>
                     <% teacher.classroomcreated.forEach(classroom => { %>
                     
                         <div id="classroom-<%= classroom._id %>" class="relative rounded overflow-hidden shadow-lg w-72 h-80">
                             <div class="absolute inset-0 bg-cover bg-gray-200 bg-center" style="background-image: url('<%= classroom.coverImage %>'); opacity: 0.2;"></div>
                             <div class="relative w-full h-full flex flex-col justify-evenly bg-transparent p-4 rounded-lg shadow-md">
-                                <button class="absolute top-2 right-2 rounded-full bg-gray-100 delete-classroom" data-id="<%= classroom._id %>">
+                                <button class="absolute top-2 border right-2 rounded-full bg-gray-100 delete-classroom" data-id="<%= classroom._id %>">
                                     <i class="fa-solid fa-trash p-3" style="color: #f52500;"></i>
                                 </button>
-                                <button class="absolute top-12 right-2 rounded-full bg-gray-100 edit-classroom" data-id="<%= classroom._id %>" data-name="<%= classroom.name %>" data-subject="<%= classroom.subjectCode %>" data-cover="<%= classroom.coverImage %>" data-teacher="<%= teacher._id %>">
+                                <button class="absolute top-12 right-2 border-2 rounded-full bg-gray-100 edit-classroom" data-id="<%= classroom._id %>" data-name="<%= classroom.name %>" data-subject="<%= classroom.subjectCode %>" data-cover="<%= classroom.coverImage %>" data-teacher="<%= teacher._id %>">
                                     <i class="fa-solid fa-edit p-3" style="color: #007bff;"></i>
                                 </button>
 

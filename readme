@@ -1,0 +1,184 @@
+ <body class="bg-green-500">
+  <div class="max-w-screen-xl mx-auto bg-white">
+   <header class="flex justify-between items-center py-4 px-8">
+    <div class="flex items-center space-x-4">
+     <img alt="ClassConnect Logo" class="h-10" height="50" src="https://storage.googleapis.com/a1aa/image/JKXKpqJphA7iG1h8crRoXOjgsJGMB7cfp354Puaase1wYaoTA.jpg" width="50"/>
+     <span class="text-xl font-bold">
+      CLASSCONNECT
+     </span>
+    </div>
+    <nav class="hidden md:flex space-x-8">
+     <a class="text-blue-600" href="#">
+      HOME
+     </a>
+     <a class="text-gray-600" href="#">
+      ABOUT US
+     </a>
+     <a class="text-gray-600" href="#">
+      COURSES
+     </a>
+     <a class="text-gray-600" href="#">
+      TUTORS
+     </a>
+     <a class="text-gray-600" href="#">
+      CONTACT
+     </a>
+    </nav>
+    <div class="md:hidden">
+     <button class="text-gray-600 focus:outline-none" id="menu-btn">
+      <i class="fas fa-bars">
+      </i>
+     </button>
+    </div>
+   </header>
+   <nav class="hidden md:hidden flex flex-col space-y-4 px-8 py-4" id="mobile-menu">
+    <a class="text-blue-600" href="#">
+     HOME
+    </a>
+    <a class="text-gray-600" href="#">
+     ABOUT US
+    </a>
+    <a class="text-gray-600" href="#">
+     COURSES
+    </a>
+    <a class="text-gray-600" href="#">
+     TUTORS
+    </a>
+    <a class="text-gray-600" href="#">
+     CONTACT
+    </a>
+   </nav>
+
+
+   <div id="loader" class="w-screen h-screen bg-black flex flex-col items-center justify-center">
+    <div class="spinner-container mb-8">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Dancing classConnect letters -->
+    <div id="dancing-letters" class="flex space-x-1 text-4xl font-bold text-white">
+      <span class="letter">c</span>
+      <span class="letter">l</span>
+      <span class="letter">a</span>
+      <span class="letter">s</span>
+      <span class="letter">s</span>
+      <span class="letter">C</span>
+      <span class="letter">o</span>
+      <span class="letter">n</span>
+      <span class="letter">n</span>
+      <span class="letter">e</span>
+      <span class="letter">c</span>
+      <span class="letter">t</span>
+    </div>
+  </div>
+
+   <main class="flex flex-col md:flex-row items-center justify-between px-8 py-16">
+    <div class="max-w-lg mb-8 md:mb-0">
+     <div class="flex items-center space-x-2 mb-4">
+      <div class="bg-blue-600 h-12 w-12 rounded-full flex items-center justify-center">
+       <span class="text-white text-2xl font-bold">
+        C
+       </span>
+      </div>
+      <h1 class="text-4xl font-bold">
+       Unleash your child’s potential
+      </h1>
+     </div>
+     <p class="text-gray-600 mb-8">
+      We’ll help you educate your children at home.
+     </p>
+     <div class="flex space-x-4">
+      <button class="bg-green-500 text-white px-6 py-2 rounded-full">
+       FREE TRIAL
+      </button>
+      <button class="border border-green-500 text-green-500 px-6 py-2 rounded-full">
+       SUBSCRIBE
+      </button>
+     </div>
+    </div>
+    <div>
+     <img alt="Child using a laptop for online learning" class="rounded-lg shadow-lg" height="400" src="https://storage.googleapis.com/a1aa/image/gZeOx6o67BTCNCGGFxPz9E7ex5QWlcYl2iyAwCCwaitiaaoTA.jpg" width="600"/>
+    </div>
+   </main>
+   <footer class="flex flex-col md:flex-row justify-between items-center py-4 px-8 bg-white">
+    <span>
+     www.classconnect.com
+    </span>
+    <div class="space-x-4 mt-4 md:mt-0">
+     <a class="text-blue-600" href="#">
+      <i class="fab fa-facebook-f">
+      </i>
+     </a>
+     <a class="text-blue-400" href="#">
+      <i class="fab fa-twitter">
+      </i>
+     </a>
+     <a class="text-pink-600" href="#">
+      <i class="fab fa-instagram">
+      </i>
+     </a>
+     <a class="text-blue-700" href="#">
+      <i class="fab fa-linkedin-in">
+      </i>
+     </a>
+    </div>
+   </footer>
+  </div>
+  <script>
+   document.getElementById('menu-btn').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+  </script>
+
+   <!-- Include GSAP Library -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+
+   <!-- Custom CSS for Spinner -->
+   <style>
+     /* Spinner container styles */
+     .spinner-container {
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       width: 100px;
+       height: 100px;
+     }
+ 
+     /* Spinner styles */
+     .spinner {
+       border: 6px solid rgba(0, 0, 0, 0.1); /* Subtle light border */
+       border-top: 6px solid #4A90E2; 
+       border-radius: 50%;
+       width: 80px;
+       height: 80px;
+       animation: spin 1.5s linear infinite; /* Infinite spin animation */
+     }
+ 
+     /* Spinner keyframes */
+     @keyframes spin {
+       0% { transform: rotate(0deg); }
+       100% { transform: rotate(360deg); }
+     }
+   </style>
+ 
+   <script>
+     // GSAP animation for dancing letters
+     gsap.fromTo(".letter", 
+       {y: 0},   // Start position
+       {
+         y: -20,  // Move the letters upward slightly
+         duration: 0.5,
+         ease: "bounce.inOut",  // Bounce effect
+         repeat: -1,            // Infinite loop
+         stagger: 0.1,          // Delay each letter
+         yoyo: true             // Animate back to original position
+       });
+ 
+     // Hide the loader and show the main content after a certain time
+     setTimeout(function() {
+       document.getElementById("loader").style.display = "none"; // Hide loader
+       document.getElementById("main-content").style.display = "flex"; // Show main content
+     }, 5000); // 5 seconds duration
+   </script>
+ </body>

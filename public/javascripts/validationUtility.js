@@ -14,6 +14,15 @@ function validateForm(fields) {
                         fieldIsValid = false;
                     }
                     break;
+
+                case 'pattern':
+                        const regex = new RegExp(validation.pattern);
+                        if (!regex.test(value)) {
+                            errorElement.textContent = validation.message;
+                            errorElement.classList.remove('hidden');
+                            fieldIsValid = false;
+                        }
+                    break;
                 case 'email':
                     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                     if (!emailPattern.test(value)) {

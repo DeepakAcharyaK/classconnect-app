@@ -1,11 +1,11 @@
 <%- include('../components/header') %>
 
-<body class="bg-gray-800 h-screen flex ">
+<body class="bg-gray-800 h-screen  ">
   <%- include('./navbar') %>
   <%- include('./sidebar') %>
 
-
-  <div class="container mx-auto mt-10 flex-grow flex-1 flex-col">
+<div class="flex p-10">
+  <div class="container mx-auto m-5 mt-10 flex-grow flex-1 flex-col">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 flex flex-col flex-grow">
       <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Teachers Chat with Admin</h1>
@@ -50,7 +50,7 @@
 
     </div>
   </div>
-
+</div>
   <script>
     // Scroll to the bottom of the chat window when the page loads
     const chatWindow = document.getElementById('chat-window');

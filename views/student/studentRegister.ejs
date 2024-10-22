@@ -1,112 +1,204 @@
 <%- include('../components/header') %>
 
-<body style="background-color: #DEE6E8;">
-    <div class="flex justify-center items-center min-h-screen w-auto">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Create an Account</h2>
-            <%- include('../components/snackbar', { 
-                successMessage: successMessage, 
-                errorMessage: errorMessage 
-            }) %>
-            <form id="registerForm" action="/student/register" method="post" novalidate>
-                <div class="mb-4">
-                    <label for="usn" class="block text-sm font-medium text-gray-700">USN</label>
-                    <input type="text" id="usn" name="usn" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Unique Student Number">
-                    <span id="usnError" class="text-red-600 text-sm hidden">USN is required</span>
-                </div>
-                <div class="mb-4">
-                    <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
-                    <input type="text" id="name" name="name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Your FullName">
-                    <span id="nameError" class="text-red-600 text-sm hidden">Full name is required</span>
-                </div>
-                <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
-                    <input type="email" id="email" name="email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="yoursgmail@gmail.com">
-                    <span id="emailError" class="text-red-600 text-sm hidden">Please enter a valid email</span>
-                </div>
-                <div class="mb-4">
-                    <label for="phone" class="block text-sm font-medium text-gray-700">Mobile Number</label>
-                    <input type="tel" id="phone" name="phone" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="+91 000 000 0000">
-                    <span id="phoneError" class="text-red-600 text-sm hidden">Please enter a valid phone number</span>
-                </div>
-                <div class="mb-4">
-                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                    <input type="password" id="password" name="password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="******">
-                    <span id="passwordError" class="text-red-600 text-sm hidden">Password must be at least 6 characters</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input type="checkbox" id="terms" name="terms" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                        <label for="terms" class="ml-2 block text-sm text-gray-900">I agree to the <a href="#" class="text-indigo-600 hover:underline">Terms and Conditions</a></label>
-                    </div>
-                    <span id="termsError" class="text-red-600 text-sm hidden">You must agree to the terms</span>
-                </div>
-                <div class="mt-6">
-                    <button type="submit" class="w-full bg-indigo-600 text-white p-2 rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Register</button>
-                </div>
-            </form>
-            <p class="mt-4 text-center text-sm text-gray-600">Already have an account? <a href="/student/login" class="text-indigo-600 hover:underline">Sign In</a></p>
+<body style="background-color: #dee6e8">
+  <div class="flex justify-center items-center min-h-screen w-auto p-4">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">
+        Create an Account
+      </h2>
+      <%- include('../components/snackbar', { successMessage: successMessage,
+      errorMessage: errorMessage }) %>
+      <form
+        id="registerForm"
+        action="/student/register"
+        method="post"
+        novalidate
+      >
+        <div class="mb-4">
+          <label for="usn" class="block text-sm font-medium text-gray-700"
+            >USN</label
+          >
+          <input
+            type="text"
+            pattern="STD\d{2}"
+            id="usn"
+            name="usn"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="STDXX"
+          />
+          <span id="usnError" class="text-red-600 text-sm hidden"
+            >USN is required</span
+          >
         </div>
-    </div>
-    <script src="/javascripts/validationUtility.js"></script>
+        <div class="mb-4">
+          <label for="name" class="block text-sm font-medium text-gray-700"
+            >Full Name</label
+          >
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="Your FullName"
+          />
+          <span id="nameError" class="text-red-600 text-sm hidden"
+            >Full name is required</span
+          >
+        </div>
+        <div class="mb-4">
+          <label for="email" class="block text-sm font-medium text-gray-700"
+            >Email Address</label
+          >
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="yoursgmail@gmail.com"
+          />
+          <span id="emailError" class="text-red-600 text-sm hidden"
+            >Please enter a valid email</span
+          >
+        </div>
+        <div class="mb-4">
+          <label for="phone" class="block text-sm font-medium text-gray-700"
+            >Mobile Number</label
+          >
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="+91 000 000 0000"
+          />
+          <span id="phoneError" class="text-red-600 text-sm hidden"
+            >Please enter a valid phone number</span
+          >
+        </div>
+        <div class="mb-4">
+          <label for="password" class="block text-sm font-medium text-gray-700"
+            >Password</label
+          >
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="******"
+          />
+          <span id="passwordError" class="text-red-600 text-sm hidden"
+            >Password must be at least 6 characters</span
+          >
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              id="terms"
+              name="terms"
+              class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+            />
+            <label for="terms" class="ml-2 block text-sm text-gray-900"
+              >I agree to the
+              <a href="#" class="text-indigo-600 hover:underline"
+                >Terms and Conditions</a
+              ></label
+            >
+          </div>
+          <span id="termsError" class="text-red-600 text-sm hidden"
+            >You must agree to the terms</span
+          >
+        </div>
+        <div class="mt-6">
+          <button
+            type="submit"
+            class="w-full bg-indigo-600 text-white p-2 rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            Register
+          </button>
+        </div>
+      </form>
+      <p class="mt-4 text-center text-sm text-gray-600">
+        Already have an account?
+        <a href="/student/login" class="text-indigo-600 hover:underline"
+          >Sign In</a
+        >
+      </p>
 
-<script>
-    document.getElementById('registerForm').addEventListener('submit', function(event) {
+      <a href="/teacher/register" class="text-sm text-right"
+        ><p class="text-gray-400">teacher?</p></a
+      >
+    </div>
+  </div>
+  <script src="/javascripts/validationUtility.js"></script>
+
+  <script>
+    document
+      .getElementById("registerForm")
+      .addEventListener("submit", function (event) {
         const fields = [
-            {
-                field: document.getElementById('usn'),
-                errorElement: document.getElementById('usnError'),
-                validations: [
-                    { type: 'required', message: 'USN is required' }
-                ]
-            },
-            {
-                field: document.getElementById('name'),
-                errorElement: document.getElementById('nameError'),
-                validations: [
-                    { type: 'required', message: 'Full name is required' }
-                ]
-            },
-            {
-                field: document.getElementById('email'),
-                errorElement: document.getElementById('emailError'),
-                validations: [
-                    { type: 'required', message: 'Email is required' },
-                    { type: 'email', message: 'Please enter a valid email address' }
-                ]
-            },
-            {
-                field: document.getElementById('phone'),
-                errorElement: document.getElementById('phoneError'),
-                validations: [
-                    { type: 'required', message: 'Phone number is required' },
-                    { type: 'tel', message: 'Please enter a valid phone number' }
-                ]
-            },
-            {
-                field: document.getElementById('password'),
-                errorElement: document.getElementById('passwordError'),
-                validations: [
-                    { type: 'required', message: 'Password is required' },
-                    { type: 'minLength', length: 6, message: 'Password must be at least 6 characters long' }
-                ]
-            },
-            {
-                field: document.getElementById('terms'),
-                errorElement: document.getElementById('termsError'),
-                validations: [
-                    { type: 'required', message: 'You must agree to the terms' }
-                ]
-            }
+        {
+            field: document.getElementById("usn"),
+            errorElement: document.getElementById("usnError"),
+            validations: [
+              { type: "required", message: "USN is required" },
+              {
+                type: "pattern",
+                pattern: "STD\\d{2}",
+                message: "USN must follow the pattern STDXX",
+              },
+            ],
+          },
+          {
+            field: document.getElementById("name"),
+            errorElement: document.getElementById("nameError"),
+            validations: [
+              { type: "required", message: "Full name is required" },
+            ],
+          },
+          {
+            field: document.getElementById("email"),
+            errorElement: document.getElementById("emailError"),
+            validations: [
+              { type: "required", message: "Email is required" },
+              { type: "email", message: "Please enter a valid email address" },
+            ],
+          },
+          {
+            field: document.getElementById("phone"),
+            errorElement: document.getElementById("phoneError"),
+            validations: [
+              { type: "required", message: "Phone number is required" },
+              { type: "tel", message: "Please enter a valid phone number" },
+            ],
+          },
+          {
+            field: document.getElementById("password"),
+            errorElement: document.getElementById("passwordError"),
+            validations: [
+              { type: "required", message: "Password is required" },
+              {
+                type: "minLength",
+                length: 6,
+                message: "Password must be at least 6 characters long",
+              },
+            ],
+          },
+          {
+            field: document.getElementById("terms"),
+            errorElement: document.getElementById("termsError"),
+            validations: [
+              { type: "required", message: "You must agree to the terms" },
+            ],
+          },
         ];
 
         const isValid = validateForm(fields);
         if (!isValid) {
-            event.preventDefault();
+          event.preventDefault();
         }
-    });
-</script>
-
+      });
+  </script>
 </body>
 
 <%- include('../components/footer') %>

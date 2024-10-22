@@ -18,30 +18,39 @@
     <% } else { %>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <% classes.forEach(function(classroom) { %>
-          <div class="bg-white shadow-lg rounded-lg overflow-hidden relative flex flex-col hover:shadow-2xl">
-            <div class="bg-blue-900 p-4 flex flex-row-reverse justify-between">
+          <div class="bg-white shadow-lg rounded-lg overflow-hidden relative flex flex-col hover:shadow-2xl" >
+            <div class="bg-blue-900 p-4 flex flex-row-reverse justify-between" id="input">
               <div class="flex items-center">
                 <img src="<%= classroom.createdteacher.profileimg || 'https://images.pexels.com/photos/1642228/pexels-photo-1642228.jpeg?auto=compress&cs=tinysrgb&w=600' %>" 
                      alt="Class Avatar" 
                      class="w-20 h-20 rounded-full object-cover object-center border-2" />
               </div>
               <div class="flex flex-col justify-center items-start">
-                <h2 class="text-white font-semibold text-xl text-center mt-2"><%= classroom.name %></h2>
+                <h2 class="text-white font-semibold text-xl text-center mt-2" id="input"><%= classroom.name %></h2>
                 <h3 class="text-white text-sm">Instructor: <span class="text-lg"><%= classroom.createdteacher.name %></span></h3>
               </div>
             </div>
             <div class="p-4">
               <p class="text-gray-600 text-sm">Subject code: <span class="text-lg"><%= classroom.subjectCode %></span></p>
               <p class="text-gray-600 text-sm">Class code: <span class="text-lg"><%= classroom.code %></span></p>
+              <a href="tel:<%=classroom.createdteacher.phone%>"><h3 class="text-gray-600 text-sm"><i class="fa-solid fa-phone"></i><span class="text-lg"><%= classroom.createdteacher.phone %></span></h3></a>
             </div>
-            <div class="px-4 py-2 bg-gray-100 text-center">
+            <div class="px-4 py-2 text-center">
               <a href="/student/<%= student._id %>/enrolled/class/<%= classroom._id %>" class="text-blue-600 text-sm font-semibold hover:underline">Visit Class</a>
             </div>
+            <button onclick="speak()"><i class="fa-solid fa-volume-high"></i></button>
           </div>
         <% }) %>
       </div>
     <% } %>
   </main>
+
+  <script>
+    function speak() {
+    var msg = new SpeechSynthesisUtterance(document.getElementById('input').innerText);
+    window.speechSynthesis.speak(msg);
+    }
+</script>
 
   <script>
     // JavaScript to toggle profile dialog visibility

@@ -55,4 +55,8 @@ window.addEventListener('click', (event) => {
   });
 
 //-------------------------------------------------
-//code
+
+function speak() {
+    var msg = new SpeechSynthesisUtterance(document.getElementById('input').innerText);
+    window.speechSynthesis.speak(msg);
+}

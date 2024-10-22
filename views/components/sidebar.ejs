@@ -1,5 +1,7 @@
-<div id="sidebar" class="fixed inset-0 bg-gray-800 bg-opacity-75 z-50 hidden md:flex md:flex-col md:w-64 md:fixed md:top-0 md:left-0 md:h-full">
-    <div class="flex flex-col flex-grow bg-white p-4 space-y-4">
+<div id="sidebar" class="hide fixed inset-0  bg-opacity-75 z-50 md:flex md:flex-col md:w-1/4 h-full overflow-y-scroll shadow-2xl">
+  <i class="close absolute top-5 right-3 fa-solid fa-circle-xmark text-2xl cursor-pointer"></i> <!-- Close icon -->
+
+    <div class="flex flex-col flex-grow shadow-2xl p-4 space-y-4" style="background: rgba(253, 253, 253, 0.954);">
       <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
       <ul class="space-y-2">
         <li>
@@ -72,3 +74,23 @@
       </a>
     </div>
   </div>
+
+  <script>
+    const sidebar = document.querySelector('#sidebar');
+    const closeSidebar = document.querySelector('.close');
+    const menu = document.querySelector('.menu');
+
+    // Close the sidebar
+    if (closeSidebar) {
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.add('hide');
+        });
+    }
+
+    // Open the sidebar
+    if (menu) {
+        menu.addEventListener('click', () => {
+            sidebar.classList.remove('hide');
+        });
+    }
+</script>

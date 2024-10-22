@@ -722,21 +722,24 @@ router.get('/:studentid/class/classachievement', isStudent, async (req, res) => 
     // Check if the student exists
     if (!student) {
       console.log('Student not found for ID:', studentid);
-      return res.status(404).send('Student not found'); // Added response message
+      req.flash('errorMessage', 'Student not found')
+      return res.status(404).redirect(`/student/home/${studentid}/`)  // Added response message
     }
 
     // Fetch all quizzes
     const quiz = await Quiz.find();
     if (!quiz) {
-      console.log('Quiz not found:');
-      return res.status(404).send('Quiz not found'); // Added response message
+      console.log('Quiz not found');
+      req.flash('errorMessage', 'Quiz not found')
+      return res.status(404).redirect(`/student/home/${studentid}/`) // Added response message
     }
 
     // Fetch achievements sorted by createdAt in descending order
     const achievements = await Gallery.find().sort({ createdAt: -1 }); // Sorting by createdAt field
     if (!achievements || achievements.length === 0) {
-      console.log('Achievements not found:');
-      return res.status(404).send('Achievements not found'); // Added response message
+      console.log('Achievements not found');
+      req.flash('errorMessage', 'Achievements not found')
+      return res.status(404).redirect(`/student/home/${studentid}/`) // Added response message
     }
 
     res.render('student/classAchievement', { achievements, student, quiz });

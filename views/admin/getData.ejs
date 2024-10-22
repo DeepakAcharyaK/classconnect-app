@@ -1,6 +1,6 @@
 <%- include('../components/header') %>
 
-<body class="bg-gray-900 text-white flex">
+<body class="bg-gray-900 text-white w-full h-screen ">
   <%- include('./navbar') %>
   <%- include('./sidebar') %>
 
@@ -9,7 +9,7 @@
       successMessage: successMessage, 
       errorMessage: errorMessage 
   }) %>
-
+<div class="flex p-10 h-auto">
   <!-- Main Content -->
   <div class="flex-1 p-4">
     <h1 class="text-3xl font-bold mb-6">Get Student Data</h1>
@@ -23,7 +23,7 @@
     </div>
 
     <!-- Modal to display student data -->
-    <div id="studentDataModal" class="fixed mt-4 bg-gray-800  bg-opacity-50 hidden justify-center items-center">
+    <div id="studentDataModal" class="fixed mt-4 bg-gray-800  bg-opacity-50 hidden justify-center items-center overflow-scroll">
       <div class="border p-4  rounded-md w-full max-w-2xl">
         <h2 class="text-2xl font-bold mb-4">Student Details</h2>
         
@@ -35,7 +35,7 @@
       </div>
     </div>
   </div>
-
+</div>
   <script>
     // Get references to HTML elements
     const getDataBtn = document.getElementById('getDataBtn');

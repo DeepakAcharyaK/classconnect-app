@@ -4,7 +4,7 @@
   <%- include('./studentNavbar', {student}) %>
   <%- include('./studentSidebar', {student, quiz}) %> <!-- Corrected this line -->
 
-  <div class="container mx-auto flex-grow flex-1 flex-col mt-28">
+  <div class="container mx-auto flex-grow flex-1 flex-col mt-28 md:pl-36">
     <div class="bg-white rounded-lg p-2 flex flex-col flex-grow">
       <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-bold text-gray-900">Inbox</h1>
@@ -17,14 +17,15 @@
         <% messages.forEach(function(message) { %>
           <% const messageTime = new Date(message.createdAt).toLocaleString(); %> <!-- Format date and time -->
 
-          <% if (message.createdBy && message.createdBy.role === 'Teacher') { %>
+          <% if (message.createdBy && message.createdByModel === 'Teacher') { %>
             <!-- Message from Teacher (right-aligned) -->
-            <div class="flex justify-end mb-6">
+            <div class="flex justify-start mb-6">
               <div class="flex items-end space-x-2">
-                <div class="text-sm text-gray-600 dark:text-gray-400"><%= messageTime %></div>
-                <div class="bg-blue-500 text-white p-2 rounded-lg max-w-xs">
-                    <%= message.content %>
+                <img src="<%=message.createdBy.profileimg%>" alt="" class="w-10 h-10 rounded-full object-cover object-center">
+                <div class="bg-gray-300 dark:bg-gray-600 text-black dark:text-white p-2 rounded-lg max-w-xs">
+                    <%= message.createdBy.name %> texted:  <span class="text-gray-700"><%= message.content %></span>
                 </div>
+                <div class="text-sm text-gray-600 dark:text-gray-400"><%= messageTime %></div>
               </div>
             </div>
           <% } else { %>

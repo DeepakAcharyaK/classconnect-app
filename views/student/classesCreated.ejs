@@ -12,7 +12,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="relative">
             <img alt="Books and study materials" class="w-full h-64 object-cover" />
-            <div class="absolute top-28 inset-0 bg-blue-900 bg-opacity-75 flex items-center rounded-md">
+            <div class="absolute top-28 inset-0 bg-blue-900 bg-opacity-75 flex items-center rounded-md" id="<%= classroom.name %>">
                 <div class="w-full text-center text-white pl-5 pr-5 flex flex-col items-start">
                     <h1 class="text-4xl font-bold"><%= classroom.name %></h1>
                     <h1 class="text-xl text-gray-400">Subject Code: <%= classroom.subjectCode %></h1>
@@ -20,6 +20,7 @@
                         <p class="text-lg text-gray-400">II MCA</p>
                         <p class="text-lg text-gray-400">Instructor: <%= classroom.createdteacher.name %></p>
                     </div>
+                    <button onclick="speak('<%= classroom.name %>')"><i class="fa-solid fa-volume-high"></i></button>
                 </div>
             </div>
         </div>
@@ -143,6 +144,8 @@
             </div>
         </div>
     </div>
+
+    <script src="/javascripts/script.js"></script>
 
     <script>
         // Function to show the modal and set the delete action

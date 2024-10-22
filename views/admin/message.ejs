@@ -1,6 +1,6 @@
 <%- include('../components/header') %>
 
-<body class="bg-gray-900 text-white flex">
+<body class="bg-gray-900 text-white">
   <%- include('./navbar') %>
   <%- include('./sidebar') %>
 
@@ -10,6 +10,7 @@
       errorMessage: errorMessage 
   }) %>
 
+  <div class="flex P-10">
   <!-- Main Content -->
   <div class="flex-1 p-4">
     <h1 class="text-3xl font-bold mb-6">Messages</h1>
@@ -36,8 +37,9 @@
       </div>
     </div>
 
-    </div>
   </div>
+</div>
+</div>
 
   <script>
     // Optional: JavaScript can be added here for dynamic message loading or form handling.

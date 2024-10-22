@@ -32,8 +32,9 @@
                 }) %>
             </p>
             <div class="mb-4">
-                <p class="text-gray-600 mb-2">
+                <p class="text-gray-600 mb-2" id="input">
                     <%= material.description %>
+                    <button onclick="speak()"><i class="fa-solid fa-volume-high"></i></button>
                 </p>
 
                 <!-- Loop through each attached file -->
@@ -83,6 +84,14 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function speak() {
+        var msg = new SpeechSynthesisUtterance(document.getElementById('input').innerText);
+        window.speechSynthesis.speak(msg);
+        }
+    </script>
+
 </body>
 
 <%- include('../components/footer') %>

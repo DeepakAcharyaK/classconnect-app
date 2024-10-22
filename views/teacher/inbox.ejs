@@ -23,7 +23,7 @@
               <div class="flex items-end space-x-2">
                 <div class="text-sm text-gray-600 dark:text-gray-400"><%= messageTime %></div>
                 <div class="bg-blue-500 text-white p-2 rounded-lg max-w-xs">
-                    <%= message.content %>
+                  <%= message.createdBy.name %> messaged: <span class="text-black font-bold"><%= message.content %></span>
                 </div>
               </div>
             </div>
@@ -33,7 +33,7 @@
               <div class="flex items-end space-x-2">
                 <img src="<%=message.createdBy.profileimg%>" alt="" class="w-10 h-10 rounded-full object-cover object-center">
                 <div class="bg-gray-300 dark:bg-gray-600 text-black dark:text-white p-2 rounded-lg max-w-xs">
-                    <%= message.createdBy.name %> texted:<%= message.content %>
+                    <%= message.createdBy.name %> messaged: <span class="text-black font-bold"><%= message.content %></span>
                 </div>
                 <div class="text-sm text-gray-600 dark:text-gray-400"><%= messageTime %></div>
               </div>

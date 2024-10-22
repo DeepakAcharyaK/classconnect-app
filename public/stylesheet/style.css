@@ -4,7 +4,6 @@
   font-family: "Baloo Bhaijaan 2", sans-serif;
 }
 
-
 /* student homepage */
 .menu-name:hover{
     font-weight: 600;
@@ -24,3 +23,14 @@
     -webkit-backdrop-filter: blur( 20px );
     border: 1px solid rgba(255, 255, 255, 0.18); 
   }
+
+  /* Hide scrollbar for Chrome, Safari, and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}

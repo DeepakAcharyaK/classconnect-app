@@ -11,7 +11,7 @@
             <form id="registerForm" action="/teacher/register" method="post" novalidate>
                 <div class="mb-4">
                     <label for="uid" class="block text-sm font-medium text-gray-700">UID</label>
-                    <input type="text" id="uid" name="uid" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Unique Identification Number">
+                    <input type="text" id="uid" name="uid" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="TECXX">
                     <span id="uidError" class="text-red-600 text-sm hidden">UID is required</span>
                 </div>
                 <div class="mb-4">
@@ -52,14 +52,20 @@
 
     <script>
         document.getElementById('registerForm').addEventListener('submit', function(event) {
-            const fields = [
-                {
-                    field: document.getElementById('uid'),
-                    errorElement: document.getElementById('uidError'),
-                    validations: [
-                        { type: 'required', message: 'UID is required' }
-                    ]
-                },
+            
+                const fields = [
+        {
+            field: document.getElementById("uid"),
+            errorElement: document.getElementById("uidError"),
+            validations: [
+              { type: "required", message: "UID is required" },
+              {
+                type: "pattern",
+                pattern: "TEC\\d{2}",
+                message: "UID must follow the pattern TECXX",
+              },
+            ],
+          },
                 {
                     field: document.getElementById('name'),
                     errorElement: document.getElementById('nameError'),

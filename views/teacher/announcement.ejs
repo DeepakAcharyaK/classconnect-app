@@ -5,21 +5,21 @@
         <%- include('../components/navbar', { teacher }) %>  
         <%- include('../components/sidebar') %>
 
-        <main class="main-container p-4 md:ml-64 md:mt-28 h-full ">
+        <main class="main-container p-4  md:mt-28 h-full ">
             <%- include('../components/snackbar', { 
                 successMessage: successMessage, 
                 errorMessage: errorMessage 
             }) %>
             
-            <h2 class="text-xl font-bold mb-4 text-center">Your Announcements</h2>
+            <h2 class="text-2xl font-bold mb-4 text-center">Your Announcements</h2>
             <div class="flex flex-wrap align-top justify-start gap-3 relative">
                 <% announcements.forEach(announcement => { %>
-                    <div class="w-72 h-80 bg-white p-4 rounded-lg shadow-md relative" id="announcement-<%= announcement._id %>">
+                    <div class="w-72 h-80 bg-white rounded-lg shadow-lg hover:shadow-2xl relative" id="announcement-<%= announcement._id %>">
                         <a href="/teacher/announcement/details/<%= announcement._id %>"> <!-- Link to details page -->
                             <% if (announcement.coverImage) { %>
-                                <img src="<%= announcement.coverImage %>" alt="announcement_post" class="h-36 w-full object-fill object-center">
+                                <img src="<%= announcement.coverImage %>" alt="announcement_post" class=" rounded-lg h-36 w-full object-fill object-center">
                             <% } else { %>
-                                <img src="https://thumbs.dreamstime.com/b/important-announcement-news-label-megaphone-vector-illustration-important-announcement-news-label-megaphone-334602537.jpg?w=768" alt="announcement_post" class="h-36 w-full object-fill object-center">
+                                <img src="https://thumbs.dreamstime.com/b/important-announcement-news-label-megaphone-vector-illustration-important-announcement-news-label-megaphone-334602537.jpg?w=768" alt=" rounded-lg announcement_post" class="h-36 w-full object-fill object-center">
                             <% } %> 
                             <h3 class="text-lg font-semibold text-center text-red-600">
                                 <%= announcement.title %>

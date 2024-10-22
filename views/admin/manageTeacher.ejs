@@ -1,7 +1,7 @@
 <%- include('../components/header') %>
 
 
-<body class="bg-gray-900 text-gray-300 flex">
+<body class="bg-gray-900 text-gray-300">
   <%- include('./navbar') %>
   <%- include('./sidebar') %>
 
@@ -9,7 +9,7 @@
     successMessage: successMessage, 
     errorMessage: errorMessage 
   }) %>
-
+<div class="flex">
   <!-- Main Content -->
   <div class="flex-1 p-4">
     <h1 class="text-3xl font-bold mb-6">Manage Teacher</h1>
@@ -83,6 +83,7 @@
       <% } %>
     </div>
   </div>
+</div>
 </body>
 
 <%- include('../components/footer') %>

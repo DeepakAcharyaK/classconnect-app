@@ -67,7 +67,7 @@ router.post('/register', async (req, res) => {
     });
 
     req.flash('successMessage', 'Registration successful.');
-    return res.status(201).redirect('/student/login');
+    return res.status(201).redirect('/teacher/login');
   } catch (err) {
     console.log( 'Registration failed. Please try again.',err)
     req.flash('errorMessage', 'Registration failed. Please try again.');
@@ -211,7 +211,7 @@ router.post('/teacherHome/:teacherid/classroom/create',isTeacher, upload.single(
 
   try {
     // Check if a cover image was uploaded, otherwise set it to default image
-    const coverImage = req.file ? `/uploads/${req.file.filename}` : '/images/class_bg.jpg';
+    const coverImage = req.file ? `/uploads/${req.file.filename}` : '/images/class_bg.webp';
 
     // Create a new classroom document
     const newClassroom = await Classrooms.create({

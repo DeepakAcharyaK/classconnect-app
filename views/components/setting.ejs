@@ -5,7 +5,7 @@
         <%- include('../components/navbar', { teacher }) %>  
         <%- include('../components/sidebar') %>
 
-        <main class="main-container p-4 md:ml-64 md:mt-28 h-full">
+        <main class="main-container p-4 md:mt-28 h-full">
             <div id="" class=" flex items-center justify-center">
                 <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
                   <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
@@ -34,7 +34,7 @@
                       <input type="file" name="profileimg" id="teacherProfileImage" class="mt-1 w-full border border-gray-300 rounded-lg">
                     </div>
                     <div class="flex justify-end space-x-4">
-                      <button type="button" id="cancelButton" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">Cancel</button>
+                      <a href="/teacher/teacherHome/<%= teacher._id %>" class="px-4 py-2 bg-gray-300 text-white rounded-lg hover:bg-gray-400">Cancel</a>
                       <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Update</button>
                     </div>
                   </form>
