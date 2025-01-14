@@ -1,1 +1,69 @@
-this is classconnect web app
+## About the Project
+
+**classConnect** is a web application similar to Google Classroom but with additional functionalities tailored for effective communication and management between teachers, students, and the Head of Department (HOD). It provides an intuitive interface and features to streamline classroom activities and departmental administration.
+-----
+## Features
+
+### For Teachers
+- Register to the portal using a unique ID.
+- Login to access the teacher's dashboard.
+- Create and manage classrooms.
+- Upload materials to classrooms.
+- Publish important announcements.
+- Create quizzes for students.
+- View quiz submissions with scores and detailed reports.
+- Communicate with students via messages.
+- Send queries to the Head of Department (HOD).
+
+### For Students
+- Register and login to access the home page.
+- Join classrooms using a class code.
+- Access uploaded materials with an audio feature for visually impaired students.
+- View teacher contact information and call directly if needed.
+- Attend strict-timed quizzes, with automatic submission if time expires.
+- Download a PDF of quiz answers with obtained marks.
+- Send queries to the HOD regarding issues with teachers or classes.
+- View announcements and achievements.
+
+### For Head of Department (HOD)
+- Login to access the HOD dashboard.
+- Approve or reject teacher registrations.
+- Manage student accounts (approve/reject/delete).
+- Publish department achievements visible to students and teachers.
+- Send important messages to students and teachers.
+- Access emergency contact details for students.
+
+---
+
+## Technologies Used
+- **Frontend**: EJS, Tailwind CSS
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB
+- **Authentication**: Passport.js, JSON Web Tokens (JWT)
+- **File Uploads**: Multer and Cloudinary
+- **Accessibility**: SpeechSynthesis API for audio reading
+
+---
+
+## Installation
+
+Start the development server:
+  npm run dev                                                              
+  Access the application at http://localhost:3000.
+
+Usage
+  Teachers: Register, login, and access the dashboard to manage classrooms, materials, and quizzes.
+  Students: Register, login, and access the home page to join classrooms, view materials, and attend quizzes.
+  HOD: Login to manage teachers, students, and announcements.
+  
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+Contact
+For questions or feedback, contact:
+
+Name: Deepak Acharya K
+Email: deepakacharyak887@gmail.com
+GitHub: https://github.com/DeepakAcharyaK
+
+
+Thank you for exploring classConnect! 🎉
